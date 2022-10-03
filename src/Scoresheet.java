@@ -65,7 +65,7 @@ public class ScoreSheet {
         // If we want to cross for example twelve, but we do not have already four crosses, we cannot lock 12 and
         // cannot lock the color. The lock can only be crossed after crossing a two or twelve. Or the number
         // that wants to be crossed is outside the score sheet.
-        if (column == getColumns() - 1 && getNumberCrossed() < MIN_CROSS || getValue(row, column) == LOCK_VALUE
+        if ((column == getColumns() - 1 && getNumberCrossed() < MIN_CROSS) || getValue(row, column) == LOCK_VALUE
                 || !validRows[row] || row < 0 || row > getRows() || column < 0 || column > getColumns()) {
             return false;
         }
@@ -81,16 +81,17 @@ public class ScoreSheet {
     public int getValue(int row, int column) {
         return DEFAULT_NUMBERS[row][column];
     }
-    public int getNumberCrossed() {
 
+    public int getNumberCrossed() {
+        return 3;
     }
 
     // Gets the score per row using the scored 2D array
-    public int getScore(int row) {
+    public void getScore(int row) {
 
     }
 
-    public int getTotalScore() {
+    public void getTotalScore() {
 
     }
 
