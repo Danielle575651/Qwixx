@@ -37,6 +37,10 @@ public class Scoresheet {
          penalties++;
     }
 
+    public void removePenalty() {
+        penalties--;
+    }
+
     // Gets the number of penalties
     public int getPenaltyValue() {
         return penalties;
@@ -65,12 +69,16 @@ public class Scoresheet {
         // If we want to cross for example twelve, but we do not have already four crosses, we cannot lock 12 and
         // cannot lock the color. The lock can only be crossed after crossing a two or twelve. Or the number
         // that wants to be crossed is outside the score sheet.
-        if ((column == getColumns() - 1 && getNumberCrossed(row) < MIN_CROSS) || getValue(row, column) == LOCK_VALUE
+        if ((column == getColumns() - 2 && getNumberCrossed(row) < MIN_CROSS) || getValue(row, column) == LOCK_VALUE
                 || !validRows[row] || row < 0 || row > getRows() || column < 0 || column > getColumns()) {
             return false;
         }
 
         return true;
+    }
+
+    public void removeCross(int row, int column) {
+        scored[row][column] = false;
     }
 
     // Ensures that a cross can be crossed and that the value on the dices matches the number on the score sheet
