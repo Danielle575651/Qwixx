@@ -1,4 +1,4 @@
-public class ScoreSheet {
+public class Scoresheet {
     public static final int MIN_CROSS = 4;
     public static final int LOCK_VALUE = 0;
     public static final int PENALTY_VALUE = -5;
@@ -11,7 +11,7 @@ public class ScoreSheet {
     private int columns;
     private int penalties;
 
-    public ScoreSheet() {
+    public Scoresheet() {
         rows = DEFAULT_NUMBERS.length;
         columns = DEFAULT_NUMBERS[0].length;
         scored = new boolean[rows][columns];
@@ -26,7 +26,7 @@ public class ScoreSheet {
     }
 
     public int getRows() {
-        return  rows;
+        return rows;
     }
 
     public int getColumns() {
@@ -48,9 +48,9 @@ public class ScoreSheet {
 
         // If the last colored number is crossed in a row, the lock is also crossed of.
         // Columns starting at 0, number of columns starting at 1, therefore the minus one.
-        if (column == getColumns() - 1) {
+        if (column == getColumns() - 2) {
             scored[row][column + 1] = true;
-            validRows[row] = false;
+            removeColor(row);
         }
     }
 
@@ -65,7 +65,7 @@ public class ScoreSheet {
         // If we want to cross for example twelve, but we do not have already four crosses, we cannot lock 12 and
         // cannot lock the color. The lock can only be crossed after crossing a two or twelve. Or the number
         // that wants to be crossed is outside the score sheet.
-        if ((column == getColumns() - 1 && getNumberCrossed() < MIN_CROSS) || getValue(row, column) == LOCK_VALUE
+        if ((column == getColumns() - 1 && getNumberCrossed(row) < MIN_CROSS) || getValue(row, column) == LOCK_VALUE
                 || !validRows[row] || row < 0 || row > getRows() || column < 0 || column > getColumns()) {
             return false;
         }
@@ -82,17 +82,35 @@ public class ScoreSheet {
         return DEFAULT_NUMBERS[row][column];
     }
 
-    public int getNumberCrossed() {
-        return 3;
+    public int getNumberCrossed(int row) {
+        int numbers = 0;
+        if (row >= 0 && row < scored.length) {
+            for(boolean var: scored[row]) {
+                if (var) {
+                    numbers++;
+                }
+            }
+        }
+        return numbers;
     }
 
     // Gets the score per row using the scored 2D array
-    public void getScore(int row) {
-
+    public int getScore(int row) {
+        int score = 0;
+        int numbersCrossed = getNumberCrossed(row);
+        for (int i = 1; i <= numbersCrossed; i++) {
+            score += i;
+        }
+        return score;
     }
 
-    public void getTotalScore() {
-
+    public int getTotalScore() {
+        int score = 0;
+        for (int row = 0; row < getRows() - 1; row++) {
+            score += getScore(row);
+        }
+        int totalScore = score + PENALTY_VALUE * getPenaltyValue();
+        return totalScore;
     }
 
 
