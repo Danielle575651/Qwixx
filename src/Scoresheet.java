@@ -2,8 +2,8 @@ public class Scoresheet {
     public static final int MIN_CROSS = 4;
     public static final int LOCK_VALUE = 0;
     public static final int PENALTY_VALUE = -5;
-    public static final int[][] DEFAULT_NUMBERS = {{2,3,4,5,6,7,8,9,10,11,12,0},
-            {2,3,4,5,6,7,8,9,10,11,12,0},{12,11,10,9,8,7,6,5,4,3,2,0},{12,11,10,9,8,7,6,5,4,3,2,0}};
+    public static final int[][] DEFAULT_NUMBERS = {{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0},
+            {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0}, {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0}, {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0}};
 
     private boolean[][] scored;
     private boolean[] validRows; // This ensures that a color and thus a row can disappear
@@ -34,7 +34,7 @@ public class Scoresheet {
     }
 
     public void addPenalty() {
-         penalties++;
+        penalties++;
     }
 
     public void removePenalty() {
@@ -58,6 +58,10 @@ public class Scoresheet {
         }
     }
 
+    public void removeCross(int row, int column) {
+        scored[row][column] = false;
+    }
+
     // Also checks if a lock can be crossed
     public boolean canCross(int row, int column) {
         for (int i = getColumns() - 1; i >= column; i--) {
@@ -77,10 +81,6 @@ public class Scoresheet {
         return true;
     }
 
-    public void removeCross(int row, int column) {
-        scored[row][column] = false;
-    }
-
     // Ensures that a cross can be crossed and that the value on the dices matches the number on the score sheet
     public boolean canCross(int row, int column, int diceValue) {
         return canCross(row, column) && diceValue == getValue(row, column);
@@ -92,8 +92,8 @@ public class Scoresheet {
 
     public int getNumberCrossed(int row) {
         int numbers = 0;
-        if (row >= 0 && row < scored.length) {
-            for(boolean var: scored[row]) {
+        if (row >= 0 && row < getRows()) {
+            for (boolean var : scored[row]) {
                 if (var) {
                     numbers++;
                 }
@@ -106,7 +106,7 @@ public class Scoresheet {
     public int getScore(int row) {
         int score = 0;
         int numbersCrossed = getNumberCrossed(row);
-        for (int i = 1; i <= numbersCrossed; i++) {
+        for (int i = 0; i <= numbersCrossed; i++) {
             score += i;
         }
         return score;
@@ -114,12 +114,10 @@ public class Scoresheet {
 
     public int getTotalScore() {
         int score = 0;
-        for (int row = 0; row < getRows() - 1; row++) {
+        for (int row = 0; row < getRows(); row++) {
             score += getScore(row);
         }
         int totalScore = score + PENALTY_VALUE * getPenaltyValue();
         return totalScore;
     }
-
-
 }
