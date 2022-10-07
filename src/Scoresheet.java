@@ -130,4 +130,18 @@ public class Scoresheet {
         }
         return lastValue;
     }
+    
+    public int getLocks() {
+        int nLock = 0;
+        for (int i = 0; i < validRows.length; i++) {
+            if (!validRows[i]) {
+                nLock++;
+            }
+        }
+        return  nLock;
+    }
+
+    public boolean[] getValidRows() {
+        return validRows;
+    }
 }
