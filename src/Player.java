@@ -8,18 +8,17 @@ public abstract class Player {
         this.name = name;
     }
 
-    /**
-    public final int[] tossDice() {
-        Dices dices = new Dices();
-        return dices.getValues();
-    }*/
-
-    // For non-active player - choose to skip the round
-    public final void skipNonActive() {
-        // do something to skip
+    public final void tossDice(Dice[] dice) {
+        for(Dice die : dice) {
+            die.rollDice();
+        }
     }
 
-
-
-    //public abstract void crossNumber(int color, int number);
+    public final void crossNumber(int color, int number) {
+        if(color == 0 || color == 1) {
+            sheet.cross(color, number - 2);
+        } else {
+            sheet.cross(color, 12 - number);
+        }
+    }
 }
