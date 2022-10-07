@@ -142,7 +142,7 @@ public class Scoresheet {
         return  nLock;
     }
 
-    public boolean getValidRows(int i) {
+    public boolean getValidRow(int i) {
         return validRows[i];
     }
     
