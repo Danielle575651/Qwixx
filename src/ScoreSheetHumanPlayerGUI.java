@@ -17,11 +17,11 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
     JLabel[][] points = new JLabel[2][13];
     JLabel[] signs = new JLabel[6];
     JButton[] pointsScored = new JButton[6];
-    HumanPlayer player = new HumanPlayer(" "); // Does already contain a score sheet
+    HumanPlayer player; // Does already contain a score sheet
 
 
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
-        player = player; // A Human Player does not have a name until it types it name and the name is set by the setName method.
+        this.player = player; // A Human Player does not have a name until it types it name and the name is set by the setName method.
 
         createTitlePanel();
         createButtons();
