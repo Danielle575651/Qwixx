@@ -3,11 +3,13 @@ import java.util.Arrays;
 public abstract class Player {
     public Scoresheet sheet;
     private final String name;
+    public boolean isActive;
 
     // For a new player, generate a new score sheet
     public Player(String name) {
         this.sheet = new Scoresheet();
         this.name = name;
+        isActive = false;
     }
 
     public final void tossDice(Dice[] dice) {
@@ -37,7 +39,7 @@ public abstract class Player {
 
         // Compute the possible combination
         for(int i = 0; i < 4; i++) {
-            if(!sheet.validRows[i]) { // if a color is not valid then its combinations = 0
+            if(!sheet.getValidRow(i)) { // if a color is not valid then its combinations = 0
                 whiteColor[i] = 0;
                 whiteColor[i+4] = 0;
                 continue;
