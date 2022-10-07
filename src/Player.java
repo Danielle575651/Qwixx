@@ -27,12 +27,7 @@ public abstract class Player {
     }
     
     public final void changeState() {
-        if(isActive) {
-            isActive = false;
-            return;
-        }
-        
-       isActive = true;
+        isActive = !isActive;
     }
 
     // Get combination of white dice

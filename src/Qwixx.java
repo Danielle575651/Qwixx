@@ -33,18 +33,18 @@ public class Qwixx {
                 "red", 0,
                 "yellow", 1,
                 "green", 2,
-                "blue",3);
+                "blue", 3);
     }
 
     public void playGame() {
         humanFirst();
         while (!end) {
             Dice[] dice = new Dice[diceSet.size()];
-            for(int i = 0; i < diceSet.size(); i++) {
+            for (int i = 0; i < diceSet.size(); i++) {
                 dice[i] = diceSet.get(i);
             }
 
-            if(this.human.getState()) {
+            if (this.human.getState()) {
                 this.human.tossDice(dice);
                 // let human do stuff
                 this.ai.bestChoiceNonActive(dice);
@@ -56,7 +56,7 @@ public class Qwixx {
 
             for (int i = 0; i < 4; i++) {
                 if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
-                    for (Dice d: diceSet) {
+                    for (Dice d : diceSet) {
                         if (colToNum.get(d.getColor()) == i) {
                             removeDice(d);
                         }
@@ -76,7 +76,7 @@ public class Qwixx {
 
     public void humanFirst() {
         diceSet.get(0).rollDice();
-        if(diceSet.get(0).getValue() <= 3) {
+        if (diceSet.get(0).getValue() <= 3) {
             humanFirst = true;
             this.human.changeState();
         } else {
@@ -84,6 +84,7 @@ public class Qwixx {
             this.ai.changeState();
         }
     }
+
     public void removeDice(Dice dice) {
         diceSet.remove(dice);
     }
