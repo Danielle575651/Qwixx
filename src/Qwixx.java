@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+
 public class Qwixx {
     private HumanPlayer human;
     private AIPlayer ai;
@@ -11,13 +12,14 @@ public class Qwixx {
     private ArrayList<Dice> diceSet;
     private Map<String, Integer> colToNum;
     private boolean humanFirst;
-
+    private ScoreSheetHumanPlayerGUI scoreSheetHumanPlayer;
     private AIGUI aiGUI;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
         this.human = human;
         this.ai = ai;
         this.aiGUI = new AIGUI();
+        this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         end = false;
 
         Dice white1 = new Dice("white");
@@ -44,6 +46,7 @@ public class Qwixx {
                 dice[i] = diceSet.get(i);
             }
 
+            // If it is the human players turn
             if (this.human.getState()) {
                 this.human.tossDice(dice);
                 // let human do stuff

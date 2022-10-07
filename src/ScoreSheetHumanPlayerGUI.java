@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class ScoreSheetHumanPlayerGUI implements ActionListener {
@@ -18,10 +19,12 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
     JLabel[] signs = new JLabel[6];
     JButton[] pointsScored = new JButton[6];
     HumanPlayer player; // Does already contain a score sheet
-
+    // Active human player can choose 2 number, inactive can choose 1
+    private ArrayList<Integer> lastCrossedNumbers;
 
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
+        lastCrossedNumbers = new ArrayList<>();
 
         createTitlePanel();
         createButtons();
@@ -88,16 +91,19 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                     if (buttons[i][j].getText().equals("X")) {
                         uncrossButton(i, j);
                         player.sheet.removeCross(i,j);
+                        lastCrossedNumbers.remove(buttons[i][j].getText());
                     } else {
                         crossButton(i, j);
-
                         // Checks if a number can be crossed based on the logic of the score sheet of the human player
                         if (player.sheet.canCross(i,j)) {
                             player.sheet.cross(i, j);
+                            //lastCrossedNumbers.add(buttons[i][j].getText());
                         } else {
                             uncrossButton(i,j);
                         }
                     }
+                    // If ready button is pressed then the choice is locked
+                    //
                 }
             }
         }

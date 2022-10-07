@@ -13,19 +13,24 @@ public abstract class Player {
     }
 
     public final void tossDice(Dice[] dice) {
-        for(Dice die : dice) {
+        for (Dice die : dice) {
             die.rollDice();
         }
     }
 
     public final void crossNumber(int color, int number) {
-        if(color == 0 || color == 1) {
+        if (color == 0 || color == 1) {
             sheet.cross(color, number - 2);
         } else {
             sheet.cross(color, 12 - number);
         }
     }
-    
+
+    // Gets the state of the player to determine if the choices made by this player are allowed.
+    public boolean getState() {
+        return isActive;
+    }
+
     public final void changeState() {
         isActive = !isActive;
     }
@@ -42,10 +47,10 @@ public abstract class Player {
         int[] whiteColor = new int[numCombs];
 
         // Compute the possible combination
-        for(int i = 0; i < 4; i++) {
-            if(!sheet.getValidRow(i)) { // if a color is not valid then its combinations = 0
+        for (int i = 0; i < 4; i++) {
+            if (!sheet.getValidRow(i)) { // if a color is not valid then its combinations = 0
                 whiteColor[i] = 0;
-                whiteColor[i+4] = 0;
+                whiteColor[i + 4] = 0;
                 continue;
             }
 
@@ -60,25 +65,25 @@ public abstract class Player {
     public boolean numIsValid(int color, int value, Dice[] dice, boolean active) {
         // for non-active, only check white comb
         int whiteComb = getWhiteComb(dice);
-        if(!active && value == whiteComb) {
+        if (!active && value == whiteComb) {
             return true;
         }
-        if(!active && value != whiteComb) {
+        if (!active && value != whiteComb) {
             return false;
         }
 
         // for active
-        if(value == whiteComb) {
+        if (value == whiteComb) {
             return true;
         }
 
         int[] comb = getColorComb(dice);
         // Check if the color is invalid
-        if(comb[color] == 0 || comb[color + 4] == 0) {
+        if (comb[color] == 0 || comb[color + 4] == 0) {
             return false;
         }
         // Check if the value is valid
-        if(value == comb[color] || value == comb[color + 4]) {
+        if (value == comb[color] || value == comb[color + 4]) {
             return true;
         } else {
             return false;
