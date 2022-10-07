@@ -117,7 +117,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
 
     private void crossPenalty(int k) {
         penalties[k].setText("X");
-        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties[k].setBackground(new Color(204, 204, 204));
         penalties[k].setForeground(Color.black);
     }
@@ -128,7 +128,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
 
     private void crossButton(int i, int j) {
         buttons[i][j].setText("X");
-        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 30));
+        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
             buttons[i][j].setVerticalTextPosition(JButton.CENTER);
