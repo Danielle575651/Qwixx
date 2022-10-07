@@ -76,9 +76,8 @@ public class AIPlayer extends Player {
         // check if we can lock with the white combination
         int whiteComb = getWhiteComb(dice);
         for(int i = 0; i < 4; i++) {
-            if(sheet.validRows[i] && sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
+            if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
-                sheet.cross(i, 11); //lock
                 return;
             }
         }
@@ -86,9 +85,8 @@ public class AIPlayer extends Player {
         int[] colorComb = getColorComb(dice);
         for(int combValue : colorComb) {
             for(int i = 0; i < 4; i++) {
-                if(sheet.validRows[i] && sheet.canCross(i, 10, combValue)) { // checking if 12 (or 2) can be crossed
+                if(sheet.canCross(i, 10, combValue)) { // checking if 12 (or 2) can be crossed
                     sheet.cross(i, 10); //cross 12 (or 2)
-                    sheet.cross(i, 11); //lock
                     return;
                 }
             }
@@ -145,9 +143,8 @@ public class AIPlayer extends Player {
         // check if we can lock with the white combination
         int whiteComb = getWhiteComb(dice);
         for(int i = 0; i < 4; i++) {
-            if(sheet.validRows[i] && sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
+            if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
-                sheet.cross(i, 11); //lock
                 return;
             }
         }
