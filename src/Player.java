@@ -3,7 +3,7 @@ import java.util.Arrays;
 public abstract class Player {
     public Scoresheet sheet;
     private final String name;
-    public boolean isActive;
+    private boolean isActive;
 
     // For a new player, generate a new score sheet
     public Player(String name) {
@@ -24,6 +24,15 @@ public abstract class Player {
         } else {
             sheet.cross(color, 12 - number);
         }
+    }
+    
+    public final void changeState() {
+        if(isActive) {
+            isActive = false;
+            return;
+        }
+        
+       isActive = true;
     }
 
     // Get combination of white dice
