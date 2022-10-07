@@ -22,4 +22,8 @@ public class HumanPlayer extends Player {
         
         crossNumber(color, number);
     }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
 }

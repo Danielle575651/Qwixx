@@ -2,8 +2,8 @@ import java.util.Arrays;
 
 public abstract class Player {
     public Scoresheet sheet;
-    private final String name;
-    private boolean isActive;
+    public String name;
+    public boolean isActive;
 
     // For a new player, generate a new score sheet
     public Player(String name) {

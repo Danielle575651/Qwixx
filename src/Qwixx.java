@@ -65,8 +65,8 @@ public class Qwixx {
             // and if so on what color he wants to cross
 
             // Remove the dice if the corresponding color bar is locked
-            for (int i = 0; i < this.player.sheet.getValidRows().length; i++) {
-                if (!this.player.sheet.getValidRows()[i] || !this.ai.sheet.getValidRows()[i]) {
+            for (int i = 0; i < 4; i++) {
+                if (!this.player.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
                     for (Dice d: diceSet) {
                         if (colToNum.get(d.getColor()) == i) {
                             removeDice(d);
