@@ -12,8 +12,8 @@ public class HumanPlayer extends Player {
         }
     }
     
-    public void cross(int color, int number, Dice[] dice, boolean active) {
-        boolean valid = numIsValid(color, number, dice, active);
+    public void cross(int color, int number, Dice[] dice, isActive) {
+        boolean valid = numIsValid(color, number, dice, isActive);
         
         if(!valid) {
             // output that is valid to cross
