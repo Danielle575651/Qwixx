@@ -6,19 +6,6 @@ public class AIPlayer extends Player {
         super("AI Player");
     }
 
-    public void crossNumber(int color, int number) {
-        if(color == 0 || color == 1) {
-            sheet.cross(color, number - 2);
-        } else {
-            sheet.cross(color, 12 - number);
-        }
-    }
-
-    // Get combination of white dice
-    public int getWhiteComb(Dice[] dice) {
-        return dice[0].getValue() + dice[1].getValue();
-    }
-
     // Finding minimum gap of the white combination
     public int[] minGapWhite(Dice[] dice) {
         int combination = getWhiteComb(dice);
@@ -44,47 +31,6 @@ public class AIPlayer extends Player {
 
         //return gapWhiteWhite;
         return new int[] {indexMin, minGap, combination};
-    }
-
-    /**
-    public int[] whiteWhiteMin(Dice[] whiteDice) {
-        int whiteWhite = dices.getWhiteWhite();
-        int[] gapWhiteWhite = new int[4];
-
-        for (int i = 0; i < 2; i++) {
-            gapWhiteWhite[i] = whiteWhite - sheet.getFinalNumEachRow()[i];
-        }
-        for (int i = 2; i < 4; i++) {
-            gapWhiteWhite[i] = sheet.getFinalNumEachRow()[i] - whiteWhite;
-        }
-
-        //Find minimum
-        int minimumGap = 15;
-        int indexMinimum = -1;
-        for (int i = 0; i < 4; i++) {
-            if (minimumGap > gapWhiteWhite[i] && gapWhiteWhite[i] > 0) {
-                minimumGap = gapWhiteWhite[i];
-                indexMinimum = i;
-            }
-        }
-
-        //return gapWhiteWhite;
-        return new int[] {indexMinimum, minimumGap, whiteWhite}; // index corresponds to color + minGap + number to cross
-    }*/
-
-    // Compute the color combination
-    public int[] getColorComb(Dice[] dice) {
-        int numColor = dice.length - 2; // Number of color dice
-        int numCombs = 2 * numColor;
-        int[] whiteColor = new int[numCombs];
-
-        // Compute the possible combination
-        for(int i = 2; i < dice.length; i++) {
-            whiteColor[i] = dice[0].getValue() + dice[i].getValue();
-            whiteColor[i + numColor] = dice[1].getValue() + dice[i].getValue();
-        }
-
-        return whiteColor;
     }
 
     public int[] minGapColor(Dice[] dice) { //assume that first 2 dice in the array are always white
@@ -115,32 +61,6 @@ public class AIPlayer extends Player {
 
         return new int[] {(int)indexMin%numColor, minGap, whiteColor[indexMin]}; // index corresponds to color + minGap + number to cross
     }
-    /**
-    public int[] whiteColorMin(Dices dices) {
-        int[] whiteColor = dices.getWhiteColor();
-
-        int[] gapWhiteColor = new int[8];
-        for (int i = 0; i < 2; i++) {
-            gapWhiteColor[i] = whiteColor[i] - sheet.getFinalNumEachRow()[i];
-            gapWhiteColor[i+4] = whiteColor[i+4] - sheet.getFinalNumEachRow()[i];
-        }
-        for (int i = 2; i < 4; i++) {
-            gapWhiteColor[i] = sheet.getFinalNumEachRow()[i] - whiteColor[i];
-            gapWhiteColor[i+4] = sheet.getFinalNumEachRow()[i] - whiteColor[i+4];
-        }
-
-        //Find minimum
-        int minimumGap = 15;
-        int indexMinimum = -1;
-        for (int i = 0; i < 8; i++) {
-            if (minimumGap > gapWhiteColor[i]  && gapWhiteColor[i] > 0) {
-                minimumGap = gapWhiteColor[i];
-                indexMinimum = i;
-            }
-        }
-
-        return new int[] {(int)indexMinimum%4, minimumGap, whiteColor[indexMinimum]}; // index corresponds to color + minGap + number to cross
-    }*/
 
     public void bestChoiceActive(Dice[] dice) {
         // check if we can lock with the white combination
