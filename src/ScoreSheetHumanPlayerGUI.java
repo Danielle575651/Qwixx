@@ -20,7 +20,9 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
     HumanPlayer player = new HumanPlayer(" "); // Does already contain a score sheet
 
 
-    ScoreSheetHumanPlayerGUI() {
+    ScoreSheetHumanPlayerGUI(HumanPlayer player) {
+        player = player; // A Human Player does not have a name until it types it name and the name is set by the setName method.
+
         createTitlePanel();
         createButtons();
         createPenalties();
@@ -85,8 +87,10 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                 if (e.getSource() == buttons[i][j]) {
                     if (buttons[i][j].getText().equals("X")) {
                         uncrossButton(i, j);
+                        player.sheet.removeCross(i,j);
                     } else {
                         crossButton(i, j);
+                        player.sheet.cross(i,j);
                     }
                 }
             }
@@ -96,8 +100,10 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
             if (e.getSource() == penalties[k]) {
                 if (penalties[k].getText().equals("X")) {
                     uncrossPenalty(k);
+                    player.sheet.removePenalty();
                 } else {
                     crossPenalty(k);
+                    player.sheet.addPenalty();
                 }
             }
         }
@@ -228,6 +234,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         inputName.setForeground(new Color(204, 204, 204));
         inputName.setFont(new Font("Ink Free", Font.BOLD, 20));
         inputName.setOpaque(true);
+        player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
         title_panel.setBounds(0, 0, 800, 50);
@@ -271,11 +278,11 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         signs[0].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[0]);
 
-        pointsScored[0] = new JButton();
+        pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
         pointsScored[0].setBackground(new Color(204, 0, 0));
         pointsScored[0].setForeground(new Color(204, 204, 204));
         pointsScored[0].setFocusable(false);
-        pointsScored[0].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        pointsScored[0].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[0]);
 
         signs[1] = new JLabel("+");
@@ -285,11 +292,11 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         signs[1].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[1]);
 
-        pointsScored[1] = new JButton();
+        pointsScored[1] = new JButton(String.valueOf(player.sheet.getScore(1)));
         pointsScored[1].setBackground(new Color(255, 204, 0));
         pointsScored[1].setForeground(new Color(204, 204, 204));
         pointsScored[1].setFocusable(false);
-        pointsScored[1].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        pointsScored[1].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[1]);
 
         signs[2] = new JLabel("+");
@@ -299,11 +306,11 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         signs[2].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[2]);
 
-        pointsScored[2] = new JButton();
+        pointsScored[2] = new JButton(String.valueOf(player.sheet.getScore(2)));
         pointsScored[2].setBackground(new Color(0, 153, 0));
         pointsScored[2].setForeground(new Color(204, 204, 204));
         pointsScored[2].setFocusable(false);
-        pointsScored[2].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        pointsScored[2].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[2]);
 
         signs[3] = new JLabel("+");
@@ -313,11 +320,11 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         signs[3].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[3]);
 
-        pointsScored[3] = new JButton();
+        pointsScored[3] = new JButton(String.valueOf(player.sheet.getScore(3)));
         pointsScored[3].setBackground(new Color(0, 0, 204));
         pointsScored[3].setForeground(new Color(204, 204, 204));
         pointsScored[3].setFocusable(false);
-        pointsScored[3].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        pointsScored[3].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[3]);
 
         signs[4] = new JLabel("-");
@@ -328,7 +335,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         scorePanel.add(signs[4]);
 
         // This are the total penalties
-        pointsScored[4] = new JButton();
+        pointsScored[4] = new JButton(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.PENALTY_VALUE));
         pointsScored[4].setBackground(Color.darkGray);
         pointsScored[4].setForeground(new Color(204, 204, 204));
         pointsScored[4].setFocusable(false);
@@ -343,7 +350,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         scorePanel.add(signs[5]);
 
         // Total points scored
-        pointsScored[5] = new JButton();
+        pointsScored[5] = new JButton(String.valueOf(player.sheet.getTotalScore()));
         pointsScored[5].setBackground(Color.darkGray);
         pointsScored[5].setForeground(new Color(204, 204, 204));
         pointsScored[5].setFocusable(false);
@@ -354,4 +361,5 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
     public JPanel getScoreSheetHumanPlayer() {
         return mainPanel;
     }
+
 }
