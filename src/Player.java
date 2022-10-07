@@ -7,7 +7,7 @@ public abstract class Player {
 
     // For a new player, generate a new score sheet
     public Player(String name) {
-        this.sheet = new Scoresheet();
+        this.sheet = new Scoresheet(name);
         this.name = name;
         isActive = false;
     }
