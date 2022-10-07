@@ -12,7 +12,7 @@ public class HumanPlayer extends Player {
         }
     }
     
-    public void cross(int color, int number, Dice[] dice, isActive) {
+    public void cross(int color, int number, Dice[] dice, boolean isActive) {
         boolean valid = numIsValid(color, number, dice, isActive);
         
         if(!valid) {

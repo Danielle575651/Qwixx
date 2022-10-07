@@ -145,12 +145,4 @@ public class Scoresheet {
     public boolean getValidRow(int i) {
         return validRows[i];
     }
-    
-    public void setName(String playerName) {
-        name = playerName;
-    }
-    
-    public String getName() {
-        return name;
-    }
 }

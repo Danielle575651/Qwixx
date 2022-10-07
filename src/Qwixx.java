@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Qwixx {
     private Player player;
@@ -10,7 +9,6 @@ public class Qwixx {
     private boolean end;
     private ArrayList<Dice> diceSet;
     private Map<String, Integer> colToNum;
-    private boolean humanFirst;
 
     public Qwixx(Player player, AIPlayer ai) {
         this.player = player;
@@ -34,16 +32,15 @@ public class Qwixx {
     }
 
     public void playGame() {
-        humanFirst();
         while (!end) {
             Map<Integer, Integer> toss = new HashMap<>();
             int white1 = 0;
             int white2 = 0;
             for (Dice d : diceSet) {
                 d.rollDice();
-                if (d.equals(diceSet.get(0))) {
+                if (d.equals(diceSet.get(1))) {
                     white1 = d.getValue();
-                }else if (d.equals(diceSet.get(1))) {
+                }else if (d.equals(diceSet.get(2))) {
                     white2 = d.getValue();
                 } else {
                     toss.put(colToNum.get(d.getColor()), d.getValue());
@@ -65,8 +62,8 @@ public class Qwixx {
             // and if so on what color he wants to cross
 
             // Remove the dice if the corresponding color bar is locked
-            for (int i = 0; i < 4; i++) {
-                if (!this.player.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
+            for (int i = 0; i < this.player.getScoresheet.getValidRows.length; i++) {
+                if (!this.player.getScoresheet.getValidRows[i] || !this.ai.getScoresheet.getValidRows[i]) {
                     for (Dice d: diceSet) {
                         if (colToNum.get(d.getColor()) == i) {
                             removeDice(d);
@@ -82,33 +79,29 @@ public class Qwixx {
         }
     }
 
-    public void humanFirst() {
-        diceSet.get(0).rollDice();
-        if(diceSet.get(0).getValue() <= 3) {
-            humanFirst = true;
-        } else {
-            humanFirst = false;
-        }
-    }
     public void removeDice(Dice dice) {
         diceSet.remove(dice);
     }
 
     public void checkEnd() {
-        if (this.player.sheet.getPenaltyValue() == 4 || this.ai.sheet.getPenaltyValue() == 4 ||
-                this.player.sheet.getLocks() == 2 || this.ai.sheet.getLocks() == 2) {
+        if (this.player.getScoresheet.getPenaltyValue() == 4 || this.ai.getScoresheet.getPenatyValue() == 4 ||
+                this.player.getScoresheet.getLocks == 2 || this.ai.getScoreSheet.getLocks == 2) {
             this.end = true;
         }
     }
 
     public void win() {
-//        System.out.println("GAME OVER");
-//        if (this.player.sheet.getTotalScore() > this.ai.sheet.getTotalScore()) {
-//            System.out.println("You win!");
-//        } else if (this.player.sheet.getTotalScore() < this.ai.sheet.getTotalScore()) {
-//            System.out.println("AI wins");
-//        } else {
-//            System.out.println("Draw");
-//        }
+        System.out.println("GAME OVER");
+        if (this.player.getScoreSheet.getTotalScore() > this.ai.getScoreSheet.getTotalScore()) {
+            System.out.println("You win!");
+        } else if (this.player.getScoreSheet.getTotalScore() < this.ai.getScoreSheet.getTotalScore()) {
+            System.out.println("AI wins");
+        } else {
+            System.out.println("Draw");
+        }
     }
 }
+
+
+
+//Need code: we need to program later a pop-up when a clicked number on the scoresheet is not possible with the dices
