@@ -1,18 +1,23 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class Qwixx {
-    private final int COLOR_NUMBER = 4;
     private HumanPlayer human;
     private AIPlayer ai;
     private boolean end;
     private ArrayList<Dice> diceSet;
     private Map<String, Integer> colToNum;
+    private boolean humanFirst;
+
+    private AIGUI aiGUI;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
         this.human = human;
         this.ai = ai;
+        this.aiGUI = new AIGUI();
         end = false;
 
         Dice white1 = new Dice("white");
@@ -32,25 +37,25 @@ public class Qwixx {
     }
 
     public void playGame() {
-        startFirst();
+        humanFirst();
         while (!end) {
-            if (human.getState()) {
-                human.tossDice(diceSet);
-                // GUI
-                ai.bestChoiceActive(diceSet);
-            } else {
-                ai.tossDice(diceSet);
-                ai.bestChoiceActive(diceSet);
-                // GUI
+            Dice[] dice = new Dice[diceSet.size()];
+            for(int i = 0; i < diceSet.size(); i++) {
+                dice[i] = diceSet.get(i);
             }
 
+            if(this.human.getState()) {
+                this.human.tossDice(dice);
+                // let human do stuff
+                this.ai.bestChoiceNonActive(dice);
+            } else {
+                this.ai.tossDice(dice);
+                // let human do stuff
+                this.ai.bestChoiceActive(dice);
+            }
 
-            human.changeState();
-            ai.changeState();
-
-            // Check if a  die can be removed from the game
-            for (int i = 0; i < COLOR_NUMBER; i++) {
-                if (!this.human.sheet.getValidRows(i) || !this.ai.sheet.getValidRows(i)) {
+            for (int i = 0; i < 4; i++) {
+                if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
                     for (Dice d: diceSet) {
                         if (colToNum.get(d.getColor()) == i) {
                             removeDice(d);
@@ -58,24 +63,27 @@ public class Qwixx {
                     }
                 }
             }
+
+            checkEnd();
+            this.human.changeState();
+            this.ai.changeState();
         }
 
-        checkEnd();
         if (end) {
             win();
         }
     }
 
-    public void startFirst() {
-        Dice d = diceSet.get(0);
-        d.rollDice();
-        if (d.getValue() <= 3) {
-            human.changeState();
+    public void humanFirst() {
+        diceSet.get(0).rollDice();
+        if(diceSet.get(0).getValue() <= 3) {
+            humanFirst = true;
+            this.human.changeState();
         } else {
-            ai.changeState();
+            humanFirst = false;
+            this.ai.changeState();
         }
     }
-
     public void removeDice(Dice dice) {
         diceSet.remove(dice);
     }
