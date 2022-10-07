@@ -69,7 +69,7 @@ public class AIPlayer extends Player {
             }
         }
 
-        return new int[] {(int)indexMin%numColor, minGap, whiteColor[indexMin]}; // index corresponds to color + minGap + number to cross
+        return new int[] {(int)indexMin%4, minGap, whiteColor[indexMin]}; // index corresponds to color + minGap + number to cross
     }
 
     public void bestChoiceActive(Dice[] dice) {
