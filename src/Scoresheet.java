@@ -120,4 +120,16 @@ public class Scoresheet {
         int totalScore = score + PENALTY_VALUE * getPenaltyValue();
         return totalScore;
     }
+
+    public int getLastCrossed(int row) {
+        int lastValue = 2;
+        if (validRows[row]) {
+            for (int i = 0; i < getColumns(); i++) {
+                if (scored[row][i]) {
+                    lastValue = getValue(row, i);
+                }
+            }
+        }
+        return lastValue;
+    }
 }
