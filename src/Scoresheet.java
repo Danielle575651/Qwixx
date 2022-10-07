@@ -10,9 +10,8 @@ public class Scoresheet {
     private int rows;
     private int columns;
     private int penalties;
-    private String name;
 
-    public Scoresheet(String playerName) {
+    public Scoresheet() {
         rows = DEFAULT_NUMBERS.length;
         columns = DEFAULT_NUMBERS[0].length;
         scored = new boolean[rows][columns];
