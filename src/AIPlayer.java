@@ -41,12 +41,22 @@ public class AIPlayer extends Player {
         // Compute the gap
         int[] gap = new int[numCombs];
         for (int i = 0; i < 2; i++) {
+            if(whiteColor[i] == 0) {
+                gap[i] = -1;
+                gap[i + 4] = -1;
+                continue;
+            }
             gap[i] = whiteColor[i] - sheet.getLastCrossed(i);
-            gap[i + numColor] = whiteColor[i + numColor] - sheet.getLastCrossed(i);
+            gap[i + 4] = whiteColor[i + numColor] - sheet.getLastCrossed(i);
         }
         for (int i = 2; i < 4; i++) {
+            if(whiteColor[i] == 0) {
+                gap[i] = -1;
+                gap[i + 4] = -1;
+                continue;
+            }
             gap[i] = sheet.getLastCrossed(i) - whiteColor[i];
-            gap[i + numColor] = sheet.getLastCrossed(i) - whiteColor[i + numColor];
+            gap[i + 4] = sheet.getLastCrossed(i) - whiteColor[i + numColor];
         }
 
         //Find minimum
