@@ -90,7 +90,13 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                         player.sheet.removeCross(i,j);
                     } else {
                         crossButton(i, j);
-                        player.sheet.cross(i,j);
+
+                        // Checks if a number can be crossed based on the logic of the score sheet of the human player
+                        if (player.sheet.canCross(i,j)) {
+                            player.sheet.cross(i, j);
+                        } else {
+                            uncrossButton(i,j);
+                        }
                     }
                 }
             }
