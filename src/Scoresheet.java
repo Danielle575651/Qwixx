@@ -10,8 +10,9 @@ public class Scoresheet {
     private int rows;
     private int columns;
     private int penalties;
+    private String name;
 
-    public Scoresheet() {
+    public Scoresheet(String playerName) {
         rows = DEFAULT_NUMBERS.length;
         columns = DEFAULT_NUMBERS[0].length;
         scored = new boolean[rows][columns];
@@ -141,7 +142,15 @@ public class Scoresheet {
         return  nLock;
     }
 
-    public boolean[] getValidRows() {
-        return validRows;
+    public boolean getValidRows(int i) {
+        return validRows[i];
+    }
+    
+    public void setName(String playerName) {
+        name = playerName;
+    }
+    
+    public String getName() {
+        return name;
     }
 }
