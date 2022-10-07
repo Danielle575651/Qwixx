@@ -122,12 +122,10 @@ public class Scoresheet {
     }
 
     public int getLastCrossed(int row) {
-        int lastValue = 2;
-        if (validRows[row]) {
-            for (int i = 0; i < getColumns(); i++) {
-                if (scored[row][i]) {
-                    lastValue = getValue(row, i);
-                }
+        int lastValue = -1;
+        for (int i = 0; i < getColumns(); i++) {
+            if (scored[row][i]) {
+                lastValue = getValue(row, i);
             }
         }
         return lastValue;
