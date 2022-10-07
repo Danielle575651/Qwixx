@@ -21,7 +21,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
 
 
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
-        this.player = player; // A Human Player does not have a name until it types it name and the name is set by the setName method.
+        this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
 
         createTitlePanel();
         createButtons();
