@@ -2,13 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class ScoreSheetGUI implements ActionListener {
-    JFrame frame = new JFrame();
+public class ScoreSheetHumanPlayerGUI implements ActionListener {
     JPanel title_panel = new JPanel();
     JPanel button_panel = new JPanel();
     JPanel penalties_panel = new JPanel();
     JPanel pointsPanel = new JPanel();
     JPanel scorePanel = new JPanel();
+    JPanel mainPanel = new JPanel();
     JLabel title = new JLabel();
     JLabel crossPenalty = new JLabel();
     JTextField inputName = new JTextField();
@@ -17,13 +17,15 @@ public class ScoreSheetGUI implements ActionListener {
     JLabel[][] points = new JLabel[2][13];
     JLabel[] signs = new JLabel[6];
     JButton[] pointsScored = new JButton[6];
+    HumanPlayer player = new HumanPlayer(" "); // Does already contain a score sheet
 
-    ScoreSheetGUI() {
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 400);
-        frame.getContentPane().setBackground(new Color(204, 204, 204));
-        frame.setLayout(new BorderLayout());
-        frame.setVisible(true);
+
+    ScoreSheetHumanPlayerGUI() {
+        createTitlePanel();
+        createButtons();
+        createPenalties();
+        createPointsPanel();
+        createScorePanel();
 
         crossPenalty.setBackground(new Color(204, 204, 204));
         crossPenalty.setForeground(Color.black);
@@ -31,12 +33,6 @@ public class ScoreSheetGUI implements ActionListener {
         crossPenalty.setHorizontalAlignment(JLabel.CENTER);
         crossPenalty.setText("Cross a penalty (-5):");
         crossPenalty.setOpaque(true);
-
-        createTitlePanel();
-        createButtons();
-        createPenalties();
-        createPointsPanel();
-        createScorePanel();
 
         pointsPanel.setLayout(new GridLayout(2, 13));
         pointsPanel.setBackground(new Color(204, 204, 204));
@@ -47,21 +43,26 @@ public class ScoreSheetGUI implements ActionListener {
         penalties_panel.setBackground(new Color(204, 204, 204));
         penalties_panel.setPreferredSize(new Dimension(300, 50));
         penalties_panel.setMinimumSize(penalties_panel.getPreferredSize());
-        JSplitPane penaltiesPanel = new JSplitPane(SwingConstants.HORIZONTAL, crossPenalty, penalties_panel);
-        penaltiesPanel.setBackground(new Color(204, 204, 204));
-        penaltiesPanel.setDividerSize(0);
+
+        JPanel penalties = new JPanel();
+        penalties.setLayout(new GridLayout(2, 1));
+        penalties.add(crossPenalty);
+        penalties.add(penalties_panel);
+
+        JPanel points = new JPanel();
+        points.setLayout(new GridLayout(1, 2));
+        points.add(pointsPanel);
+        points.add(penalties);
 
         scorePanel.setLayout(new GridLayout(1, 12));
         scorePanel.setBackground(new Color(204, 204, 204));
         scorePanel.setPreferredSize(new Dimension(800, 50));
         scorePanel.setMinimumSize(scorePanel.getPreferredSize());
 
-        JSplitPane pointsAndPenalties = new JSplitPane(SwingConstants.VERTICAL, pointsPanel, penaltiesPanel);
-        JSplitPane lowerPart = new JSplitPane(SwingConstants.HORIZONTAL, pointsAndPenalties, scorePanel);
-        pointsAndPenalties.setDividerSize(0);
-        pointsAndPenalties.setBackground(new Color(204, 204, 204));
-        lowerPart.setBackground(new Color(204, 204, 204));
-        lowerPart.setDividerSize(0);
+        JPanel lowerPanel = new JPanel();
+        lowerPanel.setLayout(new GridLayout(2, 1));
+        lowerPanel.add(points);
+        lowerPanel.add(scorePanel);
 
         button_panel.setLayout(new GridLayout(4, 12));
         button_panel.setBackground(new Color(204, 204, 204));
@@ -69,9 +70,12 @@ public class ScoreSheetGUI implements ActionListener {
         title_panel.add(title, BorderLayout.WEST);
         title_panel.add(inputName);
 
-        frame.add(title_panel, BorderLayout.NORTH);
-        frame.add(button_panel);
-        frame.add(lowerPart, BorderLayout.SOUTH);
+        BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
+        mainPanel.setLayout(testLayout);
+        mainPanel.add(title_panel);
+        mainPanel.add(button_panel);
+        mainPanel.add(lowerPanel);
+        mainPanel.setPreferredSize(new Dimension(800, 400));
     }
 
     @Override
@@ -347,8 +351,7 @@ public class ScoreSheetGUI implements ActionListener {
         scorePanel.add(pointsScored[5]);
     }
 
-    public static void main(String[] args) {
-        ScoreSheetGUI newSheet = new ScoreSheetGUI();
-
+    public JPanel getScoreSheetHumanPlayer() {
+        return mainPanel;
     }
 }
