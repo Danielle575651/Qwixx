@@ -98,7 +98,6 @@ public class Qwixx {
     public boolean humanCheck(Dice[] dice) {
         Set<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
 
-        // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed
         // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
         // and the second is the number crossed.
         for (String indices : lastCrossed) {
@@ -107,23 +106,31 @@ public class Qwixx {
             if (!human.numIsValid(Integer.valueOf(indices.substring(0)), Integer.valueOf(indices.substring(1)), dice, human.isActive)) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote();
                 return false;
-            } else if (lastCrossed.size() == 2) {
+            }
+        }
+
+        // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed in the GUI
+        if (lastCrossed.size() == 2) {
+            for (String indices : lastCrossed) {
                 for (String indices2 : lastCrossed) {
                     for (int colorCombination : human.getColorComb(dice)) {
-                        int whiteValue = Integer.valueOf(indices.substring(1));
-                        int colorValue = Integer.valueOf(indices2.substring(1));
-                        int whiteColorNumber = Integer.valueOf(indices.substring(0));
-                        int colorNumber = Integer.valueOf(indices2.substring(0));
+                        int whiteValue = Integer.valueOf(indices.substring(1)); // The value of the white combination
+                        int colorValue = Integer.valueOf(indices2.substring(1)); // The value of the colored combination
+                        int whiteColorNumber = Integer.valueOf(indices.substring(0)); // The row in which the white combination is crossed
+                        int colorNumber = Integer.valueOf(indices2.substring(0)); // The row in which the color combination is crossed
 
-                        // In case two numbers are crossed, we check if they are in the same row and then check that first
-                        // the white combination is crossed and then the colored combination
+                        // If 2 dices are chosen, then it has to be a white combination and a colored combination, but not only colored com
                         if (!indices.equals(indices2) && human.getWhiteComb(dice) == whiteValue &&
-                                colorCombination == colorValue && whiteColorNumber == colorNumber) {
-                            if (whiteValue > colorValue) {
+                                colorCombination == colorValue) {
+                            // If the colored and white combination are crossed in the same row, first white and then colored has to be crossed.
+                            if (whiteColorNumber == colorNumber && whiteValue > colorValue) {
                                 // Display error message: The order in which you crossed the number is not correct. If you want to cross numbers in the same row, you first have to cross the combination of the white dice and then a colored combination.
                                 scoreSheetHumanPlayer.displayErrorMessageOrder();
                                 return false;
                             }
+                            return true;
+                        } else { // If not a combination of white dice values and colored dice values are crossed, but only colored dices are crossed
+                            return false;
                         }
                     }
                 }
