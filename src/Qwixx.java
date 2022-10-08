@@ -103,7 +103,7 @@ public class Qwixx {
         for (String indices : lastCrossed) {
             // If the crossed number is not valid according to the dice value, display an error message (Something like):
             // The number(s) you have just crossed are not valid (e.g. they do not correspond to the dice values). Uncross the button you have just clicked and make sure to cross the number that corresponds to the dice values and hit the finish button or skip this round.
-            if (!human.numIsValid(Integer.valueOf(indices.substring(0,1)), Integer.valueOf(indices.substring(1,2)), dice, human.isActive)) {
+            if (!human.numIsValid(Integer.parseInt(indices.substring(0,1)), Integer.parseInt(indices.substring(1,2)), dice, human.isActive)) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
             }
         }
@@ -114,10 +114,10 @@ public class Qwixx {
             for (String indices : lastCrossed) {
                 for (String indices2 : lastCrossed) {
                     for (int colorCombination : human.getColorComb(dice)) {
-                        int whiteValue = Integer.valueOf(indices.substring(1,2)); // The value of the white combination
-                        int colorValue = Integer.valueOf(indices2.substring(1,2)); // The value of the colored combination
-                        int whiteColorNumber = Integer.valueOf(indices.substring(0,1)); // The row in which the white combination is crossed
-                        int colorNumber = Integer.valueOf(indices2.substring(0,1)); // The row in which the color combination is crossed
+                        int whiteValue = Integer.parseInt(indices.substring(1,2)); // The value of the white combination
+                        int colorValue = Integer.parseInt(indices2.substring(1,2)); // The value of the colored combination
+                        int whiteColorNumber = Integer.parseInt(indices.substring(0,1)); // The row in which the white combination is crossed
+                        int colorNumber = Integer.parseInt(indices2.substring(0,1)); // The row in which the color combination is crossed
 
                         // If 2 dices are chosen, then it has to be a white combination and a colored combination, but not only colored com
                         if (!indices.equals(indices2) && human.getWhiteComb(dice) == whiteValue &&
