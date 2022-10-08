@@ -81,7 +81,6 @@ public class AIPlayer extends Player {
                 gap[i] = other;
             }
         }
-        System.out.println(Arrays.toString(gap));
 
         //Find minimum
         int minGap = 15;
@@ -98,7 +97,6 @@ public class AIPlayer extends Player {
                 indexMin = i;
             }
         }
-        System.out.println("min index = " + indexMin + ", min gap = " + minGap);
 
         if(indexMin == -1) {
             return new int[] {indexMin, minGap, 0};
@@ -118,7 +116,6 @@ public class AIPlayer extends Player {
         for(int i = 0; i < 4; i++) {
             if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
-                System.out.println(this.name + " Cross color = " + i + ", number = " + 12);
                 this.gui.crossButton(i,10);
                 this.gui.crossButton(i,11);
                 return;
@@ -127,12 +124,10 @@ public class AIPlayer extends Player {
 
         // check if we can lock with the color combination
         int[] colorComb = getColorComb(dice);
-        //System.out.println("Color comb = " + Arrays.toString(colorComb));
         for(int combValue : colorComb) {
             for(int i = 0; i < 4; i++) {
                 if(sheet.canCross(i, 10, combValue)) { // checking if 12 (or 2) can be crossed
                     sheet.cross(i, 10); //cross 12 (or 2)
-                    System.out.println(this.name + " Cross color = " + i + ", number = " + 12);
                     this.gui.crossButton(i,10);
                     this.gui.crossButton(i,11);
                     return;
@@ -146,7 +141,6 @@ public class AIPlayer extends Player {
                 if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
                     if (sheet.canCross(i, 7, 9)) {
                         sheet.cross(i, 7);
-                        System.out.println(this.name + " Cross color = " + i + ", number = " + 9);
                         this.gui.crossButton(i,7);
                         return;
                     }
@@ -157,7 +151,6 @@ public class AIPlayer extends Player {
                 if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
                     if (sheet.canCross(i, 7, 5)) {
                         sheet.cross(i, 7);
-                        System.out.println(this.name + " Cross color = " + i + ", number = " + 5);
                         this.gui.crossButton(i,7);
                         return;
                     }
@@ -177,7 +170,6 @@ public class AIPlayer extends Player {
         // If there is no valid gap then we must be penalized
         if (wwRow == -1 && wcRow == -1) {
             this.sheet.addPenalty();
-            System.out.println(this.name + " penalty");
             this.gui.crossPenalty(this.sheet.getPenaltyValue()-1);
             return;
         }
@@ -230,7 +222,6 @@ public class AIPlayer extends Player {
         for(int i = 0; i < 4; i++) {
             if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
-                System.out.println(this.name + " Cross color = " + i + ", number = " + 12);
                 this.gui.crossButton(i,10);
                 return;
             }
@@ -286,12 +277,11 @@ public class AIPlayer extends Player {
         }
     }
 
-    // Check exception 2
+    // Check exception 2 - if
     public void exception2(int color, int number, int minGap) {
         if (color == 0 || color == 1) {
             if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number > 7) {
                 this.sheet.addPenalty();
-                System.out.println("penalty");
                 this.gui.crossPenalty(this.sheet.getPenaltyValue()-1);
             } else {
                 crossNumber(color, number);
@@ -300,7 +290,6 @@ public class AIPlayer extends Player {
         if (color == 2 || color == 3) {
             if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number < 7) {
                 this.sheet.addPenalty();
-                System.out.println("penalty");
                 this.gui.crossPenalty(this.sheet.getPenaltyValue()-1);
             } else {
                 crossNumber(color, number);
