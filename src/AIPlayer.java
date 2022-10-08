@@ -1,22 +1,22 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class AIPlayer extends Player {
+    private AIGUI gui;
 
-    public AIPlayer() {
-        super("AI Player");
+    public AIPlayer(String name) {
+        super(name);
+        this.gui = new AIGUI();
     }
 
-    public void crossNumber(int color, int number) {
+    public final void crossNumber(int color, int number) {
         if(color == 0 || color == 1) {
             sheet.cross(color, number - 2);
+            this.gui.crossButton(color, number - 2);
         } else {
             sheet.cross(color, 12 - number);
+            this.gui.crossButton(color, 12 - number);
         }
-    }
-
-    // Get combination of white dice
-    public int getWhiteComb(Dice[] dice) {
-        return dice[0].getValue() + dice[1].getValue();
     }
 
     // Finding minimum gap of the white combination
@@ -26,9 +26,17 @@ public class AIPlayer extends Player {
 
         // Compute the gap for red and yellow, then green and blue (since they switch the order)
         for (int i = 0; i < 2; i++) {
+            if(!sheet.getValidRow(i)) { // if a color is not valid then its gaps = 0
+                gap[i] = -1;
+                continue;
+            }
             gap[i] = combination - sheet.getLastCrossed(i);
         }
         for (int i = 2; i < 4; i++) {
+            if(!sheet.getValidRow(i)) { // if a color is not valid then its gaps = 0
+                gap[i] = -1;
+                continue;
+            }
             gap[i] = sheet.getLastCrossed(i) - combination;
         }
 
@@ -46,101 +54,63 @@ public class AIPlayer extends Player {
         return new int[] {indexMin, minGap, combination};
     }
 
-    /**
-    public int[] whiteWhiteMin(Dice[] whiteDice) {
-        int whiteWhite = dices.getWhiteWhite();
-        int[] gapWhiteWhite = new int[4];
-
-        for (int i = 0; i < 2; i++) {
-            gapWhiteWhite[i] = whiteWhite - sheet.getFinalNumEachRow()[i];
-        }
-        for (int i = 2; i < 4; i++) {
-            gapWhiteWhite[i] = sheet.getFinalNumEachRow()[i] - whiteWhite;
-        }
-
-        //Find minimum
-        int minimumGap = 15;
-        int indexMinimum = -1;
-        for (int i = 0; i < 4; i++) {
-            if (minimumGap > gapWhiteWhite[i] && gapWhiteWhite[i] > 0) {
-                minimumGap = gapWhiteWhite[i];
-                indexMinimum = i;
-            }
-        }
-
-        //return gapWhiteWhite;
-        return new int[] {indexMinimum, minimumGap, whiteWhite}; // index corresponds to color + minGap + number to cross
-    }*/
-
-    // Compute the color combination
-    public int[] getColorComb(Dice[] dice) {
-        int numColor = dice.length - 2; // Number of color dice
-        int numCombs = 2 * numColor;
-        int[] whiteColor = new int[numCombs];
-
-        // Compute the possible combination
-        for(int i = 2; i < dice.length; i++) {
-            whiteColor[i] = dice[0].getValue() + dice[i].getValue();
-            whiteColor[i + numColor] = dice[1].getValue() + dice[i].getValue();
-        }
-
-        return whiteColor;
-    }
-
-    public int[] minGapColor(Dice[] dice) { //assume that first 2 dice in the array are always white
-        int numColor = dice.length - 2; // Number of color dice
-        int numCombs = 2 * numColor;
+    public int[] minGapColor(Dice[] dice) {
         int[] whiteColor = getColorComb(dice);
 
         // Compute the gap
-        int[] gap = new int[numCombs];
+        int[] gap = new int[4];
         for (int i = 0; i < 2; i++) {
+            if(!sheet.getValidRow(i)) {
+                gap[i] = -1;
+                continue;
+            }
             gap[i] = whiteColor[i] - sheet.getLastCrossed(i);
-            gap[i + numColor] = whiteColor[i + numColor] - sheet.getLastCrossed(i);
+            int other = whiteColor[i + 4] - sheet.getLastCrossed(i); // the gap value of the other combination of the same color
+            if((gap[i] > other && other > 0) || (gap[i] < 0 && other > 0)) {
+                gap[i] = other;
+            }
         }
         for (int i = 2; i < 4; i++) {
+            if(!sheet.getValidRow(i)) {
+                gap[i] = -1;
+                continue;
+            }
             gap[i] = sheet.getLastCrossed(i) - whiteColor[i];
-            gap[i + numColor] = sheet.getLastCrossed(i) - whiteColor[i + numColor];
+            int other = sheet.getLastCrossed(i) - whiteColor[i + 4]; // the gap value of the other combination of the same color
+            if((gap[i] > other && other > 0) || (gap[i] < 0 && other > 0)) {
+                gap[i] = other;
+            }
         }
+        System.out.println(Arrays.toString(gap));
 
         //Find minimum
         int minGap = 15;
         int indexMin = -1;
-        for (int i = 0; i < numCombs; i++) {
-            if (minGap > gap[i]  && gap[i] > 0) {
+        for (int i = 0; i < 2; i++) {
+            if (minGap > gap[i]  && gap[i] > 0 && this.sheet.canCross(i, gap[i] + sheet.getLastCrossed(i) - 2)) {
                 minGap = gap[i];
                 indexMin = i;
             }
         }
-
-        return new int[] {(int)indexMin%4, minGap, whiteColor[indexMin]}; // index corresponds to color + minGap + number to cross
-    }
-    /**
-    public int[] whiteColorMin(Dices dices) {
-        int[] whiteColor = dices.getWhiteColor();
-
-        int[] gapWhiteColor = new int[8];
-        for (int i = 0; i < 2; i++) {
-            gapWhiteColor[i] = whiteColor[i] - sheet.getFinalNumEachRow()[i];
-            gapWhiteColor[i+4] = whiteColor[i+4] - sheet.getFinalNumEachRow()[i];
-        }
         for (int i = 2; i < 4; i++) {
-            gapWhiteColor[i] = sheet.getFinalNumEachRow()[i] - whiteColor[i];
-            gapWhiteColor[i+4] = sheet.getFinalNumEachRow()[i] - whiteColor[i+4];
-        }
-
-        //Find minimum
-        int minimumGap = 15;
-        int indexMinimum = -1;
-        for (int i = 0; i < 8; i++) {
-            if (minimumGap > gapWhiteColor[i]  && gapWhiteColor[i] > 0) {
-                minimumGap = gapWhiteColor[i];
-                indexMinimum = i;
+            if (minGap > gap[i]  && gap[i] > 0 && this.sheet.canCross(i, 12 + gap[i] - sheet.getLastCrossed(i))) {
+                minGap = gap[i];
+                indexMin = i;
             }
         }
+        System.out.println("min index = " + indexMin + ", min gap = " + minGap);
 
-        return new int[] {(int)indexMinimum%4, minimumGap, whiteColor[indexMinimum]}; // index corresponds to color + minGap + number to cross
-    }*/
+        if(indexMin == -1) {
+            return new int[] {indexMin, minGap, 0};
+        }
+
+        // index corresponds to color + minGap + number to cross
+        if(indexMin == 0 || indexMin == 1) {
+            return new int[] {indexMin, minGap, minGap + sheet.getLastCrossed(indexMin)};
+        } else {
+            return new int[] {indexMin, minGap, sheet.getLastCrossed(indexMin) - minGap};
+        }
+    }
 
     public void bestChoiceActive(Dice[] dice) {
         // check if we can lock with the white combination
@@ -148,24 +118,51 @@ public class AIPlayer extends Player {
         for(int i = 0; i < 4; i++) {
             if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
+                System.out.println(this.name + " Cross color = " + i + ", number = " + 12);
+                this.gui.crossButton(i,10);
+                this.gui.crossButton(i,11);
                 return;
             }
         }
+
         // check if we can lock with the color combination
         int[] colorComb = getColorComb(dice);
+        //System.out.println("Color comb = " + Arrays.toString(colorComb));
         for(int combValue : colorComb) {
             for(int i = 0; i < 4; i++) {
                 if(sheet.canCross(i, 10, combValue)) { // checking if 12 (or 2) can be crossed
                     sheet.cross(i, 10); //cross 12 (or 2)
+                    System.out.println(this.name + " Cross color = " + i + ", number = " + 12);
+                    this.gui.crossButton(i,10);
+                    this.gui.crossButton(i,11);
                     return;
                 }
             }
         }
 
         // Here we have an argument: should this exception 2 be considered at this position or later?
-        if(whiteComb == 9 || whiteComb == 5 || Arrays.binarySearch(colorComb, 9) == -1 || Arrays.binarySearch(colorComb, 5) == -1) {
-            exception2();
-            return;
+        if(whiteComb == 9 || whiteComb == 5 || IntStream.of(colorComb).anyMatch(x -> x == 9) || IntStream.of(colorComb).anyMatch(x -> x == 5)) {
+            for(int i = 0; i < 2; i++) {
+                if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
+                    if (sheet.canCross(i, 7, 9)) {
+                        sheet.cross(i, 7);
+                        System.out.println(this.name + " Cross color = " + i + ", number = " + 9);
+                        this.gui.crossButton(i,7);
+                        return;
+                    }
+                }
+            }
+
+            for(int i = 2; i < 4; i++) {
+                if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
+                    if (sheet.canCross(i, 7, 5)) {
+                        sheet.cross(i, 7);
+                        System.out.println(this.name + " Cross color = " + i + ", number = " + 5);
+                        this.gui.crossButton(i,7);
+                        return;
+                    }
+                }
+            }
         }
 
         int[] wwBestGap = minGapWhite(dice);
@@ -177,9 +174,22 @@ public class AIPlayer extends Player {
         int wcGap = wcBestGap[1];
         int wcNum = wcBestGap[2];
 
+        // If there is no valid gap then we must be penalized
+        if (wwRow == -1 && wcRow == -1) {
+            this.sheet.addPenalty();
+            System.out.println(this.name + " penalty");
+            this.gui.crossPenalty(this.sheet.getPenaltyValue()-1);
+            return;
+        }
+
         // Case: same color
         if (wwRow == wcRow) {
             if(wwGap < wcGap) {
+                if(wcGap - wwGap == 1 && wwGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+                    crossNumber(wwRow, wwNum);
+                    crossNumber(wcRow, wcNum);
+                    return;
+                }
                 exception1(wwRow, wwNum, wwGap);
                 return;
             } else {
@@ -190,11 +200,16 @@ public class AIPlayer extends Player {
 
         // if 2 min rows give same gap, then pick the one with more crossed numbers
         if (wwGap == wcGap) {
-            if (sheet.getNumberCrossed(wwRow) > sheet.getNumberCrossed(wcRow)) {
+            if(wwGap == 1) { // if min gap = 1 for both then we cross both - consider also min gap = 2
                 crossNumber(wwRow, wwNum);
+                crossNumber(wcRow, wcNum);
+                return;
+            }
+            if (sheet.getNumberCrossed(wwRow) > sheet.getNumberCrossed(wcRow)) {
+                exception1(wwRow, wwNum, wwGap);
                 return;
             } else {
-                crossNumber(wcRow, wcNum);
+                exception1(wcRow, wcNum, wcGap);
                 return;
             }
         }
@@ -215,6 +230,8 @@ public class AIPlayer extends Player {
         for(int i = 0; i < 4; i++) {
             if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
+                System.out.println(this.name + " Cross color = " + i + ", number = " + 12);
+                this.gui.crossButton(i,10);
                 return;
             }
         }
@@ -223,6 +240,16 @@ public class AIPlayer extends Player {
 
         if (input[0] == -1) { // When there is no valid gap
             return; //Skip the round
+        }
+
+        // Check if we can cross 12 or 2 to lock
+        if (input[0] < 2 && input[2] == 12 && this.sheet.canCross(input[0], 10, 12)) {
+            crossNumber(input[0], 12);
+            return;
+        }
+        if (input[0] >= 2 && input[2] == 2 && this.sheet.canCross(input[0], 10, 2)) {
+            crossNumber(input[0], 2);
+            return;
         }
 
         // if the min gap is 1, then we cross the chosen number
@@ -243,39 +270,40 @@ public class AIPlayer extends Player {
 
     public void exception1(int color, int number, int minGap) {
         if (color == 0 || color == 1) {
-            if(sheet.getLastCrossed(color) == 3 && sheet.getNumberCrossed(color) == 2 && minGap >= 4) {
-                this.sheet.addPenalty();
-            } else {
+            if(sheet.getLastCrossed(color) == 3 && sheet.getNumberCrossed(color) == 2 && minGap < 4) {
                 crossNumber(color, number);
+            } else {
+                exception2(color, number, minGap);
             }
         }
 
         if (color == 2 || color == 3) {
-            if(sheet.getLastCrossed(color) == 11 && sheet.getNumberCrossed(color) == 2 && minGap >= 4) {
-                this.sheet.addPenalty();
-            } else {
+            if(sheet.getLastCrossed(color) == 11 && sheet.getNumberCrossed(color) == 2 && minGap < 4) {
                 crossNumber(color, number);
+            } else {
+                exception2(color, number, minGap);
             }
         }
     }
 
-    // Check exception 2 - if 9 is valid then jump to 9
-    public void exception2() {
-        for(int i = 0; i < 2; i++) {
-            if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
-                if (sheet.canCross(i, 7, 9)) {
-                    sheet.cross(i, 7);
-                    return;
-                }
+    // Check exception 2
+    public void exception2(int color, int number, int minGap) {
+        if (color == 0 || color == 1) {
+            if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number > 7) {
+                this.sheet.addPenalty();
+                System.out.println("penalty");
+                this.gui.crossPenalty(this.sheet.getPenaltyValue()-1);
+            } else {
+                crossNumber(color, number);
             }
         }
-
-        for(int i = 2; i < 4; i++) {
-            if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
-                if (sheet.canCross(i, 7, 5)) {
-                    sheet.cross(i, 7);
-                    return;
-                }
+        if (color == 2 || color == 3) {
+            if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number < 7) {
+                this.sheet.addPenalty();
+                System.out.println("penalty");
+                this.gui.crossPenalty(this.sheet.getPenaltyValue()-1);
+            } else {
+                crossNumber(color, number);
             }
         }
     }
