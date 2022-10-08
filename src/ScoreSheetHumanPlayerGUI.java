@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 
 public class ScoreSheetHumanPlayerGUI implements ActionListener {
@@ -26,6 +27,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
     HumanPlayer player; // Does already contain a score sheet
     // Active human player can choose 2 number, inactive can choose 1
     Set<String> lastCrossedNumbers = new HashSet<>();
+    List<String> allCrossedNumbersInOrder = new ArrayList<>();
 
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
@@ -106,6 +108,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                         uncrossButton(i, j);
                         player.sheet.removeCross(i,j);
                         lastCrossedNumbers.remove(indexStored);
+                        allCrossedNumbersInOrder.remove(indexStored);
                     } else { // Player wants to cross the button
                         crossButton(i, j);
                         // Checks if a number can be crossed based on the logic of the score sheet of the human player
@@ -116,6 +119,7 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                                         (!player.isActive && lastCrossedNumbers.size() < maxCrossPerRoundInactive))) {
                             player.sheet.cross(i, j);
                             lastCrossedNumbers.add(indexStored);
+                            allCrossedNumbersInOrder.add(indexStored);
                         } else { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
                             uncrossButton(i,j);
 
@@ -411,12 +415,15 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         return lastCrossedNumbers;
     }
 
-    public void displayErrorMessageRemote() {
-
+    // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
+    // such that a modification can be made by the human player
+    // i is the number of crosses that has been made in the last round which were incorrect
+    public void displayErrorMessageRemote(int i) {
+        lastCrossedNumbers.addAll(allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - i, allCrossedNumbersInOrder.size()));
     }
 
-    public void displayErrorMessageOrder() {
-
+    public void displayErrorMessageOrder(int i) {
+        lastCrossedNumbers.addAll(allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - i, allCrossedNumbersInOrder.size()));
     }
 
 }
