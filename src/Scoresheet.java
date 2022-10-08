@@ -21,6 +21,10 @@ public class Scoresheet {
         }
     }
 
+    public boolean[][] getScored() {
+        return scored;
+    }
+
     public void removeColor(int row) {
         validRows[row] = false;
     }

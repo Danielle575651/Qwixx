@@ -1,8 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 public class Qwixx {
@@ -49,12 +45,12 @@ public class Qwixx {
             // If it is the human players turn
             if (this.human.getState()) {
                 this.human.tossDice(dice);
-                // let human do stuff
+                humanCheck(dice);
                 this.ai.bestChoiceNonActive(dice);
             } else {
                 this.ai.tossDice(dice);
-                // let human do stuff
                 this.ai.bestChoiceActive(dice);
+                humanCheck(dice);
             }
 
             for (int i = 0; i < 4; i++) {
@@ -97,6 +93,43 @@ public class Qwixx {
                 this.human.sheet.getLocks() == 2 || this.ai.sheet.getLocks() == 2) {
             this.end = true;
         }
+    }
+
+    public boolean humanCheck(Dice[] dice) {
+        Set<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
+
+        // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed
+        // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
+        // and the second is the number crossed.
+        for (String indices : lastCrossed) {
+            // If the crossed number is not valid according to the dice value, display an error message (Something like):
+            // The number(s) you have just crossed are not valid (e.g. they do not correspond to the dice values). Uncross the button you have just clicked and make sure to cross the number that corresponds to the dice values and hit the finish button or skip this round.
+            if (!human.numIsValid(Integer.valueOf(indices.substring(0)), Integer.valueOf(indices.substring(1)), dice, human.isActive)) {
+                scoreSheetHumanPlayer.displayErrorMessageRemote();
+                return false;
+            } else if (lastCrossed.size() == 2) {
+                for (String indices2 : lastCrossed) {
+                    for (int colorCombination : human.getColorComb(dice)) {
+                        int whiteValue = Integer.valueOf(indices.substring(1));
+                        int colorValue = Integer.valueOf(indices2.substring(1));
+                        int whiteColorNumber = Integer.valueOf(indices.substring(0));
+                        int colorNumber = Integer.valueOf(indices2.substring(0));
+
+                        // In case two numbers are crossed, we check if they are in the same row and then check that first
+                        // the white combination is crossed and then the colored combination
+                        if (!indices.equals(indices2) && human.getWhiteComb(dice) == whiteValue &&
+                                colorCombination == colorValue && whiteColorNumber == colorNumber) {
+                            if (whiteValue > colorValue) {
+                                // Display error message: The order in which you crossed the number is not correct. If you want to cross numbers in the same row, you first have to cross the combination of the white dice and then a colored combination.
+                                scoreSheetHumanPlayer.displayErrorMessageOrder();
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public void win() {
