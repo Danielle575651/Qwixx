@@ -54,6 +54,11 @@ public class Qwixx {
 
             for (int i = 0; i < 4; i++) {
                 if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
+                    // If one player closes a row, then the color should also disappear for the other player after
+                    // having chosen their dice combination (including the color that will now disappear)
+                    this.human.sheet.removeColor(i);
+                    this.ai.sheet.removeColor(i);
+
                     for (Dice d : diceSet) {
                         if (colToNum.get(d.getColor()) == i) {
                             removeDice(d);
