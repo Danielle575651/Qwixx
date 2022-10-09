@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
-public class ScoreSheetHumanPlayerGUI implements ActionListener {
+public class ScoreSheetHumanPlayerGUI extends Component implements ActionListener {
     public static int maxCrossPerRoundActive = 2;
     public static int maxCrossPerRoundInactive = 1;
 
@@ -14,6 +14,9 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
     JPanel pointsPanel = new JPanel();
     JPanel scorePanel = new JPanel();
     JPanel mainPanel = new JPanel();
+    JPanel finishedPanel = new JPanel();
+    JPanel skipRoundPanel = new JPanel();
+
     JLabel title = new JLabel();
     JLabel crossPenalty = new JLabel();
     JTextField inputName = new JTextField();
@@ -81,11 +84,19 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
         title_panel.add(title, BorderLayout.WEST);
         title_panel.add(inputName);
 
+        JPanel messages = new JPanel();
+        messages.setLayout(new GridLayout(1, 2));
+        messages.add(finishedPanel);
+        messages.add(skipRoundPanel);
+        messages.setPreferredSize(new Dimension(800, 30));
+        messages.setMinimumSize(messages.getPreferredSize());
+
         BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
         mainPanel.setLayout(testLayout);
         mainPanel.add(title_panel);
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
+        mainPanel.add(messages);
         mainPanel.setPreferredSize(new Dimension(800, 400));
     }
 
@@ -124,8 +135,12 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                             uncrossButton(i,j);
 
                             if (!player.sheet.canCross(i,j)) {
+                                JOptionPane.showMessageDialog(this, "Crossing this number is not allowed, please cross another number",
+                                        "ERROR", JOptionPane.ERROR_MESSAGE);
                                 // Display an error message that crossing this number is not allowed
                             } else {
+                                JOptionPane.showMessageDialog(this, "The maximum number of allowed crosses for this round is reached",
+                                        "ERROR", JOptionPane.ERROR_MESSAGE);
                                 // Display an error message that the maximum number of allowed crosses per round is reached
 
                             }
@@ -140,6 +155,8 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
             if (lastCrossedNumbers.size() > 0) {
                 lastCrossedNumbers.clear(); // All last crossed numbers are removed
             } else {
+                JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
                 // Display error message: No number has been crossed. Cross a number or click skip round
             }
         }
@@ -158,6 +175,8 @@ public class ScoreSheetHumanPlayerGUI implements ActionListener {
                     crossPenalty(k);
                 }
             } else { // In case a number is crossed and also the skipRound button has been clicked:
+                JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
                 // Display an error message:  Remove the crosses if you want to skip this round or click the Finish button.
             }
         }
