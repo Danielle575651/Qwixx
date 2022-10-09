@@ -27,10 +27,13 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     JButton[] pointsScored = new JButton[6];
     JButton finished = new JButton("I am finished");
     JButton skipRound = new JButton("Skip round");
+
     HumanPlayer player; // Does already contain a score sheet
     // Active human player can choose 2 number, inactive can choose 1
-    Set<String> lastCrossedNumbers = new HashSet<>();
+    int numberCrossesInRound;
+    int numberCrossesLastRound;
     List<String> allCrossedNumbersInOrder = new ArrayList<>();
+    boolean roundIsEnded;
 
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
@@ -102,6 +105,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        roundIsEnded = false;
+
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 12; j++) {
                 if (e.getSource() == buttons[i][j]) {
@@ -118,7 +123,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                     if (buttons[i][j].getText().equals("X")) {
                         uncrossButton(i, j);
                         player.sheet.removeCross(i,j);
-                        lastCrossedNumbers.remove(indexStored);
+                        numberCrossesInRound--;
                         allCrossedNumbersInOrder.remove(indexStored);
                     } else { // Player wants to cross the button
                         crossButton(i, j);
@@ -126,10 +131,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                         // If an active player has 2 or more crosses he/she cannot cross anymore. If an inactive player
                         // has 1 or more crosses he/she cannot cross anymore.
                         if (player.sheet.canCross(i,j) &&
-                                ((player.isActive && lastCrossedNumbers.size() < maxCrossPerRoundActive) ||
-                                        (!player.isActive && lastCrossedNumbers.size() < maxCrossPerRoundInactive))) {
+                                ((player.isActive && (numberCrossesInRound < maxCrossPerRoundActive)) ||
+                                        (!player.isActive && numberCrossesInRound < maxCrossPerRoundInactive))) {
                             player.sheet.cross(i, j);
-                            lastCrossedNumbers.add(indexStored);
+                            numberCrossesInRound++;
                             allCrossedNumbersInOrder.add(indexStored);
                         } else { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
                             uncrossButton(i,j);
@@ -142,7 +147,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                                 JOptionPane.showMessageDialog(this, "The maximum number of allowed crosses for this round is reached",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
                                 // Display an error message that the maximum number of allowed crosses per round is reached
-
                             }
                         }
                     }
@@ -152,8 +156,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         if (e.getSource() == finished) {
             // At least one number has been crossed and thus a round can be closed
-            if (lastCrossedNumbers.size() > 0) {
-                lastCrossedNumbers.clear(); // All last crossed numbers are removed
+            if (numberCrossesInRound > 0) {
+                numberCrossesLastRound = numberCrossesInRound; // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
+                numberCrossesInRound = 0; // A new round is started and thus the counting of crosses is restarted
+                roundIsEnded = true;
             } else {
                 JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -163,8 +169,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         if (e.getSource() == skipRound) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
-            if (lastCrossedNumbers.size() == 0) {
+            if (numberCrossesInRound == 0) {
                 player.skipRound(player.isActive);
+                roundIsEnded = true;
 
                 if (player.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
                     int k = 0;
@@ -430,19 +437,24 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         return mainPanel;
     }
 
-    public Set<String> getLastCrossedNumbers() {
-        return lastCrossedNumbers;
+    // Gets the crossed numbers in the last round, when finish or skip round is clicked
+    public List<String> getLastCrossedNumbers() {
+        return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
     }
 
     // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
     // such that a modification can be made by the human player
     // i is the number of crosses that has been made in the last round which were incorrect
     public void displayErrorMessageRemote(int i) {
-        lastCrossedNumbers.addAll(allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - i, allCrossedNumbersInOrder.size()));
+        numberCrossesInRound = i;
     }
 
     public void displayErrorMessageOrder(int i) {
-        lastCrossedNumbers.addAll(allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - i, allCrossedNumbersInOrder.size()));
+        numberCrossesInRound = i;
+    }
+
+    public boolean getRoundIsEnded() {
+        return roundIsEnded;
     }
 
 }
