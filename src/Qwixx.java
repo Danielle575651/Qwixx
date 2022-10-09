@@ -99,8 +99,7 @@ public class Qwixx {
             // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
             // and the second is the number crossed.
             for (String indices : lastCrossed) {
-                // If the crossed number is not valid according to the dice value, display an error message (Something like):
-                // The number(s) you have just crossed are not valid (e.g. they do not correspond to the dice values). Uncross the button you have just clicked and make sure to cross the number that corresponds to the dice values and hit the finish button or skip this round.
+                // If the crossed number is not valid according to the dice value, display an error message
                 if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1, 2)), dice, human.isActive)) {
                     scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 }
@@ -122,11 +121,10 @@ public class Qwixx {
                                     colorCombination == colorValue) {
                                 // If the colored and white combination are crossed in the same row, first white and then colored has to be crossed.
                                 if (whiteColorNumber == colorNumber && whiteValue > colorValue) {
-                                    // Display error message: The order in which you crossed the number is not correct. If you want to cross numbers in the same row, you first have to cross the combination of the white dice and then a colored combination.
                                     scoreSheetHumanPlayer.displayErrorMessageOrder(lastCrossed.size());
                                 }
                             } else { // If not a combination of white dice values and colored dice values are crossed, but only colored dices are crossed
-                                // Display an error message
+                                    scoreSheetHumanPlayer.displayErrorMessageOnlyColored(lastCrossed.size());
                             }
                         }
                     }

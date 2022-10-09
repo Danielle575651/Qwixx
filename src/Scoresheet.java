@@ -148,4 +148,8 @@ public class Scoresheet {
     public boolean getValidRow(int i) {
         return validRows[i];
     }
+
+    public int getPenalty() {
+        return -PENALTY_VALUE;
+    }
 }
