@@ -8,8 +8,8 @@ import java.util.Random;
 public class Dice {
     private String color;
     private int value;
-    private int maxPoint;
-    private int minPoint;
+    private final int maxPoint;
+    private final int minPoint;
 
     /**
      * Construct a dice with specified color
