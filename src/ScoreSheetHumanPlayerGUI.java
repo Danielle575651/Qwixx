@@ -89,8 +89,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         JPanel messages = new JPanel();
         messages.setLayout(new GridLayout(1, 2));
-        messages.add(finishedPanel);
-        messages.add(skipRoundPanel);
+        messages.add(finishedPanel); // where have you made this panel? You never added the button to this finishedpanel
+        messages.add(skipRoundPanel); // where have you made this panel? You never added the button to this skipRoundPanel
         messages.setPreferredSize(new Dimension(800, 30));
         messages.setMinimumSize(messages.getPreferredSize());
 
