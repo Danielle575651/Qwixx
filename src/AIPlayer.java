@@ -2,11 +2,11 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class AIPlayer extends Player {
-    private AIGUI gui;
+    private ScoreSheetAIPlayerGUI gui;
 
     public AIPlayer(String name) {
         super(name);
-        this.gui = new AIGUI();
+        this.gui = new ScoreSheetAIPlayerGUI();
     }
 
     public final void crossNumber(int color, int number) {
@@ -277,7 +277,7 @@ public class AIPlayer extends Player {
         }
     }
 
-    // Check exception 2 - if
+    // Check exception 2
     public void exception2(int color, int number, int minGap) {
         if (color == 0 || color == 1) {
             if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number > 7) {
