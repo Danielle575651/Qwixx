@@ -87,6 +87,16 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title_panel.add(title, BorderLayout.WEST);
         title_panel.add(inputName);
 
+        finishedPanel.add(finished);
+        penalties.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        penalties.setFocusable(false);
+        penalties.setBackground(new Color(204, 204, 204));
+
+        skipRoundPanel.add(skipRound);
+        skipRound.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        skipRound.setFocusable(false);
+        skipRound.setBackground(new Color(204, 204, 204));
+
         JPanel messages = new JPanel();
         messages.setLayout(new GridLayout(1, 2));
         messages.add(finishedPanel); // where have you made this panel? You never added the button to this finishedpanel
