@@ -126,7 +126,11 @@ public class Scoresheet {
     }
 
     public int getLastCrossed(int row) {
-        int lastValue = -1;
+        int lastValue = 1;
+        if (row == 2 || row == 3) {
+            lastValue = 13;
+        }
+        
         for (int i = 0; i < getColumns(); i++) {
             if (scored[row][i]) {
                 lastValue = getValue(row, i);
