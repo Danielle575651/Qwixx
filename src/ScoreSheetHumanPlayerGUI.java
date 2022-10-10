@@ -113,6 +113,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         mainPanel.setPreferredSize(new Dimension(800, 400));
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         roundIsEnded = false;
