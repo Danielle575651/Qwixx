@@ -13,7 +13,7 @@ public class Qwixx {
     public Qwixx(HumanPlayer human, AIPlayer ai) {
         this.human = human;
         this.ai = ai;
-        this.aiGUI = new AIGUI();
+        //this.aiGUI = new ScoreSheetAIPlayerGUI(); -> The GUI is generated in the AIPlayer object
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         end = false;
 
@@ -75,6 +75,7 @@ public class Qwixx {
 
         win(); // Game has always ended when you reach this point, otherwise you will not break out of the while loop
         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+        this.ai.getGUI().updatePanelWhenFinished(this.ai.getSheet());
     }
 
     public void humanFirst() {
