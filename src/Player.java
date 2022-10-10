@@ -11,6 +11,10 @@ public abstract class Player {
         this.name = name;
         isActive = false;
     }
+    
+    public Scoresheet getSheet() {
+        return this.sheet;
+    }
 
     public final void tossDice(Dice[] dice) {
         for (Dice die : dice) {
