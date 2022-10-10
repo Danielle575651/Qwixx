@@ -37,6 +37,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
+        roundIsEnded = false;
 
         createTitlePanel();
         createButtons();
@@ -99,8 +100,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         JPanel messages = new JPanel();
         messages.setLayout(new GridLayout(1, 2));
-        messages.add(finishedPanel); // where have you made this panel? You never added the button to this finishedpanel
-        messages.add(skipRoundPanel); // where have you made this panel? You never added the button to this skipRoundPanel
+        messages.add(finishedPanel);
+        messages.add(skipRoundPanel);
         messages.setPreferredSize(new Dimension(800, 30));
         messages.setMinimumSize(messages.getPreferredSize());
 
@@ -231,6 +232,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     private void crossButton(int i, int j) {
         buttons[i][j].setText("X");
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
+
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
             buttons[i][j].setVerticalTextPosition(JButton.CENTER);
@@ -240,6 +242,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     private void uncrossButton(int i, int j) {
         int value;
+
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
             buttons[i][j].setVerticalTextPosition(JButton.CENTER);
@@ -250,6 +253,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             } else {
                 value = 12 - j;
             }
+
             buttons[i][j].setText(String.valueOf(value));
             buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
         }
@@ -324,7 +328,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             penalties_panel.add(penalties[i]);
             penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 10));
             penalties[i].setFocusable(false);
-            penalties[i].addActionListener(this);
             penalties[i].setBackground(new Color(204, 204, 204));
         }
     }
@@ -386,8 +389,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[0]);
 
         pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
-        pointsScored[0].setBackground(new Color(204, 0, 0));
-        pointsScored[0].setForeground(new Color(204, 204, 204));
+        pointsScored[0].setBackground(Color.WHITE);
+        pointsScored[0].setForeground(Color.black); // Text color
+        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0),5)); // Border color
         pointsScored[0].setFocusable(false);
         pointsScored[0].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[0]);
@@ -400,8 +404,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[1]);
 
         pointsScored[1] = new JButton(String.valueOf(player.sheet.getScore(1)));
-        pointsScored[1].setBackground(new Color(255, 204, 0));
-        pointsScored[1].setForeground(new Color(204, 204, 204));
+        pointsScored[1].setBackground(Color.WHITE);
+        pointsScored[1].setForeground(Color.black);
+        pointsScored[1].setBorder(BorderFactory.createLineBorder(new Color(255, 204, 0)));
         pointsScored[1].setFocusable(false);
         pointsScored[1].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[1]);
@@ -414,8 +419,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[2]);
 
         pointsScored[2] = new JButton(String.valueOf(player.sheet.getScore(2)));
-        pointsScored[2].setBackground(new Color(0, 153, 0));
-        pointsScored[2].setForeground(new Color(204, 204, 204));
+        pointsScored[2].setBackground(Color.white);
+        pointsScored[2].setForeground(Color.black);
+        pointsScored[2].setBorder(BorderFactory.createLineBorder(new Color(0, 153, 0)));
         pointsScored[2].setFocusable(false);
         pointsScored[2].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[2]);
@@ -428,8 +434,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[3]);
 
         pointsScored[3] = new JButton(String.valueOf(player.sheet.getScore(3)));
-        pointsScored[3].setBackground(new Color(0, 0, 204));
-        pointsScored[3].setForeground(new Color(204, 204, 204));
+        pointsScored[3].setBackground(Color.white);
+        pointsScored[3].setForeground(Color.black);
+        pointsScored[3].setBorder(BorderFactory.createLineBorder(new Color(0, 0, 204)));
         pointsScored[3].setFocusable(false);
         pointsScored[3].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[3]);
@@ -443,8 +450,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         // This are the total penalties
         pointsScored[4] = new JButton(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
-        pointsScored[4].setBackground(Color.darkGray);
-        pointsScored[4].setForeground(new Color(204, 204, 204));
+        pointsScored[4].setBackground(Color.white);
+        pointsScored[4].setForeground(Color.BLACK);
+        pointsScored[4].setBorder(BorderFactory.createLineBorder(Color.darkGray));
         pointsScored[4].setFocusable(false);
         pointsScored[4].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(pointsScored[4]);
@@ -458,8 +466,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         // Total points scored
         pointsScored[5] = new JButton(String.valueOf(player.sheet.getTotalScore()));
-        pointsScored[5].setBackground(Color.darkGray);
-        pointsScored[5].setForeground(new Color(204, 204, 204));
+        pointsScored[5].setBackground(Color.white);
+        pointsScored[5].setForeground(Color.black);
+        pointsScored[5].setBorder(BorderFactory.createLineBorder(Color.darkGray));
         pointsScored[5].setFocusable(false);
         pointsScored[5].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(pointsScored[5]);
@@ -469,7 +478,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         return mainPanel;
     }
 
-    // Gets the crossed numbers in the last round, when finish or skip round is clicked
+    // When the round is finished (Skip round or Finish is clicked) but we want to check on the crosses in last round
+    // to see if they correspond to the dice values.
     public List<String> getLastCrossedNumbers() {
         return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
     }

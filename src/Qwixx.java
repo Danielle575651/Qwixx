@@ -35,6 +35,7 @@ public class Qwixx {
 
     public void playGame() {
         humanFirst();
+
         while (!end) {
             Dice[] dice = new Dice[diceSet.size()];
             for (int i = 0; i < diceSet.size(); i++) {
@@ -55,7 +56,7 @@ public class Qwixx {
             for (int i = 0; i < 4; i++) {
                 if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
                     // If one player closes a row, then the color should also disappear for the other player after
-                    // having chosen their dice combination (including the color that will now disappear)
+                    // having chosen their dice combination (including the color that may now disappear)
                     this.human.sheet.removeColor(i);
                     this.ai.sheet.removeColor(i);
 
@@ -72,9 +73,7 @@ public class Qwixx {
             this.ai.changeState();
         }
 
-        if (end) {
-            win();
-        }
+        win(); // Game has always ended when you reach this point, otherwise you will not break out of the while loop
     }
 
     public void humanFirst() {
@@ -93,6 +92,8 @@ public class Qwixx {
     public void checkEnd() {
         if (this.human.sheet.getPenaltyValue() == 4 || this.ai.sheet.getPenaltyValue() == 4 ||
                 this.human.sheet.getLocks() == 2 || this.ai.sheet.getLocks() == 2) {
+            // getLocks returns the number of colors that are removed from the game, when 2 colors are removed or
+            // one player gets 4 penalties then the game is ended.
             this.end = true;
         }
     }
@@ -102,7 +103,7 @@ public class Qwixx {
             List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
 
             // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
-            // and the second is the number crossed.
+            // and the second is the number crossed. 04 is for example a red 4
             for (String indices : lastCrossed) {
                 // If the crossed number is not valid according to the dice value, display an error message
                 if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1, 2)), dice, human.isActive)) {
