@@ -74,6 +74,7 @@ public class Qwixx {
         }
 
         win(); // Game has always ended when you reach this point, otherwise you will not break out of the while loop
+        this.scoreSheetHumanPlayer.updatePanelWhenFinished();
     }
 
     public void humanFirst() {

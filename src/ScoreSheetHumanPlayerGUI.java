@@ -388,7 +388,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[0].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[0]);
 
-        pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
+        //pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
+        pointsScored[0] = new JButton();
         pointsScored[0].setBackground(Color.WHITE);
         pointsScored[0].setForeground(Color.black); // Text color
         pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0),5)); // Border color
@@ -403,7 +404,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[1].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[1]);
 
-        pointsScored[1] = new JButton(String.valueOf(player.sheet.getScore(1)));
+        //pointsScored[1] = new JButton(String.valueOf(player.sheet.getScore(1)));
+        pointsScored[1] = new JButton();
         pointsScored[1].setBackground(Color.WHITE);
         pointsScored[1].setForeground(Color.black);
         pointsScored[1].setBorder(BorderFactory.createLineBorder(new Color(255, 204, 0)));
@@ -418,7 +420,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[2].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[2]);
 
-        pointsScored[2] = new JButton(String.valueOf(player.sheet.getScore(2)));
+        //pointsScored[2] = new JButton(String.valueOf(player.sheet.getScore(2)));
+        pointsScored[2] = new JButton();
         pointsScored[2].setBackground(Color.white);
         pointsScored[2].setForeground(Color.black);
         pointsScored[2].setBorder(BorderFactory.createLineBorder(new Color(0, 153, 0)));
@@ -433,7 +436,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[3].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[3]);
 
-        pointsScored[3] = new JButton(String.valueOf(player.sheet.getScore(3)));
+        //pointsScored[3] = new JButton(String.valueOf(player.sheet.getScore(3)));
+        pointsScored[3] = new JButton();
         pointsScored[3].setBackground(Color.white);
         pointsScored[3].setForeground(Color.black);
         pointsScored[3].setBorder(BorderFactory.createLineBorder(new Color(0, 0, 204)));
@@ -449,7 +453,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[4]);
 
         // This are the total penalties
-        pointsScored[4] = new JButton(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
+        //pointsScored[4] = new JButton(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
+        pointsScored[4] = new JButton();
         pointsScored[4].setBackground(Color.white);
         pointsScored[4].setForeground(Color.BLACK);
         pointsScored[4].setBorder(BorderFactory.createLineBorder(Color.darkGray));
@@ -465,7 +470,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[5]);
 
         // Total points scored
-        pointsScored[5] = new JButton(String.valueOf(player.sheet.getTotalScore()));
+        //pointsScored[5] = new JButton(String.valueOf(player.sheet.getTotalScore()));
+        pointsScored[5] = new JButton();
         pointsScored[5].setBackground(Color.white);
         pointsScored[5].setForeground(Color.black);
         pointsScored[5].setBorder(BorderFactory.createLineBorder(Color.darkGray));
@@ -518,4 +524,12 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         return roundIsEnded;
     }
 
+    public void updatePanelWhenFinished() {
+        for (int i = 0; i < 4; i++) {
+            pointsScored[i].setText(String.valueOf(player.sheet.getScore(i)));
+        }
+
+        pointsScored[4].setText(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
+        pointsScored[5].setText(String.valueOf(player.sheet.getTotalScore()));
+    }
 }
