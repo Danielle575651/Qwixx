@@ -475,6 +475,15 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(pointsScored[5]);
     }
 
+    public void updatePanelWhenFinished() {
+        for(int i = 0; i < 4; i++) {
+            pointsScored[i].setText(String.valueOf(player.sheet.getScore(i)));
+        }
+
+        pointsScored[4].setText(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
+        pointsScored[5].setText(String.valueOf(player.sheet.getTotalScore()));
+    }
+
     public JPanel getScoreSheetHumanPlayer() {
         return mainPanel;
     }
@@ -517,22 +526,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     public boolean getRoundIsEnded() {
         return roundIsEnded;
-    }
-
-    public static void main(String[] args) {
-        JFrame mainFrame = new JFrame();
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Container c = mainFrame.getContentPane();
-
-        mainFrame.setSize(600, 400);
-        mainFrame.getContentPane().setBackground(new Color(204, 204, 204));
-        mainFrame.setLayout(new BorderLayout(0, 0));
-        mainFrame.setVisible(true);
-
-        HumanPlayer player = new HumanPlayer("a");
-        ScoreSheetHumanPlayerGUI humanSheet = new ScoreSheetHumanPlayerGUI(player);
-
-        mainFrame.add(humanSheet.getScoreSheetHumanPlayer());
     }
 
 }
