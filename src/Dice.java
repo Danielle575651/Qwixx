@@ -6,7 +6,7 @@ import java.util.Random;
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
 public class Dice {
-    private String color;
+   private int colorInt;
     private int value;
     private final int maxPoint;
     private final int minPoint;
@@ -15,10 +15,11 @@ public class Dice {
      * Construct a dice with specified color
      * @param color specified color of the dice
      */
-    public Dice(String color) {
-        this.color = color;
+    public Dice(int colorInt) {
+        this.colorInt = colorInt;
         maxPoint = 6;
         minPoint = 1;
+
     }
 
     /**
@@ -34,8 +35,8 @@ public class Dice {
      *
      * @return color of the dice
      */
-    public String getColor() {
-        return this.color;
+    public int getColor() {
+        return this.colorInt;
     }
 
     /**
