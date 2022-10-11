@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class DiceGUI extends JFrame {
+public class DiceGUI {
     private final JLabel[] picLabels;
     private final Dice[] diceSet;
     private final int[] points;
     private Map<String, Integer> colToNum;
     private final int FRAME_HEIGHT = 800;
     private final int FRAMe_WIDTH = 1000;
+    private JPanel mainPanel;
 
     public DiceGUI() {
         picLabels = new JLabel[6];
@@ -39,21 +40,16 @@ public class DiceGUI extends JFrame {
                 fillDicePanel(DicePanel);
             }
         }));
-        add(BPanel, DicePanel, FlowLayout.LEFT);
 
-        setSize(FRAMe_WIDTH, FRAME_HEIGHT);
-    }
-
-    public static void main(String[] args) {
-        DiceGUI frame = new DiceGUI();
-        frame.setTitle("Qwixx");
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.mainPanel = new JPanel();
+        BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.X_AXIS);
+        mainPanel.setLayout(testLayout);
+        mainPanel.add(BPanel);
+        mainPanel.add(DicePanel);
     }
 
     public void initDicePanel(JPanel panel) {
-        setLayout(new FlowLayout());
+        panel.setLayout(new FlowLayout());
         picLabels[0] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("wQ.jpg"))));
         picLabels[1] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("wQ.jpg"))));
         picLabels[2] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("rQ.jpg"))));
@@ -65,11 +61,11 @@ public class DiceGUI extends JFrame {
             panel.add(l);
         }
 
-        add(panel);
+        mainPanel.add(panel);
     }
 
     public void fillDicePanel(JPanel panel) {
-        setLayout(new FlowLayout());
+        panel.setLayout(new FlowLayout());
         rollDice();
 
         for (int i = 0; i < points.length; i++) {
@@ -138,7 +134,7 @@ public class DiceGUI extends JFrame {
             panel.add(l);
         }
 
-        add(panel);
+        mainPanel.add(panel);
     }
 
     public void addDice(Dice[] diceSet) {
@@ -165,5 +161,21 @@ public class DiceGUI extends JFrame {
         // Make the corresponding die a null and its point 0
         diceSet[colToNum.get(d.getColor())] = null;
         points[colToNum.get(d.getColor())] = 0;
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(new Dimension(600,800));
+        frame.getContentPane().setBackground(new Color(204, 204, 204));
+        frame.setLayout(new BorderLayout());
+        frame.setVisible(true);
+
+        DiceGUI dice = new DiceGUI();
+        frame.add(dice.getMainPanel());
     }
 }

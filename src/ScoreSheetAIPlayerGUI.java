@@ -34,12 +34,12 @@ public class ScoreSheetAIPlayerGUI {
 
         pointsPanel.setLayout(new GridLayout(2, 13));
         pointsPanel.setBackground(new Color(204, 204, 204));
-        pointsPanel.setPreferredSize(new Dimension(500, 50));
+        pointsPanel.setPreferredSize(new Dimension(500, 25));
         pointsPanel.setMinimumSize(pointsPanel.getPreferredSize());
 
         penalties_panel.setLayout(new GridLayout(1, 4));
         penalties_panel.setBackground(new Color(204, 204, 204));
-        penalties_panel.setPreferredSize(new Dimension(300, 50));
+        penalties_panel.setPreferredSize(new Dimension(300, 25));
         penalties_panel.setMinimumSize(penalties_panel.getPreferredSize());
 
         JPanel penalties = new JPanel();
@@ -54,7 +54,7 @@ public class ScoreSheetAIPlayerGUI {
 
         scorePanel.setLayout(new GridLayout(1, 12));
         scorePanel.setBackground(new Color(204, 204, 204));
-        scorePanel.setPreferredSize(new Dimension(800, 50));
+        scorePanel.setPreferredSize(new Dimension(800, 25));
         scorePanel.setMinimumSize(scorePanel.getPreferredSize());
 
         JPanel lowerPanel = new JPanel();
@@ -73,7 +73,8 @@ public class ScoreSheetAIPlayerGUI {
         mainPanel.add(title_panel);
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
-        mainPanel.setPreferredSize(new Dimension(800, 400));
+        mainPanel.setPreferredSize(new Dimension(800, 100));
+        mainPanel.setMinimumSize(mainPanel.getPreferredSize());
     }
 
     public void crossPenalty(int k) {
@@ -201,7 +202,7 @@ public class ScoreSheetAIPlayerGUI {
         //player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
-        title_panel.setBounds(0, 0, 800, 50);
+        title_panel.setBounds(0, 0, 800, 10);
     }
 
     private void createPointsPanel() {

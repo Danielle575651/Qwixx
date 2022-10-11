@@ -1,4 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 
 public class Qwixx {
@@ -150,5 +153,34 @@ public class Qwixx {
 //        } else {
 //            System.out.println("Draw");
 //        }
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(new Dimension(600,800));
+        frame.getContentPane().setBackground(new Color(204, 204, 204));
+        frame.setLayout(new BorderLayout());
+        frame.setVisible(true);
+
+        HumanPlayer human = new HumanPlayer("");
+        AIPlayer ai = new AIPlayer("AI player");
+        Qwixx qwixxGame = new Qwixx(human, ai);
+
+        JPanel mainPanel = new JPanel();
+        BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
+        mainPanel.setLayout(testLayout);
+
+        JPanel humanPanel = qwixxGame.scoreSheetHumanPlayer.getScoreSheetHumanPlayer();
+        humanPanel.setSize(new Dimension(600, 200));
+        humanPanel.setMinimumSize(humanPanel.getPreferredSize());
+        JPanel aiPanel = qwixxGame.ai.gui.getScoreSheetAIPlayer();
+        aiPanel.setSize(new Dimension(600, 200));
+        aiPanel.setMinimumSize(humanPanel.getPreferredSize());
+
+        mainPanel.add(humanPanel);
+        mainPanel.add(aiPanel);
+        frame.add(mainPanel);
     }
 }
