@@ -73,8 +73,8 @@ public class ScoreSheetAIPlayerGUI {
         mainPanel.add(title_panel);
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
-        mainPanel.setPreferredSize(new Dimension(800, 100));
-        mainPanel.setMinimumSize(mainPanel.getPreferredSize());
+        //mainPanel.setPreferredSize(new Dimension(800, 100));
+        //mainPanel.setMinimumSize(mainPanel.getPreferredSize());
     }
 
     public void crossPenalty(int k) {
