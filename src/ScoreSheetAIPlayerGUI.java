@@ -1,21 +1,13 @@
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
 import javax.swing.*;
 
-public class ScoreSheetHumanPlayerGUI extends Component implements ActionListener {
-    public static int maxCrossPerRoundActive = 2;
-    public static int maxCrossPerRoundInactive = 1;
-
+public class ScoreSheetAIPlayerGUI {
     JPanel title_panel = new JPanel();
     JPanel button_panel = new JPanel();
     JPanel penalties_panel = new JPanel();
     JPanel pointsPanel = new JPanel();
     JPanel scorePanel = new JPanel();
     JPanel mainPanel = new JPanel();
-    JPanel finishedPanel = new JPanel();
-    JPanel skipRoundPanel = new JPanel();
 
     JLabel title = new JLabel();
     JLabel crossPenalty = new JLabel();
@@ -25,20 +17,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     JLabel[][] points = new JLabel[2][13];
     JLabel[] signs = new JLabel[6];
     JButton[] pointsScored = new JButton[6];
-    JButton finished = new JButton("I am finished");
-    JButton skipRound = new JButton("Skip round");
 
-    HumanPlayer player; // Does already contain a score sheet
-    // Active human player can choose 2 number, inactive can choose 1
-    int numberCrossesInRound;
-    int numberCrossesLastRound;
-    List<String> allCrossedNumbersInOrder = new ArrayList<>();
-    boolean roundIsEnded;
-
-    ScoreSheetHumanPlayerGUI(HumanPlayer player) {
-        this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
-        roundIsEnded = false;
-
+    ScoreSheetAIPlayerGUI() {
         createTitlePanel();
         createButtons();
         createPenalties();
@@ -88,147 +68,22 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title_panel.add(title, BorderLayout.WEST);
         title_panel.add(inputName);
 
-        finishedPanel.add(finished);
-        penalties.setFont(new Font("MV Boli", Font.PLAIN, 10));
-        penalties.setFocusable(false);
-        penalties.setBackground(new Color(204, 204, 204));
-
-        skipRoundPanel.add(skipRound);
-        skipRound.setFont(new Font("MV Boli", Font.PLAIN, 10));
-        skipRound.setFocusable(false);
-        skipRound.setBackground(new Color(204, 204, 204));
-
-        JPanel messages = new JPanel();
-        messages.setLayout(new GridLayout(1, 2));
-        messages.add(finishedPanel);
-        messages.add(skipRoundPanel);
-        messages.setPreferredSize(new Dimension(800, 30));
-        messages.setMinimumSize(messages.getPreferredSize());
-
         BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
         mainPanel.setLayout(testLayout);
         mainPanel.add(title_panel);
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
-        mainPanel.add(messages);
         mainPanel.setPreferredSize(new Dimension(800, 400));
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        roundIsEnded = false;
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 12; j++) {
-                if (e.getSource() == buttons[i][j]) {
-                    int value;
-
-                    if (i == 0 || i == 1) {
-                        value = 2 + j;
-                    } else {
-                        value = 12 - j;
-                    }
-                    String indexStored = "" + i + value;
-
-                    // Player wants to uncross the button
-                    if (buttons[i][j].getText().equals("X")) {
-                        List<String> crossedThisRound = allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size()
-                                - numberCrossesInRound, allCrossedNumbersInOrder.size());
-                        boolean canUncross = false;
-
-                        // Can only uncross button (i,j) that has been crossed in this round
-                        for (String cross : crossedThisRound) {
-                            if (Integer.parseInt(cross.substring(0, 1)) == i && Integer.parseInt(cross.substring(1, 2)) == value) {
-                                canUncross = true;
-                            }
-                        }
-
-                        if (canUncross) {
-                            uncrossButton(i, j);
-                            player.sheet.removeCross(i, j);
-                            numberCrossesInRound--;
-                            allCrossedNumbersInOrder.remove(indexStored);
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Uncrossing this number is not allowed",
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else { // Player wants to cross the button
-                        crossButton(i, j);
-                        // Checks if a number can be crossed based on the logic of the score sheet of the human player
-                        // If an active player has 2 or more crosses he/she cannot cross anymore. If an inactive player
-                        // has 1 or more crosses he/she cannot cross anymore.
-                        if (player.sheet.canCross(i, j) &&
-                                ((player.isActive && (numberCrossesInRound < maxCrossPerRoundActive)) ||
-                                        (!player.isActive && numberCrossesInRound < maxCrossPerRoundInactive))) {
-                            player.sheet.cross(i, j);
-                            numberCrossesInRound++;
-                            allCrossedNumbersInOrder.add(indexStored);
-
-                            if (j == 10) { // If last number is crossed then (and this allowed) then lock can also be crossed. canCross already checks if a 12 or 2 are allowed to be crossed
-                                // A lock does not count into the number of crosses done in a round
-                                crossButton(i, 11);
-                            }
-                        } else { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
-                            uncrossButton(i, j);
-
-                            if (!player.sheet.canCross(i, j)) {
-                                JOptionPane.showMessageDialog(this, "Crossing this number is not allowed, please cross another number",
-                                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                                // Display an error message that crossing this number is not allowed
-                            } else {
-                                JOptionPane.showMessageDialog(this, "The maximum number of allowed crosses for this round is reached",
-                                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                                // Display an error message that the maximum number of allowed crosses per round is reached
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (e.getSource() == finished) {
-            // At least one number has been crossed and thus a round can be closed
-            if (numberCrossesInRound > 0) {
-                numberCrossesLastRound = numberCrossesInRound; // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
-                numberCrossesInRound = 0; // A new round is started and thus the counting of crosses is restarted
-                roundIsEnded = true;
-            } else {
-                JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                // Display error message: No number has been crossed. Cross a number or click skip round
-            }
-        }
-
-        if (e.getSource() == skipRound) {
-            // Indeed no numbers has been crossed and thus a round can legally be skipped
-            if (numberCrossesInRound == 0) {
-                player.skipRound(player.isActive);
-                roundIsEnded = true;
-
-                if (player.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
-                    int k = 0;
-                    // As long as the penalty buttons are crossed, a new penalty cannot be crossed
-                    while (penalties[k].getText().equals("X")) {
-                        k++;
-                    }
-                    crossPenalty(k);
-                }
-            } else { // In case a number is crossed and also the skipRound button has been clicked:
-                JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                // Display an error message:  Remove the crosses if you want to skip this round or click the Finish button.
-            }
-        }
-    }
-
-    private void crossPenalty(int k) {
+    public void crossPenalty(int k) {
         penalties[k].setText("X");
         penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties[k].setBackground(new Color(204, 204, 204));
         penalties[k].setForeground(Color.black);
     }
 
-    private void crossButton(int i, int j) {
+    public void crossButton(int i, int j) {
         buttons[i][j].setText("X");
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
 
@@ -289,7 +144,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 button_panel.add(buttons[i][j]);
                 buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
                 buttons[i][j].setFocusable(false);
-                buttons[i][j].addActionListener(this);
+                //buttons[i][j].addActionListener(this);
                 int value = j + 2;
 
                 if (i == 0) {
@@ -336,14 +191,14 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title.setForeground(new Color(204, 204, 204));
         title.setFont(new Font("Ink Free", Font.BOLD, 25));
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setText("Qwixx Score Sheet from (type your name):");
+        title.setText("Qwixx Score Sheet from: AI Player");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
         inputName.setForeground(new Color(204, 204, 204));
         inputName.setFont(new Font("Ink Free", Font.BOLD, 20));
         inputName.setOpaque(true);
-        player.setName(inputName.getText()); // Sets the name of the human player
+        //player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
         title_panel.setBounds(0, 0, 800, 50);
@@ -387,7 +242,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[0].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[0]);
 
-        //pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
         pointsScored[0] = new JButton();
         pointsScored[0].setBackground(Color.WHITE);
         pointsScored[0].setForeground(Color.black); // Text color
@@ -403,7 +257,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[1].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[1]);
 
-        //pointsScored[1] = new JButton(String.valueOf(player.sheet.getScore(1)));
         pointsScored[1] = new JButton();
         pointsScored[1].setBackground(Color.WHITE);
         pointsScored[1].setForeground(Color.black);
@@ -419,7 +272,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[2].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[2]);
 
-        //pointsScored[2] = new JButton(String.valueOf(player.sheet.getScore(2)));
         pointsScored[2] = new JButton();
         pointsScored[2].setBackground(Color.white);
         pointsScored[2].setForeground(Color.black);
@@ -435,7 +287,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[3].setFont(new Font("MV Boli", Font.PLAIN, 20));
         scorePanel.add(signs[3]);
 
-        //pointsScored[3] = new JButton(String.valueOf(player.sheet.getScore(3)));
         pointsScored[3] = new JButton();
         pointsScored[3].setBackground(Color.white);
         pointsScored[3].setForeground(Color.black);
@@ -452,7 +303,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[4]);
 
         // This are the total penalties
-        //pointsScored[4] = new JButton(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
         pointsScored[4] = new JButton();
         pointsScored[4].setBackground(Color.white);
         pointsScored[4].setForeground(Color.BLACK);
@@ -469,7 +319,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(signs[5]);
 
         // Total points scored
-        //pointsScored[5] = new JButton(String.valueOf(player.sheet.getTotalScore()));
         pointsScored[5] = new JButton();
         pointsScored[5].setBackground(Color.white);
         pointsScored[5].setForeground(Color.black);
@@ -479,56 +328,16 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(pointsScored[5]);
     }
 
-    public JPanel getScoreSheetHumanPlayer() {
+    public JPanel getScoreSheetAIPlayer() {
         return mainPanel;
     }
 
-    // When the round is finished (Skip round or Finish is clicked) but we want to check on the crosses in last round
-    // to see if they correspond to the dice values.
-    public List<String> getLastCrossedNumbers() {
-        return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
-    }
-
-    // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
-    // such that a modification can be made by the human player
-    // i is the number of crosses that has been made in the last round which were incorrect
-    public void displayErrorMessageRemote(int i) {
-        numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The number(s) you have just crossed are not valid " +
-                        "(e.g. they do not correspond to the dice values). Uncross the button you have just clicked and " +
-                        "make sure to cross the number that corresponds to the dice values and hit the finish button or " +
-                        "skip this round.",
-                "ERROR", JOptionPane.ERROR_MESSAGE);
-
-    }
-
-    public void displayErrorMessageOrder(int i) {
-        numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not" +
-                        " correct. If you want to cross numbers in the same row, you first have to cross the combination" +
-                        " of the white dice and then a colored combination.",
-                "ERROR", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public void displayErrorMessageOnlyColored(int i) {
-        numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The numbers you have just crossed are not valid. " +
-                        "Uncross the button you have just clicked and make sure to choose first a combination of the " +
-                        "white dice and then a combination of a white and colored die. Do not forget to hit the finish " +
-                        "button.",
-                "ERROR", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public boolean getRoundIsEnded() {
-        return roundIsEnded;
-    }
-
-    public void updatePanelWhenFinished() {
-        for (int i = 0; i < 4; i++) {
-            pointsScored[i].setText(String.valueOf(player.sheet.getScore(i)));
+    public void updatePanelWhenFinished(Scoresheet sheet) {
+        for(int i = 0; i < 4; i++) {
+            pointsScored[i].setText(String.valueOf(sheet.getScore(i)));
         }
 
-        pointsScored[4].setText(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
-        pointsScored[5].setText(String.valueOf(player.sheet.getTotalScore()));
+        pointsScored[4].setText(String.valueOf(sheet.getPenaltyValue() * sheet.getPenalty()));
+        pointsScored[5].setText(String.valueOf(sheet.getTotalScore()));
     }
 }

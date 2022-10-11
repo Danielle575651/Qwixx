@@ -11,6 +11,10 @@ public abstract class Player {
         this.name = name;
         isActive = false;
     }
+    
+    public Scoresheet getSheet() {
+        return this.sheet;
+    }
 
     public final void tossDice(Dice[] dice) {
         for (Dice die : dice) {
@@ -18,7 +22,7 @@ public abstract class Player {
         }
     }
 
-    public final void crossNumber(int color, int number) {
+    public void crossNumber(int color, int number) {
         if (color == 0 || color == 1) {
             sheet.cross(color, number - 2);
         } else {

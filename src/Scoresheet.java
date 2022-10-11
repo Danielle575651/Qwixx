@@ -121,12 +121,15 @@ public class Scoresheet {
         for (int row = 0; row < getRows(); row++) {
             score += getScore(row);
         }
-        int totalScore = score + PENALTY_VALUE * getPenaltyValue();
-        return totalScore;
+        return score + PENALTY_VALUE * getPenaltyValue();
     }
 
     public int getLastCrossed(int row) {
-        int lastValue = -1;
+        int lastValue = 1;
+        if (row == 2 || row == 3) {
+            lastValue = 13;
+        }
+        
         for (int i = 0; i < getColumns(); i++) {
             if (scored[row][i]) {
                 lastValue = getValue(row, i);
@@ -137,8 +140,8 @@ public class Scoresheet {
     
     public int getLocks() {
         int nLock = 0;
-        for (int i = 0; i < validRows.length; i++) {
-            if (!validRows[i]) {
+        for (boolean validRow : validRows) {
+            if (!validRow) {
                 nLock++;
             }
         }
