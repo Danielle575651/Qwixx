@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class DiceGUI {
     private final JLabel[] picLabels;
-    private final Dice[] diceSet;
+    public final Dice[] diceSet;
     private final int[] points;
     private Map<String, Integer> colToNum;
     private final int FRAME_HEIGHT = 800;
@@ -15,17 +15,15 @@ public class DiceGUI {
     private JPanel mainPanel;
 
     public DiceGUI() {
-        picLabels = new JLabel[6];
-        diceSet = new Dice[6];
-        addDice(diceSet);
+         picLabels = new JLabel[6];
+        diceSetG = new Dice[6];
         points = new int[6];
-
-        colToNum = new HashMap<>();
-        colToNum = Map.of(
-                "red", 2,
-                "yellow", 3,
-                "green", 4,
-                "blue", 5);
+        diceSetG[0] = new Dice(0);
+        diceSetG[1] = new Dice(1);
+        diceSetG[2] = new Dice(2);
+        diceSetG[3] = new Dice(3);
+        diceSetG[4] = new Dice(4);
+        diceSetG[5] = new Dice(5);
 
         JPanel DicePanel = new JPanel();
         initDicePanel(DicePanel);
@@ -146,21 +144,19 @@ public class DiceGUI {
         diceSet[5] = new Dice("blue");
     }
 
-    public void rollDice() {
-        // Only roll the dice which are not null
-        for (int i = 0; i < diceSet.length; i++) {
-            if (diceSet[i] != null) {
-                Dice d = diceSet[i];
+    public void displayTheRolledDice() {
+        // Roll all 6 dice, but display only the valid dice, and store all the infor to array
+        for (int i = 0; i < 6; i++) {
+            if (points[i] != 0) {
+                Dice d = diceSetG[i];
                 d.rollDice();
                 points[i] = d.getValue();
             }
         }
     }
-
-    public void removeDice(Dice d) {
-        // Make the corresponding die a null and its point 0
-        diceSet[colToNum.get(d.getColor())] = null;
-        points[colToNum.get(d.getColor())] = 0;
+ public void removeDice(int colorInt) {
+        // Make the point o the corresponding die to 0 (so as to make the panel show no dice value)
+        points[colorInt] = 0;
     }
 
     public JPanel getMainPanel() {
