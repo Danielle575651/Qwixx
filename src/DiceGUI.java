@@ -30,7 +30,7 @@ public class DiceGUI extends JFrame {
         initDicePanel(DicePanel);
 
         JPanel BPanel = new JPanel();
-        BPanel.add(new JButton(new AbstractAction("Roll") {
+        BPanel.add(new JButton(new AbstractAction("Roll Dice") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DicePanel.removeAll();
@@ -75,7 +75,6 @@ public class DiceGUI extends JFrame {
         for (int i = 0; i < points.length; i++) {
             if (i == 0) {
                 switch (points[i]) {
-                    case 0 -> picLabels[0] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("wC.jpg"))));
                     case 1 -> picLabels[0] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("w1.jpg"))));
                     case 2 -> picLabels[0] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("w2.jpg"))));
                     case 3 -> picLabels[0] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("w3.jpg"))));
@@ -85,7 +84,6 @@ public class DiceGUI extends JFrame {
                 }
             } else if (i == 1) {
                 switch (points[i]) {
-                    case 0 -> picLabels[1] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("wC.jpg"))));
                     case 1 -> picLabels[1] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("w1.jpg"))));
                     case 2 -> picLabels[1] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("w2.jpg"))));
                     case 3 -> picLabels[1] = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("w3.jpg"))));
