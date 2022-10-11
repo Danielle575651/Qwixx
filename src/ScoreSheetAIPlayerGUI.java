@@ -27,38 +27,46 @@ public class ScoreSheetAIPlayerGUI {
 
         crossPenalty.setBackground(new Color(204, 204, 204));
         crossPenalty.setForeground(Color.black);
-        crossPenalty.setFont(new Font("MV Boli", Font.PLAIN, 15));
+        crossPenalty.setPreferredSize(new Dimension(300, 10));
+        crossPenalty.setMinimumSize(penalties_panel.getPreferredSize());
+        crossPenalty.setFont(new Font("MV Boli", Font.PLAIN, 10));
         crossPenalty.setHorizontalAlignment(JLabel.CENTER);
         crossPenalty.setText("Cross a penalty (-5):");
         crossPenalty.setOpaque(true);
 
         pointsPanel.setLayout(new GridLayout(2, 13));
         pointsPanel.setBackground(new Color(204, 204, 204));
-        pointsPanel.setPreferredSize(new Dimension(500, 25));
+        pointsPanel.setPreferredSize(new Dimension(300, 80));
         pointsPanel.setMinimumSize(pointsPanel.getPreferredSize());
 
         penalties_panel.setLayout(new GridLayout(1, 4));
         penalties_panel.setBackground(new Color(204, 204, 204));
-        penalties_panel.setPreferredSize(new Dimension(300, 25));
+        penalties_panel.setPreferredSize(new Dimension(300, 70));
         penalties_panel.setMinimumSize(penalties_panel.getPreferredSize());
 
         JPanel penalties = new JPanel();
         penalties.setLayout(new GridLayout(2, 1));
+        penalties.setPreferredSize(new Dimension(300, crossPenalty.getPreferredSize().height + penalties_panel.getPreferredSize().height));
+        penalties.setMinimumSize(penalties.getPreferredSize());
         penalties.add(crossPenalty);
         penalties.add(penalties_panel);
 
         JPanel points = new JPanel();
         points.setLayout(new GridLayout(1, 2));
+        points.setPreferredSize(new Dimension(600, pointsPanel.getPreferredSize().height));
+        points.setMinimumSize(scorePanel.getPreferredSize());
         points.add(pointsPanel);
         points.add(penalties);
 
         scorePanel.setLayout(new GridLayout(1, 12));
         scorePanel.setBackground(new Color(204, 204, 204));
-        scorePanel.setPreferredSize(new Dimension(800, 25));
+        scorePanel.setPreferredSize(new Dimension(600, 30));
         scorePanel.setMinimumSize(scorePanel.getPreferredSize());
 
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new GridLayout(2, 1));
+        lowerPanel.setPreferredSize(new Dimension(600, points.getPreferredSize().height + scorePanel.getPreferredSize().height));
+        lowerPanel.setMinimumSize(scorePanel.getPreferredSize());
         lowerPanel.add(points);
         lowerPanel.add(scorePanel);
 
@@ -73,20 +81,20 @@ public class ScoreSheetAIPlayerGUI {
         mainPanel.add(title_panel);
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
-        //mainPanel.setPreferredSize(new Dimension(800, 100));
-        //mainPanel.setMinimumSize(mainPanel.getPreferredSize());
+        int height = title_panel.getPreferredSize().height + button_panel.getPreferredSize().height + lowerPanel.getPreferredSize().height;
+        mainPanel.setPreferredSize(new Dimension(600, height));
     }
 
     public void crossPenalty(int k) {
         penalties[k].setText("X");
-        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
+        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 18));
         penalties[k].setBackground(new Color(204, 204, 204));
         penalties[k].setForeground(Color.black);
     }
 
     public void crossButton(int i, int j) {
         buttons[i][j].setText("X");
-        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 18));
 
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
@@ -110,7 +118,7 @@ public class ScoreSheetAIPlayerGUI {
             }
 
             buttons[i][j].setText(String.valueOf(value));
-            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
+            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 18));
         }
     }
 
@@ -121,29 +129,29 @@ public class ScoreSheetAIPlayerGUI {
                     if (i == 0) {
                         buttons[i][j] = new JButton(new ImageIcon(((new ImageIcon(
                                 "src/Red_Lock.png").getImage()
-                                .getScaledInstance(64, 64,
+                                .getScaledInstance(30, 30,
                                         java.awt.Image.SCALE_SMOOTH)))));
                     } else if (i == 1) {
                         buttons[i][j] = new JButton(new ImageIcon(((new ImageIcon(
                                 "src/Yellow_Lock.png").getImage()
-                                .getScaledInstance(64, 64,
+                                .getScaledInstance(30, 30,
                                         java.awt.Image.SCALE_SMOOTH)))));
                     } else if (i == 2) {
                         buttons[i][j] = new JButton(new ImageIcon(((new ImageIcon(
                                 "src/Green_Lock.png").getImage()
-                                .getScaledInstance(64, 64,
+                                .getScaledInstance(30, 30,
                                         java.awt.Image.SCALE_SMOOTH)))));
                     } else {
                         buttons[i][j] = new JButton(new ImageIcon(((new ImageIcon(
                                 "src/Blue_Lock.png").getImage()
-                                .getScaledInstance(64, 64,
+                                .getScaledInstance(30, 30,
                                         java.awt.Image.SCALE_SMOOTH)))));
                     }
                 } else {
                     buttons[i][j] = new JButton();
                 }
                 button_panel.add(buttons[i][j]);
-                buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
+                buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 18));
                 buttons[i][j].setFocusable(false);
                 //buttons[i][j].addActionListener(this);
                 int value = j + 2;
@@ -181,7 +189,7 @@ public class ScoreSheetAIPlayerGUI {
         for (int i = 0; i < 4; i++) {
             penalties[i] = new JButton();
             penalties_panel.add(penalties[i]);
-            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 10));
+            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 18));
             penalties[i].setFocusable(false);
             penalties[i].setBackground(new Color(204, 204, 204));
         }
@@ -190,19 +198,19 @@ public class ScoreSheetAIPlayerGUI {
     private void createTitlePanel() {
         title.setBackground(new Color(0, 0, 153));
         title.setForeground(new Color(204, 204, 204));
-        title.setFont(new Font("Ink Free", Font.BOLD, 25));
+        title.setFont(new Font("Ink Free", Font.BOLD, 15));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setText("Qwixx Score Sheet from: AI Player");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
         inputName.setForeground(new Color(204, 204, 204));
-        inputName.setFont(new Font("Ink Free", Font.BOLD, 20));
+        inputName.setFont(new Font("Ink Free", Font.BOLD, 15));
         inputName.setOpaque(true);
         //player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
-        title_panel.setBounds(0, 0, 800, 10);
+        title_panel.setBounds(0, 0, 600, 20);
     }
 
     private void createPointsPanel() {
@@ -240,13 +248,14 @@ public class ScoreSheetAIPlayerGUI {
         signs[0].setBackground(new Color(204, 204, 204));
         signs[0].setForeground(Color.black);
         signs[0].setFocusable(false);
-        signs[0].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        signs[0].setFont(new Font("MV Boli", Font.PLAIN, 18));
+        signs[0].setHorizontalAlignment(JLabel.CENTER);
         scorePanel.add(signs[0]);
 
         pointsScored[0] = new JButton();
         pointsScored[0].setBackground(Color.WHITE);
         pointsScored[0].setForeground(Color.black); // Text color
-        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0))); // Border color
+        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0),5)); // Border color
         pointsScored[0].setFocusable(false);
         pointsScored[0].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[0]);
@@ -255,7 +264,8 @@ public class ScoreSheetAIPlayerGUI {
         signs[1].setBackground(new Color(204, 204, 204));
         signs[1].setForeground(Color.black);
         signs[1].setFocusable(false);
-        signs[1].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        signs[1].setFont(new Font("MV Boli", Font.PLAIN, 18));
+        signs[1].setHorizontalAlignment(JLabel.CENTER);
         scorePanel.add(signs[1]);
 
         pointsScored[1] = new JButton();
@@ -270,7 +280,8 @@ public class ScoreSheetAIPlayerGUI {
         signs[2].setBackground(new Color(204, 204, 204));
         signs[2].setForeground(Color.black);
         signs[2].setFocusable(false);
-        signs[2].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        signs[2].setFont(new Font("MV Boli", Font.PLAIN, 18));
+        signs[2].setHorizontalAlignment(JLabel.CENTER);
         scorePanel.add(signs[2]);
 
         pointsScored[2] = new JButton();
@@ -285,7 +296,8 @@ public class ScoreSheetAIPlayerGUI {
         signs[3].setBackground(new Color(204, 204, 204));
         signs[3].setForeground(Color.black);
         signs[3].setFocusable(false);
-        signs[3].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        signs[3].setFont(new Font("MV Boli", Font.PLAIN, 18));
+        signs[3].setHorizontalAlignment(JLabel.CENTER);
         scorePanel.add(signs[3]);
 
         pointsScored[3] = new JButton();
@@ -300,7 +312,8 @@ public class ScoreSheetAIPlayerGUI {
         signs[4].setBackground(new Color(204, 204, 204));
         signs[4].setForeground(Color.black);
         signs[4].setFocusable(false);
-        signs[4].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        signs[4].setFont(new Font("MV Boli", Font.PLAIN, 18));
+        signs[4].setHorizontalAlignment(JLabel.CENTER);
         scorePanel.add(signs[4]);
 
         // This are the total penalties
@@ -309,14 +322,15 @@ public class ScoreSheetAIPlayerGUI {
         pointsScored[4].setForeground(Color.BLACK);
         pointsScored[4].setBorder(BorderFactory.createLineBorder(Color.darkGray));
         pointsScored[4].setFocusable(false);
-        pointsScored[4].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        pointsScored[4].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[4]);
 
         signs[5] = new JLabel("=");
         signs[5].setBackground(new Color(204, 204, 204));
         signs[5].setForeground(Color.black);
         signs[5].setFocusable(false);
-        signs[5].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        signs[5].setFont(new Font("MV Boli", Font.PLAIN, 18));
+        signs[5].setHorizontalAlignment(JLabel.CENTER);
         scorePanel.add(signs[5]);
 
         // Total points scored
@@ -325,7 +339,7 @@ public class ScoreSheetAIPlayerGUI {
         pointsScored[5].setForeground(Color.black);
         pointsScored[5].setBorder(BorderFactory.createLineBorder(Color.darkGray));
         pointsScored[5].setFocusable(false);
-        pointsScored[5].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        pointsScored[5].setFont(new Font("MV Boli", Font.PLAIN, 15));
         scorePanel.add(pointsScored[5]);
     }
 
