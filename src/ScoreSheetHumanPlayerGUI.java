@@ -392,7 +392,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
         pointsScored[0].setBackground(Color.WHITE);
         pointsScored[0].setForeground(Color.black); // Text color
-        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0),5)); // Border color
+        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0))); // Border color
         pointsScored[0].setFocusable(false);
         pointsScored[0].setFont(new Font("MV Boli", Font.PLAIN, 12));
         scorePanel.add(pointsScored[0]);

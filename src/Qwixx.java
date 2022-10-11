@@ -135,7 +135,7 @@ public class Qwixx {
                                     scoreSheetHumanPlayer.displayErrorMessageOrder(lastCrossed.size());
                                 }
                             } else { // If not a combination of white dice values and colored dice values are crossed, but only colored dices are crossed
-                                    scoreSheetHumanPlayer.displayErrorMessageOnlyColored(lastCrossed.size());
+                                scoreSheetHumanPlayer.displayErrorMessageOnlyColored(lastCrossed.size());
                             }
                         }
                     }
