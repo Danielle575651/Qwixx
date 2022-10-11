@@ -39,6 +39,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
+        numberCrossesInRound = 0;
+        numberCrossesLastRound = 0;
 
         createTitlePanel();
         createButtons();
@@ -113,7 +115,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
         mainPanel.add(messages);
-        mainPanel.setPreferredSize(new Dimension(600, 140));
+        mainPanel.setPreferredSize(new Dimension(600, 100));
     }
 
     @Override
@@ -225,14 +227,14 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     private void crossPenalty(int k) {
         penalties[k].setText("X");
-        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
+        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 12));
         penalties[k].setBackground(new Color(204, 204, 204));
         penalties[k].setForeground(Color.black);
     }
 
     private void crossButton(int i, int j) {
         buttons[i][j].setText("X");
-        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
+        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
 
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
@@ -256,7 +258,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             }
 
             buttons[i][j].setText(String.valueOf(value));
-            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
+            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
         }
     }
 
@@ -327,7 +329,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         for (int i = 0; i < 4; i++) {
             penalties[i] = new JButton();
             penalties_panel.add(penalties[i]);
-            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 10));
+            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 12));
             penalties[i].setFocusable(false);
             penalties[i].setBackground(new Color(204, 204, 204));
         }
@@ -336,19 +338,21 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     private void createTitlePanel() {
         title.setBackground(new Color(0, 0, 153));
         title.setForeground(new Color(204, 204, 204));
-        title.setFont(new Font("Ink Free", Font.BOLD, 15));
+        title.setFont(new Font("Ink Free", Font.BOLD, 12));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setText("Qwixx Score Sheet from (type your name):");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
         inputName.setForeground(new Color(204, 204, 204));
-        inputName.setFont(new Font("Ink Free", Font.BOLD, 15));
+        inputName.setFont(new Font("Ink Free", Font.BOLD, 12));
         inputName.setOpaque(true);
         player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
-        title_panel.setBounds(0, 0, 600, 20);
+        title_panel.setBounds(0, 0, 600, 12);
+        title_panel.setSize(new Dimension(600,12));
+        title_panel.setMinimumSize(title_panel.getPreferredSize());
     }
 
     private void createPointsPanel() {

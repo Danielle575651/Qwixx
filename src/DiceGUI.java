@@ -12,7 +12,7 @@ public class DiceGUI {
     private Map<String, Integer> colToNum;
     private final int FRAME_HEIGHT = 800;
     private final int FRAMe_WIDTH = 1000;
-    private JPanel mainPanel;
+    private JPanel mainPanel =  new JPanel();
 
     public DiceGUI() {
         picLabels = new JLabel[6];
@@ -41,7 +41,6 @@ public class DiceGUI {
             }
         }));
 
-        this.mainPanel = new JPanel();
         BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.X_AXIS);
         mainPanel.setLayout(testLayout);
         mainPanel.add(BPanel);
