@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
-public class ScoreSheetGUI extends Component implements ActionListener {
+public class ScoreSheetHumanPlayerGUI extends Component implements ActionListener {
     public static int maxCrossPerRoundActive = 2;
     public static int maxCrossPerRoundInactive = 1;
 
@@ -36,7 +36,7 @@ public class ScoreSheetGUI extends Component implements ActionListener {
     List<String> allCrossedNumbersInOrder = new ArrayList<>();
     boolean roundIsEnded;
 
-    ScoreSheetGUI(HumanPlayer player) {
+    ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
 
@@ -48,7 +48,7 @@ public class ScoreSheetGUI extends Component implements ActionListener {
 
         crossPenalty.setBackground(new Color(204, 204, 204));
         crossPenalty.setForeground(Color.black);
-        crossPenalty.setPreferredSize(new Dimension(300, 15));
+        crossPenalty.setPreferredSize(new Dimension(300, 20));
         crossPenalty.setMinimumSize(penalties_panel.getPreferredSize());
         crossPenalty.setFont(new Font("MV Boli", Font.PLAIN, 10));
         crossPenalty.setHorizontalAlignment(JLabel.CENTER);
@@ -57,12 +57,12 @@ public class ScoreSheetGUI extends Component implements ActionListener {
 
         pointsPanel.setLayout(new GridLayout(2, 13));
         pointsPanel.setBackground(new Color(204, 204, 204));
-        pointsPanel.setPreferredSize(new Dimension(500, 50));
+        pointsPanel.setPreferredSize(new Dimension(500, 60));
         pointsPanel.setMinimumSize(pointsPanel.getPreferredSize());
 
         penalties_panel.setLayout(new GridLayout(1, 4));
         penalties_panel.setBackground(new Color(204, 204, 204));
-        penalties_panel.setPreferredSize(new Dimension(300, 35));
+        penalties_panel.setPreferredSize(new Dimension(300, 40));
         penalties_panel.setMinimumSize(penalties_panel.getPreferredSize());
 
         JPanel penalties = new JPanel();
@@ -535,13 +535,13 @@ public class ScoreSheetGUI extends Component implements ActionListener {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Container c = mainFrame.getContentPane();
 
-        mainFrame.setSize(600, 400);
+        mainFrame.setSize(600, 320);
         mainFrame.getContentPane().setBackground(new Color(204, 204, 204));
         mainFrame.setLayout(new BorderLayout(0, 0));
         mainFrame.setVisible(true);
 
         HumanPlayer player = new HumanPlayer("a");
-        ScoreSheetGUI humanSheet = new ScoreSheetGUI(player);
+        ScoreSheetHumanPlayerGUI humanSheet = new ScoreSheetHumanPlayerGUI(player);
 
         mainFrame.add(humanSheet.getScoreSheetHumanPlayer());
     }
