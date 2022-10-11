@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -11,6 +12,7 @@ public class Qwixx {
     private ArrayList<Dice> diceSet;
     private Map<String, Integer> colToNum;
     private ScoreSheetHumanPlayerGUI scoreSheetHumanPlayer;
+    private DiceGUI diceGUI;
     //private AIGUI aiGUI;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
@@ -19,13 +21,14 @@ public class Qwixx {
         //this.aiGUI = new ScoreSheetAIPlayerGUI(); -> The GUI is generated in the AIPlayer object
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         end = false;
+        this.diceGUI = new DiceGUI();
 
-        Dice white1 = new Dice("white");
-        Dice white2 = new Dice("white");
-        Dice red = new Dice("red");
-        Dice yellow = new Dice("yellow");
-        Dice green = new Dice("green");
-        Dice blue = new Dice("blue");
+        Dice white1 = new Dice(0);
+        Dice white2 = new Dice(0);
+        Dice red = new Dice(1);
+        Dice yellow = new Dice(2);
+        Dice green = new Dice(3);
+        Dice blue = new Dice(4);
         diceSet = new ArrayList<>();
         Collections.addAll(diceSet, white1, white2, red, yellow, green, blue);
 
@@ -169,18 +172,22 @@ public class Qwixx {
         Qwixx qwixxGame = new Qwixx(human, ai);
 
         JPanel mainPanel = new JPanel();
-        BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
-        mainPanel.setLayout(testLayout);
+        mainPanel.setLayout(new BorderLayout());
 
         JPanel humanPanel = qwixxGame.scoreSheetHumanPlayer.getScoreSheetHumanPlayer();
-        humanPanel.setSize(new Dimension(600, 200));
         humanPanel.setMinimumSize(humanPanel.getPreferredSize());
-        JPanel aiPanel = qwixxGame.ai.gui.getScoreSheetAIPlayer();
-        aiPanel.setSize(new Dimension(600, 200));
+        JPanel aiPanel = qwixxGame.ai.gui.getScorePanel();
         aiPanel.setMinimumSize(humanPanel.getPreferredSize());
 
-        mainPanel.add(humanPanel);
-        mainPanel.add(aiPanel);
-        frame.add(mainPanel);
+        JPanel dicePanel = qwixxGame.diceGUI.getMainPanel();
+        dicePanel.setSize(new Dimension(600, 100));
+
+        frame.add(aiPanel, BorderLayout.PAGE_END);
+        frame.add(humanPanel, BorderLayout.PAGE_START);
+        frame.add(dicePanel, BorderLayout.CENTER);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setVisible(true);
+        frame.setResizable(false);
     }
 }

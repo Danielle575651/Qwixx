@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -75,12 +74,12 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         scorePanel.setLayout(new GridLayout(1, 12));
         scorePanel.setBackground(new Color(204, 204, 204));
-        scorePanel.setPreferredSize(new Dimension(600, 30));
+        scorePanel.setPreferredSize(new Dimension(600, 50));
         scorePanel.setMinimumSize(scorePanel.getPreferredSize());
 
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new GridLayout(2, 1));
-        lowerPanel.setPreferredSize(new Dimension(600, 80));
+        lowerPanel.setPreferredSize(new Dimension(600, 50));
         lowerPanel.add(points);
         lowerPanel.add(scorePanel);
 
@@ -104,15 +103,18 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         messages.setLayout(new GridLayout(1, 2));
         messages.add(finishedPanel);
         messages.add(skipRoundPanel);
-        messages.setPreferredSize(new Dimension(600, 30));
+        messages.setPreferredSize(new Dimension(600, 15));
         messages.setMinimumSize(messages.getPreferredSize());
 
-        BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
-        mainPanel.setLayout(testLayout);
-        mainPanel.add(title_panel);
+        JPanel bottom = new JPanel(new GridLayout(2,1));
+        bottom.add(lowerPanel);
+        bottom.add(messages);
+
+        //BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(title_panel, BorderLayout.PAGE_START);
+        mainPanel.add(bottom, BorderLayout.PAGE_END);
         mainPanel.add(button_panel);
-        mainPanel.add(lowerPanel);
-        mainPanel.add(messages);
         //mainPanel.setPreferredSize(new Dimension(600, 140));
     }
 
@@ -225,7 +227,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     private void crossPenalty(int k) {
         penalties[k].setText("X");
-        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 12));
+        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties[k].setBackground(new Color(204, 204, 204));
         penalties[k].setForeground(Color.black);
     }

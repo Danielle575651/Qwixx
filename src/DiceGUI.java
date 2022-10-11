@@ -7,23 +7,25 @@ import java.util.Objects;
 
 public class DiceGUI {
     private final JLabel[] picLabels;
-    public final Dice[] diceSet;
+    private final Dice[] diceSet;
     private final int[] points;
     private Map<String, Integer> colToNum;
-    private final int FRAME_HEIGHT = 800;
-    private final int FRAMe_WIDTH = 1000;
-    private JPanel mainPanel =  new JPanel();
+    private final int FRAME_HEIGHT = 75;
+    private final int FRAMe_WIDTH = 600;
+    private JPanel mainPanel = new JPanel();
 
     public DiceGUI() {
-         picLabels = new JLabel[6];
-        diceSetG = new Dice[6];
+        picLabels = new JLabel[6];
+        diceSet = new Dice[6];
+        addDice(diceSet);
         points = new int[6];
-        diceSetG[0] = new Dice(0);
-        diceSetG[1] = new Dice(1);
-        diceSetG[2] = new Dice(2);
-        diceSetG[3] = new Dice(3);
-        diceSetG[4] = new Dice(4);
-        diceSetG[5] = new Dice(5);
+
+        colToNum = new HashMap<>();
+        colToNum = Map.of(
+                "red", 2,
+                "yellow", 3,
+                "green", 4,
+                "blue", 5);
 
         JPanel DicePanel = new JPanel();
         initDicePanel(DicePanel);
@@ -39,6 +41,7 @@ public class DiceGUI {
             }
         }));
 
+        this.mainPanel = new JPanel();
         BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.X_AXIS);
         mainPanel.setLayout(testLayout);
         mainPanel.add(BPanel);
@@ -135,27 +138,29 @@ public class DiceGUI {
     }
 
     public void addDice(Dice[] diceSet) {
-        diceSet[0] = new Dice("white");
-        diceSet[1] = new Dice("white");
-        diceSet[2] = new Dice("red");
-        diceSet[3] = new Dice("yellow");
-        diceSet[4] = new Dice("green");
-        diceSet[5] = new Dice("blue");
+        diceSet[0] = new Dice(0);
+        diceSet[1] = new Dice(0);
+        diceSet[2] = new Dice(1);
+        diceSet[3] = new Dice(2);
+        diceSet[4] = new Dice(3);
+        diceSet[5] = new Dice(4);
     }
 
-    public void displayTheRolledDice() {
-        // Roll all 6 dice, but display only the valid dice, and store all the infor to array
-        for (int i = 0; i < 6; i++) {
-            if (points[i] != 0) {
-                Dice d = diceSetG[i];
+    public void rollDice() {
+        // Only roll the dice which are not null
+        for (int i = 0; i < diceSet.length; i++) {
+            if (diceSet[i] != null) {
+                Dice d = diceSet[i];
                 d.rollDice();
                 points[i] = d.getValue();
             }
         }
     }
- public void removeDice(int colorInt) {
-        // Make the point o the corresponding die to 0 (so as to make the panel show no dice value)
-        points[colorInt] = 0;
+
+    public void removeDice(Dice d) {
+        // Make the corresponding die a null and its point 0
+        diceSet[colToNum.get(d.getColor())] = null;
+        points[colToNum.get(d.getColor())] = 0;
     }
 
     public JPanel getMainPanel() {

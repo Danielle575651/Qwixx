@@ -6,7 +6,7 @@ import java.util.Random;
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
 public class Dice {
-   private int colorInt;
+    private int colorInt;
     private int value;
     private final int maxPoint;
     private final int minPoint;
