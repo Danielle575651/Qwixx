@@ -22,7 +22,7 @@ public abstract class Player {
         }
     }
 
-    public final void crossNumber(int color, int number) {
+    public void crossNumber(int color, int number) {
         if (color == 0 || color == 1) {
             sheet.cross(color, number - 2);
         } else {

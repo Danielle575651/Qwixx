@@ -2,14 +2,14 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class AIPlayer extends Player {
-    private ScoreSheetAIPlayerGUI gui;
+    public ScoreSheetAIPlayerGUI gui;
 
     public AIPlayer(String name) {
         super(name);
         this.gui = new ScoreSheetAIPlayerGUI();
     }
 
-    public final void crossNumber(int color, int number) {
+    public void crossNumber(int color, int number) {
         if(color == 0 || color == 1) {
             sheet.cross(color, number - 2);
             this.gui.crossButton(color, number - 2);

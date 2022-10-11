@@ -121,8 +121,7 @@ public class Scoresheet {
         for (int row = 0; row < getRows(); row++) {
             score += getScore(row);
         }
-        int totalScore = score + PENALTY_VALUE * getPenaltyValue();
-        return totalScore;
+        return score + PENALTY_VALUE * getPenaltyValue();
     }
 
     public int getLastCrossed(int row) {
@@ -141,8 +140,8 @@ public class Scoresheet {
     
     public int getLocks() {
         int nLock = 0;
-        for (int i = 0; i < validRows.length; i++) {
-            if (!validRows[i]) {
+        for (boolean validRow : validRows) {
+            if (!validRow) {
                 nLock++;
             }
         }

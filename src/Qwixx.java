@@ -8,7 +8,7 @@ public class Qwixx {
     private ArrayList<Dice> diceSet;
     private Map<String, Integer> colToNum;
     private ScoreSheetHumanPlayerGUI scoreSheetHumanPlayer;
-    private AIGUI aiGUI;
+    //private AIGUI aiGUI;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
         this.human = human;
@@ -75,7 +75,7 @@ public class Qwixx {
 
         win(); // Game has always ended when you reach this point, otherwise you will not break out of the while loop
         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-        this.ai.getGUI().updatePanelWhenFinished(this.ai.getSheet());
+        this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
     }
 
     public void humanFirst() {
