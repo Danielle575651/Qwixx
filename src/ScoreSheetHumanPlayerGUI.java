@@ -80,7 +80,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new GridLayout(2, 1));
-        lowerPanel.setPreferredSize(new Dimension(600, 800));
+        lowerPanel.setPreferredSize(new Dimension(600, 80));
         lowerPanel.add(points);
         lowerPanel.add(scorePanel);
 
