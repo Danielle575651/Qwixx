@@ -39,8 +39,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
-        numberCrossesInRound = 0;
-        numberCrossesLastRound = 0;
 
         createTitlePanel();
         createButtons();
@@ -50,6 +48,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         crossPenalty.setBackground(new Color(204, 204, 204));
         crossPenalty.setForeground(Color.black);
+        crossPenalty.setPreferredSize(new Dimension(300, 20));
+        crossPenalty.setMinimumSize(penalties_panel.getPreferredSize());
         crossPenalty.setFont(new Font("MV Boli", Font.PLAIN, 10));
         crossPenalty.setHorizontalAlignment(JLabel.CENTER);
         crossPenalty.setText("Cross a penalty (-5):");
@@ -57,7 +57,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         pointsPanel.setLayout(new GridLayout(2, 13));
         pointsPanel.setBackground(new Color(204, 204, 204));
-        pointsPanel.setPreferredSize(new Dimension(500, 30));
+        pointsPanel.setPreferredSize(new Dimension(500, 60));
         pointsPanel.setMinimumSize(pointsPanel.getPreferredSize());
 
         penalties_panel.setLayout(new GridLayout(1, 4));
@@ -67,11 +67,16 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         JPanel penalties = new JPanel();
         penalties.setLayout(new GridLayout(2, 1));
+        penalties.setPreferredSize(new Dimension(300, crossPenalty.getPreferredSize().height + penalties_panel.getPreferredSize().height));
+        penalties.setMinimumSize(penalties.getPreferredSize());
         penalties.add(crossPenalty);
         penalties.add(penalties_panel);
+        System.out.println(crossPenalty.getPreferredSize().height + " " + penalties_panel.getPreferredSize().height);
 
         JPanel points = new JPanel();
         points.setLayout(new GridLayout(1, 2));
+        points.setPreferredSize(new Dimension(600, pointsPanel.getPreferredSize().height));
+        points.setMinimumSize(scorePanel.getPreferredSize());
         points.add(pointsPanel);
         points.add(penalties);
 
@@ -82,7 +87,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
         JPanel lowerPanel = new JPanel();
         lowerPanel.setLayout(new GridLayout(2, 1));
-        lowerPanel.setPreferredSize(new Dimension(600, 80));
+        lowerPanel.setPreferredSize(new Dimension(600, points.getPreferredSize().height + scorePanel.getPreferredSize().height));
+        lowerPanel.setMinimumSize(scorePanel.getPreferredSize());
         lowerPanel.add(points);
         lowerPanel.add(scorePanel);
 
@@ -115,7 +121,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
         mainPanel.add(messages);
-        mainPanel.setPreferredSize(new Dimension(600, 100));
+        int height = title_panel.getPreferredSize().height + button_panel.getPreferredSize().height + lowerPanel.getPreferredSize().height + messages.getPreferredSize().height;
+        System.out.println(height);
+        mainPanel.setPreferredSize(new Dimension(600, height));
+        System.out.println(title_panel.getPreferredSize().height + " " + button_panel.getPreferredSize().height + " " + lowerPanel.getPreferredSize().height + " " + messages.getPreferredSize().height);
     }
 
     @Override
@@ -227,14 +236,14 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     private void crossPenalty(int k) {
         penalties[k].setText("X");
-        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 12));
+        penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties[k].setBackground(new Color(204, 204, 204));
         penalties[k].setForeground(Color.black);
     }
 
     private void crossButton(int i, int j) {
         buttons[i][j].setText("X");
-        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
+        buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
 
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
@@ -258,7 +267,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             }
 
             buttons[i][j].setText(String.valueOf(value));
-            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
+            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 20));
         }
     }
 
@@ -329,7 +338,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         for (int i = 0; i < 4; i++) {
             penalties[i] = new JButton();
             penalties_panel.add(penalties[i]);
-            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 12));
+            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 10));
             penalties[i].setFocusable(false);
             penalties[i].setBackground(new Color(204, 204, 204));
         }
@@ -338,21 +347,19 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     private void createTitlePanel() {
         title.setBackground(new Color(0, 0, 153));
         title.setForeground(new Color(204, 204, 204));
-        title.setFont(new Font("Ink Free", Font.BOLD, 12));
+        title.setFont(new Font("Ink Free", Font.BOLD, 15));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setText("Qwixx Score Sheet from (type your name):");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
         inputName.setForeground(new Color(204, 204, 204));
-        inputName.setFont(new Font("Ink Free", Font.BOLD, 12));
+        inputName.setFont(new Font("Ink Free", Font.BOLD, 15));
         inputName.setOpaque(true);
         player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
-        title_panel.setBounds(0, 0, 600, 12);
-        title_panel.setSize(new Dimension(600,12));
-        title_panel.setMinimumSize(title_panel.getPreferredSize());
+        title_panel.setBounds(0, 0, 600, 20);
     }
 
     private void createPointsPanel() {
@@ -396,7 +403,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         pointsScored[0] = new JButton(String.valueOf(player.sheet.getScore(0)));
         pointsScored[0].setBackground(Color.WHITE);
         pointsScored[0].setForeground(Color.black); // Text color
-        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0))); // Border color
+        pointsScored[0].setBorder(BorderFactory.createLineBorder(new Color(204, 0, 0),5)); // Border color
         pointsScored[0].setFocusable(false);
         pointsScored[0].setFont(new Font("MV Boli", Font.PLAIN, 12));
         scorePanel.add(pointsScored[0]);
@@ -479,15 +486,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(pointsScored[5]);
     }
 
-    public void updatePanelWhenFinished() {
-        for(int i = 0; i < 4; i++) {
-            pointsScored[i].setText(String.valueOf(player.sheet.getScore(i)));
-        }
-
-        pointsScored[4].setText(String.valueOf(player.sheet.getPenaltyValue() * player.sheet.getPenalty()));
-        pointsScored[5].setText(String.valueOf(player.sheet.getTotalScore()));
-    }
-
     public JPanel getScoreSheetHumanPlayer() {
         return mainPanel;
     }
@@ -530,6 +528,22 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     public boolean getRoundIsEnded() {
         return roundIsEnded;
+    }
+
+    public static void main(String[] args) {
+        JFrame mainFrame = new JFrame();
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Container c = mainFrame.getContentPane();
+
+        mainFrame.setSize(600, 320);
+        mainFrame.getContentPane().setBackground(new Color(204, 204, 204));
+        mainFrame.setLayout(new BorderLayout(0, 0));
+        mainFrame.setVisible(true);
+
+        HumanPlayer player = new HumanPlayer("a");
+        ScoreSheetHumanPlayerGUI humanSheet = new ScoreSheetHumanPlayerGUI(player);
+
+        mainFrame.add(humanSheet.getScoreSheetHumanPlayer());
     }
 
 }
