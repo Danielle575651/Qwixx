@@ -39,8 +39,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
-        numberCrossesInRound = 0;
-        numberCrossesLastRound = 0;
 
         createTitlePanel();
         createButtons();
@@ -115,7 +113,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         mainPanel.add(button_panel);
         mainPanel.add(lowerPanel);
         mainPanel.add(messages);
-        mainPanel.setPreferredSize(new Dimension(600, 100));
+        //mainPanel.setPreferredSize(new Dimension(600, 140));
     }
 
     @Override
@@ -329,7 +327,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         for (int i = 0; i < 4; i++) {
             penalties[i] = new JButton();
             penalties_panel.add(penalties[i]);
-            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 12));
+            penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 10));
             penalties[i].setFocusable(false);
             penalties[i].setBackground(new Color(204, 204, 204));
         }
@@ -338,21 +336,19 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     private void createTitlePanel() {
         title.setBackground(new Color(0, 0, 153));
         title.setForeground(new Color(204, 204, 204));
-        title.setFont(new Font("Ink Free", Font.BOLD, 12));
+        title.setFont(new Font("Ink Free", Font.BOLD, 15));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setText("Qwixx Score Sheet from (type your name):");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
         inputName.setForeground(new Color(204, 204, 204));
-        inputName.setFont(new Font("Ink Free", Font.BOLD, 12));
+        inputName.setFont(new Font("Ink Free", Font.BOLD, 15));
         inputName.setOpaque(true);
         player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
-        title_panel.setBounds(0, 0, 600, 12);
-        title_panel.setSize(new Dimension(600,12));
-        title_panel.setMinimumSize(title_panel.getPreferredSize());
+        title_panel.setBounds(0, 0, 600, 20);
     }
 
     private void createPointsPanel() {
@@ -405,7 +401,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[1].setBackground(new Color(204, 204, 204));
         signs[1].setForeground(Color.black);
         signs[1].setFocusable(false);
-        signs[1].setFont(new Font("MV Boli", Font.PLAIN, 15));
+        signs[1].setFont(new Font("MV Boli", Font.PLAIN, 10));
         scorePanel.add(signs[1]);
 
         pointsScored[1] = new JButton(String.valueOf(player.sheet.getScore(1)));
@@ -420,7 +416,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[2].setBackground(new Color(204, 204, 204));
         signs[2].setForeground(Color.black);
         signs[2].setFocusable(false);
-        signs[2].setFont(new Font("MV Boli", Font.PLAIN, 15));
+        signs[2].setFont(new Font("MV Boli", Font.PLAIN, 10));
         scorePanel.add(signs[2]);
 
         pointsScored[2] = new JButton(String.valueOf(player.sheet.getScore(2)));
@@ -435,7 +431,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[3].setBackground(new Color(204, 204, 204));
         signs[3].setForeground(Color.black);
         signs[3].setFocusable(false);
-        signs[3].setFont(new Font("MV Boli", Font.PLAIN, 15));
+        signs[3].setFont(new Font("MV Boli", Font.PLAIN, 10));
         scorePanel.add(signs[3]);
 
         pointsScored[3] = new JButton(String.valueOf(player.sheet.getScore(3)));
@@ -450,7 +446,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[4].setBackground(new Color(204, 204, 204));
         signs[4].setForeground(Color.black);
         signs[4].setFocusable(false);
-        signs[4].setFont(new Font("MV Boli", Font.PLAIN, 15));
+        signs[4].setFont(new Font("MV Boli", Font.PLAIN, 10));
         scorePanel.add(signs[4]);
 
         // This are the total penalties
@@ -466,7 +462,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         signs[5].setBackground(new Color(204, 204, 204));
         signs[5].setForeground(Color.black);
         signs[5].setFocusable(false);
-        signs[5].setFont(new Font("MV Boli", Font.PLAIN, 15));
+        signs[5].setFont(new Font("MV Boli", Font.PLAIN, 10));
         scorePanel.add(signs[5]);
 
         // Total points scored
