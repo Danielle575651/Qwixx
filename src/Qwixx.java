@@ -17,6 +17,9 @@ public class Qwixx extends Component implements ActionListener {
     private JButton restartGame = new JButton();
     private JButton gameRules = new JButton();
     private JPanel infoPanel = new JPanel();
+    private JButton finish = new JButton();
+    private JButton skip = new JButton();
+    private JButton turn = new JButton();
     private int clicksOnRestartGame = 0;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
@@ -26,23 +29,34 @@ public class Qwixx extends Component implements ActionListener {
         this.diceGUI = new DiceGUI();
         this.activePlayer = "Game is not started yet.";
         end = false;
+        //humanFirst();
+        finish = scoreSheetHumanPlayer.finished;
+        finish.addActionListener(this);
+        skip = scoreSheetHumanPlayer.skipRound;
+        skip.addActionListener(this);
+        this.human.changeState();
     }
 
     public void playGame() {
-        humanFirst();
-        updateTurnButton();
+        //humanFirst();
+        //updateTurnButton();
 
         while (!end) {
             if (this.human.getState()) {
-                if (diceGUI.nextRoundButton().getModel().isPressed()) {
-                    // If it is the human players turn
-                    humanCheck(diceGUI.getCurrentPoints());
-                    this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
-                }
+                //System.out.println("human turn");
+                //if (this.endRound) {
+                // If it is the human players turn
+                System.out.println("Human turn");
+                //humanCheck(diceGUI.getCurrentPoints());
+                //this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                //}
             } else {
                 diceGUI.nextRoundButton().doClick();
                 this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
-                humanCheck(diceGUI.getCurrentPoints());
+
+                //    humanCheck(diceGUI.getCurrentPoints());
+                //    System.out.println("check");
+
             }
 
             for (int i = 0; i < NUMBER_OF_COLOR; i++) {
@@ -66,24 +80,47 @@ public class Qwixx extends Component implements ActionListener {
             checkEnd();
             this.human.changeState();
             this.ai.changeState();
-            updateTurnButton();
+            //updateTurnButton();
         }
         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
         this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
 
     }
 
+    public void playGame2() {
+        //updateTurnButton();
 
-    public void humanFirst() {
-        Dice d = this.diceGUI.getDiceSet()[0];
-        d.rollDice();
-        //if (d.getValue() <= 3) {
-        //  this.human.changeState();
-        //} else {
-        //  this.ai.changeState();
-        //}
-        this.human.changeState();
+        for (int i = 0; i < NUMBER_OF_COLOR; i++) {
+            if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
+                // If one player closes a row, then the color should also disappear for the other player after
+                // having chosen their dice combination (including the color that may now disappear)
+                this.human.sheet.removeColor(i);
+                this.ai.sheet.removeColor(i);
+
+                // Also remove the corresponding die from the game
+                for (Dice d : this.diceGUI.getDiceSet()) {
+                    if (!d.isRemoved()) {
+                        if (d.getColor() == i + 2) {
+                            diceGUI.removeDice(d);
+                        }
+                    }
+                }
+            }
+           // updateTurnButton();
+        }
     }
+
+
+    //public void humanFirst() {
+        //Dice d = this.diceGUI.getDiceSet()[0];
+        //d.rollDice();
+        //if (d.getValue() <= 3) {
+        //    this.human.changeState();
+        //} else {
+        //    this.ai.changeState();
+        //}
+     //   this.human.changeState();
+    //}
 
 
     public void checkEnd() {
@@ -97,7 +134,11 @@ public class Qwixx extends Component implements ActionListener {
 
     public void updateActivePlayer() {
         if (this.human.isActive) {
-            this.activePlayer = this.human.getName();
+            if (this.human.getName() == " ") {
+                this.activePlayer = "Human player";
+            } else {
+                this.activePlayer = this.human.getName();
+            }
         } else if (this.ai.isActive) {
             this.activePlayer = this.ai.getName();
         } else {
@@ -106,7 +147,7 @@ public class Qwixx extends Component implements ActionListener {
     }
 
 
-    public void updateTurnButton() {
+    /*public void updateTurnButton() {
         this.infoPanel.removeAll();
         this.infoPanel.revalidate();
         this.infoPanel.repaint();
@@ -119,16 +160,16 @@ public class Qwixx extends Component implements ActionListener {
         infoPanel.add(turn);
         infoPanel.setSize(new Dimension(100, 100));
     }
-
+*/
     public void humanCheck(int[] points) {
-        if (scoreSheetHumanPlayer.getRoundIsEnded()) {
+        //if (scoreSheetHumanPlayer.getRoundIsEnded()) {
             List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
 
             // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
             // and the second is the number crossed. 04 is for example a red 4
             for (String indices : lastCrossed) {
                 // If the crossed number is not valid according to the dice value, display an error message
-                if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1, 2)), points, human.isActive)) {
+                if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive)) {
                     scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 }
             }
@@ -139,8 +180,8 @@ public class Qwixx extends Component implements ActionListener {
                 for (String indices : lastCrossed) {
                     for (String indices2 : lastCrossed) {
                         for (int colorCombination : human.getColorComb(points)) {
-                            int whiteValue = Integer.parseInt(indices.substring(1, 2)); // The value of the white combination
-                            int colorValue = Integer.parseInt(indices2.substring(1, 2)); // The value of the colored combination
+                            int whiteValue = Integer.parseInt(indices.substring(1)); // The value of the white combination
+                            int colorValue = Integer.parseInt(indices2.substring(1)); // The value of the colored combination
                             int whiteColorNumber = Integer.parseInt(indices.substring(0, 1)); // The row in which the white combination is crossed
                             int colorNumber = Integer.parseInt(indices2.substring(0, 1)); // The row in which the color combination is crossed
 
@@ -158,7 +199,7 @@ public class Qwixx extends Component implements ActionListener {
                     }
                 }
             }
-        }
+        //}
     }
 
 
@@ -168,7 +209,9 @@ public class Qwixx extends Component implements ActionListener {
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         this.diceGUI = new DiceGUI();
         end = false;
-        playGame();
+        this.human.changeState();
+        //startGame = false;
+        //playGame();
     }
 
     public void createGUI() {
@@ -190,9 +233,10 @@ public class Qwixx extends Component implements ActionListener {
 
         restartGame.setText("Click to start a new game");
         gameRules.setText("Click here to view the rules of Qwixx");
-        JLabel turn = new JLabel("Turn of: " + this.activePlayer);
+        this.turn = new JButton(this.activePlayer);
         restartGame.addActionListener(this);
         gameRules.addActionListener(this);
+        this.turn.addActionListener(this);
 
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(3, 1));
@@ -226,8 +270,36 @@ public class Qwixx extends Component implements ActionListener {
                         "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
                 restartTheGame(this.human);
+                this.activePlayer = this.human.getName();
+                this.turn.setText(this.activePlayer);
             }
-        } else {
+        } else if (e.getSource() == this.finish || e.getSource() == this.skip) {
+            if (!end) {
+                if (this.human.isActive) {
+                    humanCheck(diceGUI.getCurrentPoints());
+                    this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                    diceGUI.nextRoundButton().doClick();
+                } else {
+                    this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
+                    humanCheck(diceGUI.getCurrentPoints());
+                }
+                this.human.changeState();
+                this.ai.changeState();
+                updateActivePlayer();
+                this.turn.setText(this.activePlayer);
+                playGame2();
+            } else {
+                this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+                this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+            }
+
+            checkEnd();
+
+            if (end) {
+                this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+                this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+            }
+        } else if (e.getSource() == this.gameRules) {
             JOptionPane.showMessageDialog(this, "Game rules",
                     "Warning", JOptionPane.WARNING_MESSAGE);
         }
@@ -238,6 +310,6 @@ public class Qwixx extends Component implements ActionListener {
         AIPlayer ai = new AIPlayer();
         Qwixx qwixxGame = new Qwixx(human, ai);
         qwixxGame.createGUI();
-        qwixxGame.playGame();
+        //qwixxGame.playGame();
     }
 }

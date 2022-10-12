@@ -38,6 +38,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
+        numberCrossesLastRound = 0;
+        numberCrossesInRound = 0;
 
         createTitlePanel();
         createButtons();
@@ -141,7 +143,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
                         // Can only uncross button (i,j) that has been crossed in this round
                         for (String cross : crossedThisRound) {
-                            if (Integer.parseInt(cross.substring(0, 1)) == i && Integer.parseInt(cross.substring(1, 2)) == value) {
+                            if (Integer.parseInt(cross.substring(0, 1)) == i && Integer.parseInt(cross.substring(1)) == value) {
                                 canUncross = true;
                             }
                         }
@@ -195,6 +197,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 numberCrossesLastRound = numberCrossesInRound; // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
                 numberCrossesInRound = 0; // A new round is started and thus the counting of crosses is restarted
                 roundIsEnded = true;
+                System.out.println(roundIsEnded);
             } else {
                 JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
                         "ERROR", JOptionPane.ERROR_MESSAGE);

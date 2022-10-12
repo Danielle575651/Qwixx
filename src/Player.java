@@ -40,7 +40,19 @@ public abstract class Player {
     }
 
     public final void changeState() {
-        isActive = !isActive;
+        if (isActive) {
+            isActive = false;
+        } else {
+            isActive = true;
+        }
+    }
+
+    public void isActivePlayer() {
+        this.isActive = true;
+    }
+
+    public void isNotActivePlayer() {
+        this.isActive = false;
     }
 
     // Get combination of white dice
