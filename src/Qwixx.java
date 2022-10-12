@@ -54,8 +54,10 @@ public class Qwixx extends Component implements ActionListener {
 
                     // Also remove the corresponding die from the game
                     for (Dice d : this.diceGUI.getDiceSet()) {
-                        if (d.getColor() == i + 2) {
-                            diceGUI.removeDice(d);
+                        if (!d.isRemoved()) {
+                            if (d.getColor() == i + 2) {
+                                diceGUI.removeDice(d);
+                            }
                         }
                     }
                 }
