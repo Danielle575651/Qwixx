@@ -28,10 +28,6 @@ public class Qwixx extends Component implements ActionListener {
         end = false;
     }
 
-    public JButton getRestartGameButton() {
-        return restartGame;
-    }
-
     public void playGame() {
         humanFirst();
         updateTurnButton();
@@ -70,9 +66,9 @@ public class Qwixx extends Component implements ActionListener {
             this.ai.changeState();
             updateTurnButton();
         }
-
         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
         this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+
     }
 
 
@@ -80,9 +76,9 @@ public class Qwixx extends Component implements ActionListener {
         Dice d = this.diceGUI.getDiceSet()[0];
         d.rollDice();
         //if (d.getValue() <= 3) {
-          //  this.human.changeState();
+        //  this.human.changeState();
         //} else {
-          //  this.ai.changeState();
+        //  this.ai.changeState();
         //}
         this.human.changeState();
     }
