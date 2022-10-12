@@ -310,6 +310,6 @@ public class Qwixx extends Component implements ActionListener {
         AIPlayer ai = new AIPlayer();
         Qwixx qwixxGame = new Qwixx(human, ai);
         qwixxGame.createGUI();
-        //qwixxGame.playGame();
+        qwixxGame.playGame2();
     }
 }
