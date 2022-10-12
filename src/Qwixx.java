@@ -106,20 +106,20 @@ public class Qwixx extends Component implements ActionListener {
                     }
                 }
             }
-           // updateTurnButton();
+            // updateTurnButton();
         }
     }
 
 
     //public void humanFirst() {
-        //Dice d = this.diceGUI.getDiceSet()[0];
-        //d.rollDice();
-        //if (d.getValue() <= 3) {
-        //    this.human.changeState();
-        //} else {
-        //    this.ai.changeState();
-        //}
-     //   this.human.changeState();
+    //Dice d = this.diceGUI.getDiceSet()[0];
+    //d.rollDice();
+    //if (d.getValue() <= 3) {
+    //    this.human.changeState();
+    //} else {
+    //    this.ai.changeState();
+    //}
+    //   this.human.changeState();
     //}
 
 
@@ -163,42 +163,42 @@ public class Qwixx extends Component implements ActionListener {
 */
     public void humanCheck(int[] points) {
         //if (scoreSheetHumanPlayer.getRoundIsEnded()) {
-            List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
+        List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
 
-            // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
-            // and the second is the number crossed. 04 is for example a red 4
-            for (String indices : lastCrossed) {
-                // If the crossed number is not valid according to the dice value, display an error message
-                if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive)) {
-                    scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
-                }
+        // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
+        // and the second is the number crossed. 04 is for example a red 4
+        for (String indices : lastCrossed) {
+            // If the crossed number is not valid according to the dice value, display an error message
+            if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive)) {
+                scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
             }
+        }
 
-            // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed in the GUI
-            // If human is not the active player but wants to cross 2 numbers, then also an error message would already be displayed in the GUI
-            if (lastCrossed.size() == 2) {
-                for (String indices : lastCrossed) {
-                    for (String indices2 : lastCrossed) {
-                        for (int colorCombination : human.getColorComb(points)) {
-                            int whiteValue = Integer.parseInt(indices.substring(1)); // The value of the white combination
-                            int colorValue = Integer.parseInt(indices2.substring(1)); // The value of the colored combination
-                            int whiteColorNumber = Integer.parseInt(indices.substring(0, 1)); // The row in which the white combination is crossed
-                            int colorNumber = Integer.parseInt(indices2.substring(0, 1)); // The row in which the color combination is crossed
+        // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed in the GUI
+        // If human is not the active player but wants to cross 2 numbers, then also an error message would already be displayed in the GUI
+        if (lastCrossed.size() == 2) {
+            for (String indices : lastCrossed) {
+                for (String indices2 : lastCrossed) {
+                    for (int colorCombination : human.getColorComb(points)) {
+                        int whiteValue = Integer.parseInt(indices.substring(1)); // The value of the white combination
+                        int colorValue = Integer.parseInt(indices2.substring(1)); // The value of the colored combination
+                        int whiteColorNumber = Integer.parseInt(indices.substring(0, 1)); // The row in which the white combination is crossed
+                        int colorNumber = Integer.parseInt(indices2.substring(0, 1)); // The row in which the color combination is crossed
 
-                            // If 2 dices are chosen, then it has to be a white combination and a colored combination, but not only colored com
-                            if (!indices.equals(indices2) && human.getWhiteComb(points) == whiteValue &&
-                                    colorCombination == colorValue) {
-                                // If the colored and white combination are crossed in the same row, first white and then colored has to be crossed.
-                                if (whiteColorNumber == colorNumber && whiteValue > colorValue) {
-                                    scoreSheetHumanPlayer.displayErrorMessageOrder(lastCrossed.size());
-                                }
-                            } else { // If not a combination of white dice values and colored dice values are crossed, but only colored dices are crossed
-                                scoreSheetHumanPlayer.displayErrorMessageOnlyColored(lastCrossed.size());
+                        // If 2 dices are chosen, then it has to be a white combination and a colored combination, but not only colored com
+                        if (!indices.equals(indices2) && human.getWhiteComb(points) == whiteValue &&
+                                colorCombination == colorValue) {
+                            // If the colored and white combination are crossed in the same row, first white and then colored has to be crossed.
+                            if (whiteColorNumber == colorNumber && whiteValue > colorValue) {
+                                scoreSheetHumanPlayer.displayErrorMessageOrder(lastCrossed.size());
                             }
+                        } else { // If not a combination of white dice values and colored dice values are crossed, but only colored dices are crossed
+                            scoreSheetHumanPlayer.displayErrorMessageOnlyColored(lastCrossed.size());
                         }
                     }
                 }
             }
+        }
         //}
     }
 
@@ -278,6 +278,7 @@ public class Qwixx extends Component implements ActionListener {
                 if (this.human.isActive) {
                     humanCheck(diceGUI.getCurrentPoints());
                     this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                    // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                     diceGUI.nextRoundButton().doClick();
                 } else {
                     this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
@@ -310,6 +311,6 @@ public class Qwixx extends Component implements ActionListener {
         AIPlayer ai = new AIPlayer();
         Qwixx qwixxGame = new Qwixx(human, ai);
         qwixxGame.createGUI();
-        //qwixxGame.playGame();
+        qwixxGame.playGame2();
     }
 }

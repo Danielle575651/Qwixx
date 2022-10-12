@@ -91,11 +91,15 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title_panel.add(title, BorderLayout.WEST);
         title_panel.add(inputName);
 
+        finished.setFocusable(false);
+        finished.addActionListener(this);
         finishedPanel.add(finished);
         penalties.setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties.setFocusable(false);
         penalties.setBackground(new Color(204, 204, 204));
 
+        skipRound.setFocusable(false);
+        skipRound.addActionListener(this);
         skipRoundPanel.add(skipRound);
         skipRound.setFont(new Font("MV Boli", Font.PLAIN, 10));
         skipRound.setFocusable(false);
@@ -111,7 +115,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         JPanel bottom = new JPanel(new GridLayout(2,1));
         bottom.add(lowerPanel);
         bottom.add(messages);
-
 
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(title_panel, BorderLayout.PAGE_START);
@@ -197,7 +200,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 numberCrossesLastRound = numberCrossesInRound; // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
                 numberCrossesInRound = 0; // A new round is started and thus the counting of crosses is restarted
                 roundIsEnded = true;
-                System.out.println(roundIsEnded);
             } else {
                 JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -292,10 +294,11 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 } else {
                     buttons[i][j] = new JButton();
                 }
-                button_panel.add(buttons[i][j]);
-                buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
                 buttons[i][j].setFocusable(false);
                 buttons[i][j].addActionListener(this);
+                button_panel.add(buttons[i][j]);
+                buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
+
                 int value = j + 2;
 
                 if (i == 0) {
@@ -334,6 +337,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             penalties[i].setFont(new Font("MV Boli", Font.PLAIN, 10));
             penalties[i].setFocusable(false);
             penalties[i].setBackground(new Color(204, 204, 204));
+            penalties[i].addActionListener(this);
         }
     }
 
