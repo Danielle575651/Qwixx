@@ -11,9 +11,13 @@ public abstract class Player {
         this.name = name;
         isActive = false;
     }
-    
+
     public Scoresheet getSheet() {
         return this.sheet;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public final void tossDice(Dice[] dice) {
@@ -40,13 +44,13 @@ public abstract class Player {
     }
 
     // Get combination of white dice
-    public int getWhiteComb(Dice[] dice) {
-        return dice[0].getValue() + dice[1].getValue();
+    public int getWhiteComb(int[] points) {
+        return points[0] + points[1];
     }
 
     // Compute the color combination
-    public int[] getColorComb(Dice[] dice) {
-        int numColor = dice.length - 2; // Number of color dice
+    public int[] getColorComb(int[] points) {
+        int numColor = points.length - 2; // Number of color dice
         int numCombs = 2 * numColor;
         int[] whiteColor = new int[numCombs];
 
@@ -58,17 +62,17 @@ public abstract class Player {
                 continue;
             }
 
-            whiteColor[i] = dice[0].getValue() + dice[i].getValue();
-            whiteColor[i + 4] = dice[1].getValue() + dice[i].getValue();
+            whiteColor[i] = points[0] + points[i];
+            whiteColor[i + 4] = points[1] + points[i];
         }
 
         return whiteColor;
     }
 
     // Check if a value if available in the combination
-    public boolean numIsValid(int color, int value, Dice[] dice, boolean active) {
+    public boolean numIsValid(int color, int value, int[] points, boolean active) {
         // for non-active, only check white comb
-        int whiteComb = getWhiteComb(dice);
+        int whiteComb = getWhiteComb(points);
         if (!active && value == whiteComb) {
             return true;
         }
@@ -81,7 +85,7 @@ public abstract class Player {
             return true;
         }
 
-        int[] comb = getColorComb(dice);
+        int[] comb = getColorComb(points);
         // Check if the color is invalid
         if (comb[color] == 0 || comb[color + 4] == 0) {
             return false;

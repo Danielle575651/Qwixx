@@ -4,8 +4,8 @@ import java.util.stream.IntStream;
 public class AIPlayer extends Player {
     public ScoreSheetAIPlayerGUI gui;
 
-    public AIPlayer(String name) {
-        super(name);
+    public AIPlayer() {
+        super("AI Player");
         this.gui = new ScoreSheetAIPlayerGUI();
     }
 
@@ -20,8 +20,8 @@ public class AIPlayer extends Player {
     }
 
     // Finding minimum gap of the white combination
-    public int[] minGapWhite(Dice[] dice) {
-        int combination = getWhiteComb(dice);
+    public int[] minGapWhite(int[] points) {
+        int combination = getWhiteComb(points);
         int[] gap = new int[4];
 
         // Compute the gap for red and yellow, then green and blue (since they switch the order)
@@ -54,8 +54,8 @@ public class AIPlayer extends Player {
         return new int[] {indexMin, minGap, combination};
     }
 
-    public int[] minGapColor(Dice[] dice) {
-        int[] whiteColor = getColorComb(dice);
+    public int[] minGapColor(int[] points) {
+        int[] whiteColor = getColorComb(points);
 
         // Compute the gap
         int[] gap = new int[4];
@@ -110,9 +110,9 @@ public class AIPlayer extends Player {
         }
     }
 
-    public void bestChoiceActive(Dice[] dice) {
+    public void bestChoiceActive(int[] points) {
         // check if we can lock with the white combination
-        int whiteComb = getWhiteComb(dice);
+        int whiteComb = getWhiteComb(points);
         for(int i = 0; i < 4; i++) {
             if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
@@ -123,7 +123,7 @@ public class AIPlayer extends Player {
         }
 
         // check if we can lock with the color combination
-        int[] colorComb = getColorComb(dice);
+        int[] colorComb = getColorComb(points);
         for(int combValue : colorComb) {
             for(int i = 0; i < 4; i++) {
                 if(sheet.canCross(i, 10, combValue)) { // checking if 12 (or 2) can be crossed
@@ -158,11 +158,11 @@ public class AIPlayer extends Player {
             }
         }
 
-        int[] wwBestGap = minGapWhite(dice);
+        int[] wwBestGap = minGapWhite(points);
         int wwRow = wwBestGap[0];
         int wwGap = wwBestGap[1];
         int wwNum = wwBestGap[2];
-        int[] wcBestGap = minGapColor(dice);
+        int[] wcBestGap = minGapColor(points);
         int wcRow = wcBestGap[0];
         int wcGap = wcBestGap[1];
         int wcNum = wcBestGap[2];
@@ -216,9 +216,9 @@ public class AIPlayer extends Player {
         }
     }
 
-    public void bestChoiceNonActive(Dice[] dice) {
+    public void bestChoiceNonActive(int[] points) {
         // check if we can lock with the white combination
-        int whiteComb = getWhiteComb(dice);
+        int whiteComb = getWhiteComb(points);
         for(int i = 0; i < 4; i++) {
             if(sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
                 sheet.cross(i, 10); //cross 12 (or 2)
@@ -227,7 +227,7 @@ public class AIPlayer extends Player {
             }
         }
 
-        int[] input = minGapWhite(dice); // index corresponds to color + minGap + number to cross
+        int[] input = minGapWhite(points); // index corresponds to color + minGap + number to cross
 
         if (input[0] == -1) { // When there is no valid gap
             return; //Skip the round

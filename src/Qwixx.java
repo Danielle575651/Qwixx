@@ -1,101 +1,94 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 
-public class Qwixx {
+public class Qwixx extends Component implements ActionListener {
     private HumanPlayer human;
     private AIPlayer ai;
     private boolean end;
-    private ArrayList<Dice> diceSet;
-    private Map<String, Integer> colToNum;
     private ScoreSheetHumanPlayerGUI scoreSheetHumanPlayer;
     private DiceGUI diceGUI;
-    //private AIGUI aiGUI;
+    private final int NUMBER_OF_COLOR = 4;
+    private String activePlayer;
+
+    private JButton restartGame = new JButton();
+    private JButton gameRules = new JButton();
+    private int clicksOnRestartGame = 0;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
         this.human = human;
         this.ai = ai;
-        //this.aiGUI = new ScoreSheetAIPlayerGUI(); -> The GUI is generated in the AIPlayer object
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
-        end = false;
         this.diceGUI = new DiceGUI();
+        this.activePlayer = "Game is not started yet.";
+        end = false;
+    }
 
-        Dice white1 = new Dice(0);
-        Dice white2 = new Dice(0);
-        Dice red = new Dice(1);
-        Dice yellow = new Dice(2);
-        Dice green = new Dice(3);
-        Dice blue = new Dice(4);
-        diceSet = new ArrayList<>();
-        Collections.addAll(diceSet, white1, white2, red, yellow, green, blue);
-
-        colToNum = Map.of(
-                "red", 0,
-                "yellow", 1,
-                "green", 2,
-                "blue", 3);
+    public JButton getRestartGameButton() {
+        return restartGame;
     }
 
     public void playGame() {
-        humanFirst();
+        if (getRestartGameButton().getModel().isPressed()) {
+            humanFirst();
 
-        while (!end) {
-            Dice[] dice = new Dice[diceSet.size()];
-            for (int i = 0; i < diceSet.size(); i++) {
-                dice[i] = diceSet.get(i);
-            }
+            while (!end) {
+                if (this.human.getState()) {
+                    if (diceGUI.nextRoundButton().getModel().isPressed()) {
+                        // If it is the human players turn
+                        humanCheck(diceGUI.getCurrentPoints());
+                        this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                    }
+                } else {
+                    diceGUI.tossDiceAI();
+                    this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
+                    humanCheck(diceGUI.getCurrentPoints());
+                }
 
-            // If it is the human players turn
-            if (this.human.getState()) {
-                this.human.tossDice(dice);
-                humanCheck(dice);
-                this.ai.bestChoiceNonActive(dice);
-            } else {
-                this.ai.tossDice(dice);
-                this.ai.bestChoiceActive(dice);
-                humanCheck(dice);
-            }
+                for (int i = 0; i < NUMBER_OF_COLOR; i++) {
+                    if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
+                        // If one player closes a row, then the color should also disappear for the other player after
+                        // having chosen their dice combination (including the color that may now disappear)
+                        this.human.sheet.removeColor(i);
+                        this.ai.sheet.removeColor(i);
 
-            for (int i = 0; i < 4; i++) {
-                if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
-                    // If one player closes a row, then the color should also disappear for the other player after
-                    // having chosen their dice combination (including the color that may now disappear)
-                    this.human.sheet.removeColor(i);
-                    this.ai.sheet.removeColor(i);
-
-                    for (Dice d : diceSet) {
-                        if (colToNum.get(d.getColor()) == i) {
-                            removeDice(d);
+                        // Also remove the corresponding die from the game
+                        for (Dice d : this.diceGUI.getDiceSet()) {
+                            if (d.getColor() == i + 2) {
+                                diceGUI.removeDice(d);
+                            }
                         }
                     }
                 }
+
+                checkEnd();
+                this.human.changeState();
+                this.ai.changeState();
+                updateActivePlayer();
             }
 
-            checkEnd();
-            this.human.changeState();
-            this.ai.changeState();
-        }
 
-        win(); // Game has always ended when you reach this point, otherwise you will not break out of the while loop
-        this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-        this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+            this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+            this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+        }
     }
+
 
     public void humanFirst() {
-        diceSet.get(0).rollDice();
-        if (diceSet.get(0).getValue() <= 3) {
+        Dice d = this.diceGUI.getDiceSet()[0];
+        d.rollDice();
+        if (d.getValue() <= 3) {
             this.human.changeState();
+            updateActivePlayer();
         } else {
             this.ai.changeState();
+            updateActivePlayer();
         }
     }
 
-    public void removeDice(Dice dice) {
-        diceSet.remove(dice);
-    }
 
     public void checkEnd() {
         if (this.human.sheet.getPenaltyValue() == 4 || this.ai.sheet.getPenaltyValue() == 4 ||
@@ -106,7 +99,17 @@ public class Qwixx {
         }
     }
 
-    public void humanCheck(Dice[] dice) {
+    public void updateActivePlayer() {
+        if (this.human.isActive) {
+            this.activePlayer = this.human.getName();
+        } else if (this.ai.isActive) {
+            this.activePlayer = this.ai.getName();
+        } else {
+            this.activePlayer = "Game is not started yet.";
+        }
+    }
+
+    public void humanCheck(int[] points) {
         if (scoreSheetHumanPlayer.getRoundIsEnded()) {
             List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
 
@@ -114,7 +117,7 @@ public class Qwixx {
             // and the second is the number crossed. 04 is for example a red 4
             for (String indices : lastCrossed) {
                 // If the crossed number is not valid according to the dice value, display an error message
-                if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1, 2)), dice, human.isActive)) {
+                if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1, 2)), points, human.isActive)) {
                     scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 }
             }
@@ -124,14 +127,14 @@ public class Qwixx {
             if (lastCrossed.size() == 2) {
                 for (String indices : lastCrossed) {
                     for (String indices2 : lastCrossed) {
-                        for (int colorCombination : human.getColorComb(dice)) {
+                        for (int colorCombination : human.getColorComb(points)) {
                             int whiteValue = Integer.parseInt(indices.substring(1, 2)); // The value of the white combination
                             int colorValue = Integer.parseInt(indices2.substring(1, 2)); // The value of the colored combination
                             int whiteColorNumber = Integer.parseInt(indices.substring(0, 1)); // The row in which the white combination is crossed
                             int colorNumber = Integer.parseInt(indices2.substring(0, 1)); // The row in which the color combination is crossed
 
                             // If 2 dices are chosen, then it has to be a white combination and a colored combination, but not only colored com
-                            if (!indices.equals(indices2) && human.getWhiteComb(dice) == whiteValue &&
+                            if (!indices.equals(indices2) && human.getWhiteComb(points) == whiteValue &&
                                     colorCombination == colorValue) {
                                 // If the colored and white combination are crossed in the same row, first white and then colored has to be crossed.
                                 if (whiteColorNumber == colorNumber && whiteValue > colorValue) {
@@ -158,36 +161,81 @@ public class Qwixx {
 //        }
     }
 
-    public static void main(String[] args) {
+    public void restartTheGame(HumanPlayer human) {
+        this.human = new HumanPlayer(human.getName());
+        this.ai = new AIPlayer();
+        this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
+        this.diceGUI = new DiceGUI();
+        end = false;
+    }
+
+    public void createGUI() {
         JFrame frame = new JFrame();
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(new Dimension(600,800));
+        frame.setSize(new Dimension(600, 800));
         frame.getContentPane().setBackground(new Color(204, 204, 204));
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
 
-        HumanPlayer human = new HumanPlayer("");
-        AIPlayer ai = new AIPlayer("AI player");
-        Qwixx qwixxGame = new Qwixx(human, ai);
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-
-        JPanel humanPanel = qwixxGame.scoreSheetHumanPlayer.getScoreSheetHumanPlayer();
+        JPanel humanPanel = this.scoreSheetHumanPlayer.getScoreSheetHumanPlayer();
         humanPanel.setMinimumSize(humanPanel.getPreferredSize());
-        JPanel aiPanel = qwixxGame.ai.gui.getScorePanel();
+        JPanel aiPanel = this.ai.gui.getScorePanel();
         aiPanel.setMinimumSize(humanPanel.getPreferredSize());
 
-        JPanel dicePanel = qwixxGame.diceGUI.getMainPanel();
-        dicePanel.setSize(new Dimension(600, 100));
+        JPanel dicePanel = this.diceGUI.getDicePanel();
+        dicePanel.setSize(new Dimension(500, 100));
+
+        restartGame.setText("Click to start a new game");
+        gameRules.setText("Click here to view the rules of Qwixx");
+        JTextArea turn = new JTextArea("Turn of: " + this.activePlayer);
+        restartGame.addActionListener(this);
+        gameRules.addActionListener(this);
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new GridLayout(3, 1));
+        infoPanel.add(restartGame);
+        infoPanel.add(gameRules);
+        infoPanel.add(turn);
+        infoPanel.setSize(new Dimension(100, 100));
+
+        JPanel middlePanel = new JPanel();
+        BoxLayout layout = new BoxLayout(middlePanel, BoxLayout.X_AXIS);
+        middlePanel.setLayout(layout);
+        middlePanel.add(infoPanel);
+        middlePanel.add(dicePanel);
 
         frame.add(aiPanel, BorderLayout.PAGE_END);
         frame.add(humanPanel, BorderLayout.PAGE_START);
-        frame.add(dicePanel, BorderLayout.CENTER);
+        frame.add(middlePanel, BorderLayout.CENTER);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
         frame.setVisible(true);
         frame.setResizable(false);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == restartGame) {
+            clicksOnRestartGame++;
+
+            if (clicksOnRestartGame % 2 != 0) {
+                JOptionPane.showMessageDialog(this, "When clicking this button you will restart the game. Click again if you are sure that you want to restart.",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+            } else {
+                restartTheGame(this.human);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Game rules",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        HumanPlayer human = new HumanPlayer("");
+        AIPlayer ai = new AIPlayer();
+        Qwixx qwixxGame = new Qwixx(human, ai);
+        qwixxGame.createGUI();
+        qwixxGame.playGame();
     }
 }

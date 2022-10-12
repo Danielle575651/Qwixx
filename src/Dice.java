@@ -6,20 +6,20 @@ import java.util.Random;
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
 public class Dice {
-    private int colorInt;
+    private int color;
     private int value;
-    private final int maxPoint;
-    private final int minPoint;
+    private final int MAX_POINTS;
+    private final int MIN_POINTS;
 
     /**
-     * Construct a dice with specified color
+     * Construct a die with specified color, 0 - white, 1 - white, 2 - red, 3 - yellow, 4 - green, 5 - blue
+     * Here we use the above numbers to represent the color each die has
      * @param color specified color of the dice
      */
-    public Dice(int colorInt) {
-        this.colorInt = colorInt;
-        maxPoint = 6;
-        minPoint = 1;
-
+    public Dice(int color) {
+        this.color = color;
+        MAX_POINTS = 6;
+        MIN_POINTS = 1;
     }
 
     /**
@@ -27,7 +27,7 @@ public class Dice {
      */
     public void rollDice() {
         Random rand = new Random();
-        this.value = this.minPoint + rand.nextInt(this.maxPoint);
+        this.value = this.MIN_POINTS + rand.nextInt(this.MAX_POINTS);
     }
 
     /**
@@ -36,8 +36,9 @@ public class Dice {
      * @return color of the dice
      */
     public int getColor() {
-        return this.colorInt;
+        return this.color;
     }
+
 
     /**
      * Get the number of the top side of the dice
