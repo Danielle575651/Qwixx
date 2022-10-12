@@ -176,7 +176,7 @@ public class DiceGUI extends JPanel {
     public void rollDice() {
         // Only roll the dice which are not null
         for (int i = 0; i < diceSet.length; i++) {
-            if (diceSet[i] != null) {
+            if (!diceSet[i].isRemoved()) {
                 Dice d = diceSet[i];
                 d.rollDice();
                 points[i] = d.getValue();
@@ -187,7 +187,10 @@ public class DiceGUI extends JPanel {
     public void removeDice(Dice d) {
         for (int i = 0; i < diceSet.length; i++) {
             if (diceSet[i].equals(d)) {
-                diceSet[i] = null;
+                int color = d.getColor();
+                Dice dice = new Dice(color);
+                dice.changeState();
+                diceSet[i] = dice;
             }
         }
 
