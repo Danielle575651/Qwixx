@@ -16,6 +16,7 @@ public class Qwixx extends Component implements ActionListener {
 
     private JButton restartGame = new JButton();
     private JButton gameRules = new JButton();
+    private JPanel infoPanel = new JPanel();
     private int clicksOnRestartGame = 0;
 
     public Qwixx(HumanPlayer human, AIPlayer ai) {
@@ -32,8 +33,9 @@ public class Qwixx extends Component implements ActionListener {
     }
 
     public void playGame() {
-        if (getRestartGameButton().getModel().isPressed()) {
+        if (clicksOnRestartGame % 2 == 0) {
             humanFirst();
+            updateTurnButton();
 
             while (!end) {
                 if (this.human.getState()) {
@@ -67,7 +69,7 @@ public class Qwixx extends Component implements ActionListener {
                 checkEnd();
                 this.human.changeState();
                 this.ai.changeState();
-                updateActivePlayer();
+                updateTurnButton();
             }
 
 
@@ -82,10 +84,8 @@ public class Qwixx extends Component implements ActionListener {
         d.rollDice();
         if (d.getValue() <= 3) {
             this.human.changeState();
-            updateActivePlayer();
         } else {
             this.ai.changeState();
-            updateActivePlayer();
         }
     }
 
@@ -107,6 +107,21 @@ public class Qwixx extends Component implements ActionListener {
         } else {
             this.activePlayer = "Game is not started yet.";
         }
+    }
+
+
+    public void updateTurnButton() {
+        this.infoPanel.removeAll();
+        this.infoPanel.revalidate();
+        this.infoPanel.repaint();
+        infoPanel.setLayout(new GridLayout(3, 1));
+        infoPanel.add(restartGame);
+        infoPanel.add(gameRules);
+        JLabel turn = new JLabel();
+        updateActivePlayer();
+        turn.setText("Turn of: " + this.activePlayer);
+        infoPanel.add(turn);
+        infoPanel.setSize(new Dimension(100, 100));
     }
 
     public void humanCheck(int[] points) {
@@ -167,6 +182,7 @@ public class Qwixx extends Component implements ActionListener {
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         this.diceGUI = new DiceGUI();
         end = false;
+        playGame();
     }
 
     public void createGUI() {
@@ -188,7 +204,7 @@ public class Qwixx extends Component implements ActionListener {
 
         restartGame.setText("Click to start a new game");
         gameRules.setText("Click here to view the rules of Qwixx");
-        JTextArea turn = new JTextArea("Turn of: " + this.activePlayer);
+        JLabel turn = new JLabel("Turn of: " + this.activePlayer);
         restartGame.addActionListener(this);
         gameRules.addActionListener(this);
 
