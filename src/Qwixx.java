@@ -70,6 +70,7 @@ public class Qwixx extends Component implements ActionListener {
         }
         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
         this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+
     }
 
 
@@ -160,16 +161,6 @@ public class Qwixx extends Component implements ActionListener {
         }
     }
 
-    public void win() {
-//        System.out.println("GAME OVER");
-//        if (this.player.sheet.getTotalScore() > this.ai.sheet.getTotalScore()) {
-//            System.out.println("You win!");
-//        } else if (this.player.sheet.getTotalScore() < this.ai.sheet.getTotalScore()) {
-//            System.out.println("AI wins");
-//        } else {
-//            System.out.println("Draw");
-//        }
-    }
 
     public void restartTheGame(HumanPlayer human) {
         this.human = new HumanPlayer(human.getName());
@@ -220,7 +211,7 @@ public class Qwixx extends Component implements ActionListener {
         frame.add(humanPanel, BorderLayout.PAGE_START);
         frame.add(middlePanel, BorderLayout.CENTER);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true);
+//        frame.setUndecorated(true);
         frame.setVisible(true);
         frame.setResizable(false);
     }
