@@ -74,8 +74,8 @@ public abstract class Player {
                 continue;
             }
 
-            whiteColor[i] = points[0] + points[i];
-            whiteColor[i + 4] = points[1] + points[i];
+            whiteColor[i] = points[0] + points[i + 2];
+            whiteColor[i + 4] = points[1] + points[i + 2];
         }
 
         return whiteColor;
