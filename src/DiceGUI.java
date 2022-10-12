@@ -20,7 +20,7 @@ public class DiceGUI extends JPanel {
 
         points = new int[6];
 
-        dicePanel.setLayout(new GridLayout(1,6));
+        dicePanel.setLayout(new GridLayout(1, 6));
         initDicePanel(dicePanel);
 
         nextRound = new JButton(new AbstractAction("Toss dice") {
@@ -34,7 +34,7 @@ public class DiceGUI extends JPanel {
         });
         BPanel.add(nextRound);
 
-        mainPanel.setLayout(new GridLayout(1,2));
+        mainPanel.setLayout(new GridLayout(1, 2));
         mainPanel.add(BPanel);
         mainPanel.add(dicePanel);
     }
@@ -68,93 +68,141 @@ public class DiceGUI extends JPanel {
         for (int i = 0; i < points.length; i++) {
             if (i == 0) {
                 switch (points[i]) {
-                    case 1 -> picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w1.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 2 -> picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w2.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 3 -> picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w3.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 4 -> picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w4.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 5 -> picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w5.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 6 -> picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w6.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 1 ->
+                            picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w1.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 2 ->
+                            picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w2.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 3 ->
+                            picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w3.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 4 ->
+                            picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w4.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 5 ->
+                            picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w5.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 6 ->
+                            picLabels[0] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w6.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
                 }
             } else if (i == 1) {
                 switch (points[i]) {
-                    case 1 -> picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w1.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 2 -> picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w2.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 3 -> picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w3.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 4 -> picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w4.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 5 -> picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w5.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 6 -> picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w6.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 1 ->
+                            picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w1.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 2 ->
+                            picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w2.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 3 ->
+                            picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w3.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 4 ->
+                            picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w4.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 5 ->
+                            picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w5.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 6 ->
+                            picLabels[1] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("w6.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
                 }
             } else if (i == 2) {
                 switch (points[i]) {
-                    case 1 -> picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r1.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 2 -> picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r2.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 3 -> picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r3.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 4 -> picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r4.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 5 -> picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r5.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 6 -> picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r6.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 0 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("rC.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 1 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r1.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 2 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r2.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 3 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r3.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 4 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r4.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 5 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r5.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 6 ->
+                            picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("r6.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
                 }
             } else if (i == 3) {
                 switch (points[i]) {
-                    case 1 -> picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y1.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 2 -> picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y2.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 3 -> picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y3.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 4 -> picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y4.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 5 -> picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y5.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 6 -> picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y6.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 0 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("yC.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 1 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y1.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 2 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y2.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 3 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y3.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 4 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y4.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 5 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y5.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 6 ->
+                            picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("y6.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
                 }
             } else if (i == 4) {
                 switch (points[i]) {
-                    case 1 -> picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g1.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 2 -> picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g2.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 3 -> picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g3.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 4 -> picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g4.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 5 -> picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g5.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 6 -> picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g6.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 0 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("gC.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 1 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g1.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 2 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g2.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 3 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g3.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 4 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g4.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 5 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g5.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 6 ->
+                            picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("g6.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
                 }
             } else {
                 switch (points[i]) {
-                    case 1 -> picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b1.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 2 -> picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b2.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 3 -> picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b3.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 4 -> picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b4.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 5 -> picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b5.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
-                    case 6 -> picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b6.jpg"))).getImage()
-                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 0 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("bC.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 1 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b1.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 2 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b2.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 3 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b3.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 4 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b4.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 5 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b5.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+                    case 6 ->
+                            picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("b6.jpg"))).getImage()
+                                    .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
                 }
             }
         }
