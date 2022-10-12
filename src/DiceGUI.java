@@ -243,6 +243,27 @@ public class DiceGUI extends JPanel {
         }
 
         points[d.getColor()] = 0;
+        switch (d.getColor()) {
+            case 2 ->
+                    picLabels[2] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("rC.jpg"))).getImage()
+                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+            case 3 ->
+                    picLabels[3] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("yC.jpg"))).getImage()
+                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+            case 4 ->
+                    picLabels[4] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("gC.jpg"))).getImage()
+                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+            case 5 ->
+                    picLabels[5] = new JLabel(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("bC.jpg"))).getImage()
+                            .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
+        }
+
+        dicePanel.removeAll();
+        dicePanel.revalidate();
+        dicePanel.repaint();
+        for (JLabel l : picLabels) {
+            dicePanel.add(l);
+        }
     }
 
     public int[] getCurrentPoints() {
