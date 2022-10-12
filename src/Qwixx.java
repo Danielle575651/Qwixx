@@ -161,7 +161,7 @@ public class Qwixx extends Component implements ActionListener {
         infoPanel.setSize(new Dimension(100, 100));
     }
 */
-    public void humanCheck(int[] points) {
+    public boolean humanCheck(int[] points) {
         //if (scoreSheetHumanPlayer.getRoundIsEnded()) {
         List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
 
@@ -171,6 +171,7 @@ public class Qwixx extends Component implements ActionListener {
             // If the crossed number is not valid according to the dice value, display an error message
             if (!human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive)) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
+                return false;
             }
         }
 
@@ -191,15 +192,18 @@ public class Qwixx extends Component implements ActionListener {
                             // If the colored and white combination are crossed in the same row, first white and then colored has to be crossed.
                             if (whiteColorNumber == colorNumber && whiteValue > colorValue) {
                                 scoreSheetHumanPlayer.displayErrorMessageOrder(lastCrossed.size());
+                                return false;
                             }
                         } else { // If not a combination of white dice values and colored dice values are crossed, but only colored dices are crossed
                             scoreSheetHumanPlayer.displayErrorMessageOnlyColored(lastCrossed.size());
+                            return false;
                         }
                     }
                 }
             }
         }
         //}
+        return true;
     }
 
 
@@ -276,10 +280,10 @@ public class Qwixx extends Component implements ActionListener {
         } else if (e.getSource() == this.finish || e.getSource() == this.skip) {
             if (!end) {
                 if (this.human.isActive) {
-                    humanCheck(diceGUI.getCurrentPoints());
-                    this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
-                    // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
-                    diceGUI.nextRoundButton().doClick();
+                    if (humanCheck(diceGUI.getCurrentPoints())) { // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
+                        this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                        diceGUI.nextRoundButton().doClick();
+                    }
                 } else {
                     this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
                     humanCheck(diceGUI.getCurrentPoints());
