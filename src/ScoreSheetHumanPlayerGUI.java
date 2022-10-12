@@ -194,42 +194,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             }
         }
 
-        if (e.getSource() == finished) {
-            // At least one number has been crossed and thus a round can be closed
-            if (numberCrossesInRound > 0) {
-                numberCrossesLastRound = numberCrossesInRound; // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
-                numberCrossesInRound = 0; // A new round is started and thus the counting of crosses is restarted
-                roundIsEnded = true;
-            } else {
-                JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                // Display error message: No number has been crossed. Cross a number or click skip round
-            }
-        }
 
-        if (e.getSource() == skipRound) {
-            // Indeed no numbers has been crossed and thus a round can legally be skipped
-            if (numberCrossesInRound == 0) {
-                player.skipRound(player.isActive);
-                roundIsEnded = true;
-
-                if (player.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
-                    int k = 0;
-                    // As long as the penalty buttons are crossed, a new penalty cannot be crossed
-                    while (penalties[k].getText().equals("X")) {
-                        k++;
-                    }
-                    crossPenalty(k);
-                }
-            } else { // In case a number is crossed and also the skipRound button has been clicked:
-                JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                // Display an error message:  Remove the crosses if you want to skip this round or click the Finish button.
-            }
-        }
     }
 
-    private void crossPenalty(int k) {
+    public void crossPenalty(int k) {
         penalties[k].setText("X");
         penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties[k].setBackground(new Color(204, 204, 204));
@@ -499,7 +467,16 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     // When the round is finished (Skip round or Finish is clicked) but we want to check on the crosses in last round
     // to see if they correspond to the dice values.
     public List<String> getLastCrossedNumbers() {
-        return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
+        if (allCrossedNumbersInOrder.size() > 2) {
+            return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
+        } else if (allCrossedNumbersInOrder.size() == 2) {
+            if (numberCrossesLastRound == 2) {
+                return allCrossedNumbersInOrder;
+            } else {
+                return allCrossedNumbersInOrder.subList(1, 2);
+            }
+        }
+        return allCrossedNumbersInOrder;
     }
 
     // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
@@ -535,5 +512,23 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     public boolean getRoundIsEnded() {
         return roundIsEnded;
     }
+
+    // can be deleted later, to find bug
+    public int getCrossesInRoun() {
+        return this.numberCrossesInRound;
+    }
+
+    public void setCrossesInRound(int i) {
+        this.numberCrossesInRound = i;
+    }
+
+    public void setCrossesLastRound(int i) {
+        this.numberCrossesLastRound = i;
+    }
+
+    public void setRoundIsEnded() {
+        this.roundIsEnded = true;
+    }
+
 
 }
