@@ -210,14 +210,4 @@ public class DiceGUI extends JPanel {
         return this.mainPanel;
     }
 
-    public void tossDiceAI() {
-        this.mainPanel.removeAll();
-        this.dicePanel.removeAll();
-        this.dicePanel.revalidate();
-        this.dicePanel.repaint();
-        fillDicePanel(this.dicePanel);
-        mainPanel.setLayout(new GridLayout(1,2));
-        mainPanel.add(this.BPanel);
-        mainPanel.add(dicePanel);
-    }
 }

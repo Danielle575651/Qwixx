@@ -33,60 +33,58 @@ public class Qwixx extends Component implements ActionListener {
     }
 
     public void playGame() {
-        if (clicksOnRestartGame % 2 == 0) {
-            humanFirst();
-            updateTurnButton();
+        humanFirst();
+        updateTurnButton();
 
-            while (!end) {
-                if (this.human.getState()) {
-                    if (diceGUI.nextRoundButton().getModel().isPressed()) {
-                        // If it is the human players turn
-                        humanCheck(diceGUI.getCurrentPoints());
-                        this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
-                    }
-                } else {
-                    diceGUI.tossDiceAI();
-                    this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
+        while (!end) {
+            if (this.human.getState()) {
+                if (diceGUI.nextRoundButton().getModel().isPressed()) {
+                    // If it is the human players turn
                     humanCheck(diceGUI.getCurrentPoints());
+                    this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
                 }
+            } else {
+                diceGUI.nextRoundButton().doClick();
+                this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
+                humanCheck(diceGUI.getCurrentPoints());
+            }
 
-                for (int i = 0; i < NUMBER_OF_COLOR; i++) {
-                    if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
-                        // If one player closes a row, then the color should also disappear for the other player after
-                        // having chosen their dice combination (including the color that may now disappear)
-                        this.human.sheet.removeColor(i);
-                        this.ai.sheet.removeColor(i);
+            for (int i = 0; i < NUMBER_OF_COLOR; i++) {
+                if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
+                    // If one player closes a row, then the color should also disappear for the other player after
+                    // having chosen their dice combination (including the color that may now disappear)
+                    this.human.sheet.removeColor(i);
+                    this.ai.sheet.removeColor(i);
 
-                        // Also remove the corresponding die from the game
-                        for (Dice d : this.diceGUI.getDiceSet()) {
-                            if (d.getColor() == i + 2) {
-                                diceGUI.removeDice(d);
-                            }
+                    // Also remove the corresponding die from the game
+                    for (Dice d : this.diceGUI.getDiceSet()) {
+                        if (d.getColor() == i + 2) {
+                            diceGUI.removeDice(d);
                         }
                     }
                 }
-
-                checkEnd();
-                this.human.changeState();
-                this.ai.changeState();
-                updateTurnButton();
             }
 
-
-            this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-            this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+            checkEnd();
+            this.human.changeState();
+            this.ai.changeState();
+            updateTurnButton();
         }
+
+        this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+        this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
     }
 
 
     public void humanFirst() {
         Dice d = this.diceGUI.getDiceSet()[0];
         d.rollDice();
-        if (d.getValue() <= 3) {
-            this.human.changeState();
-        } else {
-            this.ai.changeState();
-        }
+        //if (d.getValue() <= 3) {
+          //  this.human.changeState();
+        //} else {
+          //  this.ai.changeState();
+        //}
+        this.human.changeState();
     }
 
 
