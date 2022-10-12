@@ -68,7 +68,6 @@ public class Qwixx extends Component implements ActionListener {
         }
         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
         this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
-
     }
 
 
