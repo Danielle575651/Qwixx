@@ -10,6 +10,7 @@ public class Dice {
     private int value;
     private final int MAX_POINTS;
     private final int MIN_POINTS;
+    private boolean isRemoved;
 
     /**
      * Construct a die with specified color, 0 - white, 1 - white, 2 - red, 3 - yellow, 4 - green, 5 - blue
@@ -20,6 +21,7 @@ public class Dice {
         this.color = color;
         MAX_POINTS = 6;
         MIN_POINTS = 1;
+        isRemoved = false;
     }
 
     /**
@@ -47,5 +49,13 @@ public class Dice {
      */
     public int getValue() {
         return this.value;
+    }
+
+    public boolean isRemoved() {
+        return this.isRemoved;
+    }
+
+    public void changeState() {
+        this.isRemoved = true;
     }
 }
