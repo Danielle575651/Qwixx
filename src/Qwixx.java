@@ -304,12 +304,6 @@ public class Qwixx extends Component implements ActionListener {
             }
         }
 
-        if (e.getSource() == gameRules) {
-            JOptionPane.showMessageDialog(this, "Fill in the rules.",
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         if (e.getSource() == quitApp) {
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }
