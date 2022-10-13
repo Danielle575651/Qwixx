@@ -207,6 +207,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     private void crossButton(int i, int j) {
         buttons[i][j].setText("X");
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
+        buttons[i][j].setForeground(Color.BLACK);
 
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
@@ -231,6 +232,15 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
             buttons[i][j].setText(String.valueOf(value));
             buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
+            if (i == 0) {
+                buttons[i][j].setForeground(new Color(204, 0, 0));
+            } else if (i == 1) {
+                buttons[i][j].setForeground(new Color(255, 204, 0));
+            } else if (i == 2) {
+                buttons[i][j].setForeground(new Color(0, 153, 0));
+            } else {
+                buttons[i][j].setForeground(new Color(0, 0, 204));
+            }
         }
     }
 
