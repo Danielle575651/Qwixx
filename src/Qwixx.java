@@ -17,8 +17,8 @@ public class Qwixx extends Component implements ActionListener {
     private JButton restartGame = new JButton();
     private JButton gameRules = new JButton();
     private JPanel infoPanel = new JPanel();
-    private JButton finish = new JButton();
-    private JButton skip = new JButton();
+    private JButton finish;
+    private JButton skip;
     private JButton turn = new JButton();
     private int clicksOnRestartGame = 0;
 
@@ -121,6 +121,7 @@ public class Qwixx extends Component implements ActionListener {
                                     return false;
                                 }
                             }
+                            return true;
                         }
 
                         if ((colorDiceValues[colorFirstCross] == valueFirstCross || colorDiceValues[colorFirstCross + 4] == valueFirstCross)
@@ -138,9 +139,9 @@ public class Qwixx extends Component implements ActionListener {
 
     public void restartTheGame(HumanPlayer human) {
         this.human = new HumanPlayer(human.getName());
-        this.ai = new AIPlayer();
-        this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
-        this.diceGUI = new DiceGUI();
+        //this.ai = new AIPlayer();
+        //this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
+        //this.diceGUI = new DiceGUI();
         end = false;
         this.human.changeState();
     }
@@ -205,8 +206,8 @@ public class Qwixx extends Component implements ActionListener {
             }
         } else if (e.getSource() == this.finish) {
             // At least one number has been crossed and thus a round can be closed
-            if (scoreSheetHumanPlayer.getCrossesInRoun() > 0) {
-                scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRoun()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
+            if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
+                scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
                 scoreSheetHumanPlayer.setCrossesInRound(0); // A new round is started and thus the counting of crosses is restarted
                 scoreSheetHumanPlayer.setRoundIsEnded();
             } else {
@@ -239,7 +240,7 @@ public class Qwixx extends Component implements ActionListener {
             }
         } else if (e.getSource() == this.skip) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
-            if (scoreSheetHumanPlayer.getCrossesInRoun() == 0) {
+            if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
                 human.skipRound(human.isActive);
                 scoreSheetHumanPlayer.setRoundIsEnded();
 

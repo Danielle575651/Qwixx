@@ -513,8 +513,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         return roundIsEnded;
     }
 
-    // can be deleted later, to find bug
-    public int getCrossesInRoun() {
+    public int getCrossesInRound() {
         return this.numberCrossesInRound;
     }
 
