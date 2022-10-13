@@ -38,8 +38,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
-        numberCrossesLastRound = 0;
-        numberCrossesInRound = 0;
+        numberCrossesLastRound = 0; // Does not include a cross placed on a lock
+        numberCrossesInRound = 0; // Does not include a cross placed on a lock
 
         createTitlePanel();
         createButtons();
@@ -127,7 +127,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         roundIsEnded = false;
 
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 12; j++) {
+            for (int j = 0; j < 11; j++) { // A lock cannot be crossed by the human player itself
                 if (e.getSource() == buttons[i][j]) {
                     int value;
 
@@ -155,8 +155,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                             uncrossButton(i, j);
                             
                             // If player wants to uncross 12 or 2 and this is allowed then lock also gets uncrossed
-                            if (j == 10) {
+                            if (j == 10 && buttons[i][j].getText().equals("X")) {
                                 uncrossButton(i, 11);
+                                player.sheet.removeCross(i, 11);
                             }
                             
                             player.sheet.removeCross(i, j);
@@ -181,6 +182,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                             if (j == 10) { // If last number is crossed then (and this allowed) then lock can also be crossed. canCross already checks if a 12 or 2 are allowed to be crossed
                                 // A lock does not count into the number of crosses done in a round
                                 crossButton(i, 11);
+                                player.sheet.cross(i, 11);
                             }
                         } else { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
                             uncrossButton(i, j);
