@@ -512,18 +512,17 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     public void displayErrorMessageOrder(int i) {
         numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not" +
-                        " correct. If you want to cross numbers in the same row, you first have to cross the combination" +
+        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not"  + "\n"+ 
+                        " correct. If you want to cross numbers in the same row, you first have to cross the combination" + "\n" +
                         " of the white dice and then a colored combination.",
                 "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
     public void displayErrorMessageOnlyColored(int i) {
         numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The numbers you have just crossed are not valid. " +
-                        "Uncross the button you have just clicked and make sure to choose first a combination of the " +
-                        "white dice and then a combination of a white and colored die. Do not forget to hit the finish " +
-                        "button.",
+        JOptionPane.showMessageDialog(this, "The numbers you have just crossed are not valid. "  + "\n"+
+                        "Uncross the button you have just clicked and make sure to choose first a combination of the " + "\n" +
+                        "white dice and then a combination of a white and colored die." + "\n" +"Do not forget to hit the finish button.",
                 "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
