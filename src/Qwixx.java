@@ -331,6 +331,7 @@ public class Qwixx extends Component implements ActionListener {
                 if (this.human.isActive) {
                     // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                     this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                    diceGUI.enableToss();
                     diceGUI.nextRoundButton().doClick();
                     diceGUI.disableToss();
                 } else {
@@ -372,6 +373,7 @@ public class Qwixx extends Component implements ActionListener {
                     if (this.human.isActive) {
                         // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                         this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                        diceGUI.enableToss();
                         diceGUI.nextRoundButton().doClick();
                         diceGUI.disableToss();
                     } else {
