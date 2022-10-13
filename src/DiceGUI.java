@@ -281,5 +281,12 @@ public class DiceGUI extends JPanel {
     public JPanel getDicePanel() {
         return this.mainPanel;
     }
+    
+    public void disableToss() {
+        this.nextRound.setEnabled(false);
+    }
 
+    public void enableToss() {
+        this.nextRound.setEnabled(true);
+    }
 }
