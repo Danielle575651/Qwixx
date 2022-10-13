@@ -86,6 +86,7 @@ public class ScoreSheetAIPlayerGUI {
     public void crossButton(int i, int j) {
         buttons[i][j].setText("X");
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
+        buttons[i][j].setForeground(Color.BLACK);
 
         if (j == 11) {
             buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
