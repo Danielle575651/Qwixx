@@ -9,6 +9,10 @@ public class AIPlayer extends Player {
         this.gui = new ScoreSheetAIPlayerGUI();
     }
 
+    public ScoreSheetAIPlayerGUI getGUI() {
+        return this.gui;
+    }
+
     public void crossNumber(int color, int number) {
         if(color == 0 || color == 1) {
             sheet.cross(color, number - 2);
@@ -17,6 +21,7 @@ public class AIPlayer extends Player {
             sheet.cross(color, 12 - number);
             this.gui.crossButton(color, 12 - number);
         }
+        System.out.println(color + " " + number);
     }
 
     // Finding minimum gap of the white combination
@@ -177,7 +182,7 @@ public class AIPlayer extends Player {
         // Case: same color
         if (wwRow == wcRow) {
             if(wwGap < wcGap) {
-                if(wcGap - wwGap == 1 && wwGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+                if(wcGap - wwGap <= 2 && wwGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
                     crossNumber(wwRow, wwNum);
                     crossNumber(wcRow, wcNum);
                     return;
@@ -185,6 +190,11 @@ public class AIPlayer extends Player {
                 exception1(wwRow, wwNum, wwGap);
                 return;
             } else {
+                if(wwGap - wcGap <= 2 && wcGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+                    crossNumber(wwRow, wwNum);
+                    crossNumber(wcRow, wcNum);
+                    return;
+                }
                 exception1(wcRow, wcNum, wcGap);
                 return;
             }
@@ -208,9 +218,19 @@ public class AIPlayer extends Player {
 
         // Different color + gap
         if (wwGap < wcGap) {
+            if(wwGap < 3 && wcGap == 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+                crossNumber(wwRow, wwNum);
+                crossNumber(wcRow, wcNum);
+                return;
+            }
             exception1(wwRow, wwNum, wwGap);
             return;
         } else {
+            if(wcGap < 3 && wwGap == 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+                crossNumber(wwRow, wwNum);
+                crossNumber(wcRow, wcNum);
+                return;
+            }
             exception1(wcRow, wcNum, wcGap);
             return;
         }
@@ -244,7 +264,7 @@ public class AIPlayer extends Player {
         }
 
         // if the min gap is 1, then we cross the chosen number
-        if (input[1] == 1) {
+        if (input[1] < 3) {
             crossNumber(input[0], input[2]);
             return;
         }
