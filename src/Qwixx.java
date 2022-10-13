@@ -96,7 +96,6 @@ public class Qwixx extends Component implements ActionListener {
         // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed in the GUI
         // If human is not the active player but wants to cross 2 numbers, then also an error message would already be displayed in the GUI
         if (lastCrossed.size() == 2) {
-            //value == comb[color] || value == comb[color + 4]
             for (String lastCross : lastCrossed) {
                 for (String lastCross2 : lastCrossed) {
                     if (!lastCross.equals(lastCross2)) { // Do not compare the same crosses
