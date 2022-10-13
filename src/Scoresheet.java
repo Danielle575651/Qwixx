@@ -39,6 +39,14 @@ public class Scoresheet {
     }
 
     /**
+     * Method which sets the row to true of the specific color which needs to be added.
+     * @param row row which belongs to the color which needs to be added
+     */
+    public void addColor(int row) {
+        validRows[row] = true;
+    }
+
+    /**
      * Method that returns the amount of rows.
      * @return the amount of rows
      */
@@ -92,6 +100,11 @@ public class Scoresheet {
      */
     public void removeCross(int row, int column) {
         scored[row][column] = false;
+
+        // If 2 or 12 is uncrosses and the color is not added back yet, we add the color back to the game
+        if (column == getColumns() - 2) {
+            addColor(row);
+        }
     }
 
     /**
