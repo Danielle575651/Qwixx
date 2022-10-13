@@ -1,3 +1,8 @@
+/**
+ * Class that contains the methods for the ScoreSheet of the Qwixx game.
+ *
+ * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
+ */
 public class Scoresheet {
     public static final int MIN_CROSS = 5;
     public static final int LOCK_VALUE = 0;
@@ -11,62 +16,91 @@ public class Scoresheet {
     private int columns;
     private int penalties;
 
+    /**
+     * Constructor for the Scoresheet, which initializes the values.
+     */
     public Scoresheet() {
         rows = DEFAULT_NUMBERS.length;
         columns = DEFAULT_NUMBERS[0].length;
         scored = new boolean[rows][columns];
         validRows = new boolean[rows];
+        //for every row, set the initial row on true, when being false a row disappears
         for (int i = 0; i < rows; i++) {
             validRows[i] = true;
         }
     }
 
-    public boolean[][] getScored() {
-        return scored;
-    }
-
+    /**
+     * Method which sets the row to false of the specific color which needs to be removed.
+     * @param row row which belongs to the color which needs to be removed
+     */
     public void removeColor(int row) {
         validRows[row] = false;
     }
 
+    /**
+     * Method that returns the amount of rows.
+     * @return the amount of rows
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Method that returns the amount of columns.
+     * @return the amount of columns
+     */
     public int getColumns() {
         return columns;
     }
 
+    /**
+     * Method that adds a penalty to the total amount of already existing penalties.
+     */
     public void addPenalty() {
         penalties++;
     }
 
-    public void removePenalty() {
-        penalties--;
-    }
-
-    // Gets the number of penalties
+    /**
+     * Method that returns the total amount of penalties that are given
+     * @return the number of penalties
+     */
     public int getPenaltyValue() {
         return penalties;
     }
 
-    // Always first check if the value can be crossed before crossing!
+    /**
+     * Method that crosses a specific element (a given number of a given color), and when the last colored number of
+     * the row is crossed, the last element also will be crossed.
+     * @param row the row, corresponding to one of the four colors
+     * @param column the column, which indicates which number needs to be crossed
+     */
     public void cross(int row, int column) {
         scored[row][column] = true;
 
         // If the last colored number is crossed in a row, the lock is also crossed of.
-        // Columns starting at 0, number of columns starting at 1, therefore the minus one.
         if (column == getColumns() - 2) {
             scored[row][column + 1] = true;
             removeColor(row);
         }
     }
 
+    /**
+     * Method that removes the cross from the belonging element, corresponding to a specific row and column.
+     * @param row the row, corresponding to one of the four colors
+     * @param column the column, which indicates which number needs to be crossed
+     */
     public void removeCross(int row, int column) {
         scored[row][column] = false;
     }
 
-    // Also checks if a lock can be crossed
+    /**
+     * Method that checks whether a cross is allowed on the place of the specific row and column. It also checks whether
+     * a lock is allowed.
+     * @param row the row, corresponding to one of the four colors
+     * @param column the column, which indicates which number needs to be crossed
+     * @return a boolean whether the cross is allowed to place
+     */
     public boolean canCross(int row, int column) {
         for (int i = getColumns() - 1; i >= column; i--) {
             // If the number at the index or before are already crossed then cannot be crossed again.
@@ -85,15 +119,34 @@ public class Scoresheet {
         return true;
     }
 
-    // Ensures that a cross can be crossed and that the value on the dices matches the number on the score sheet
+    /**
+     * Method that ensures whether a cross that wants to be placed is allowed and if the number of the scoresheet matches
+     * with the value on the dices.
+     * @param row the row, corresponding to one of the four colors
+     * @param column the column, which indicates which number needs to be crossed
+     * @param diceValue integer that gives the value on the dice
+     * @return a boolean whether the cross is allowed to place and matches the dice value.
+     * @see #canCross(int, int)
+     */
     public boolean canCross(int row, int column, int diceValue) {
         return canCross(row, column) && diceValue == getValue(row, column);
     }
 
+    /**
+     * Method that gets the value of the corresponding row and column.
+     * @param row the row, corresponding to one of the four colors
+     * @param column the column, which indicates which number needs to be crossed
+     * @return the value of the corresponding row and column
+     */
     public int getValue(int row, int column) {
         return DEFAULT_NUMBERS[row][column];
     }
 
+    /**
+     * Method that returns the amount of numbers that are crossed in a specific row.
+     * @param row the row, corresponding to one of the four colors
+     * @return an integer with the amount of numbers in a row that are crossed
+     */
     public int getNumberCrossed(int row) {
         int numbers = 0;
         if (row >= 0 && row < getRows()) {
@@ -106,7 +159,11 @@ public class Scoresheet {
         return numbers;
     }
 
-    // Gets the score per row using the scored 2D array
+    /**
+     * Method that returns the score for a given row.
+     * @param row the row, corresponding to one of the four colors
+     * @return an integer with the total score of one row
+     */
     public int getScore(int row) {
         int score = 0;
         int numbersCrossed = getNumberCrossed(row);
@@ -116,6 +173,11 @@ public class Scoresheet {
         return score;
     }
 
+    /**
+     * Method that returns the overall score, when summing up the scores of all the rows and subtracting the penalty
+     * value times the amount of penalties.
+     * @return the total score of the score sheet
+     */
     public int getTotalScore() {
         int score = 0;
         for (int row = 0; row < getRows(); row++) {
@@ -124,6 +186,11 @@ public class Scoresheet {
         return score + PENALTY_VALUE * getPenaltyValue();
     }
 
+    /**
+     * Method that returns the last value that is crossed of a row.
+     * @param row the row, corresponding to one of the four colors
+     * @return an integer with the last value that is crossed in a row
+     */
     public int getLastCrossed(int row) {
         int lastValue = 1;
         if (row == 2 || row == 3) {
@@ -137,7 +204,11 @@ public class Scoresheet {
         }
         return lastValue;
     }
-    
+
+    /**
+     * Method which counts the total amount of locks that are crossed.
+     * @return the amount of locks that are already crossed
+     */
     public int getLocks() {
         int nLock = 0;
         for (boolean validRow : validRows) {
@@ -148,10 +219,19 @@ public class Scoresheet {
         return  nLock;
     }
 
+    /**
+     * Method which checks whether a specific row is still existing and not removed.
+     * @param i, an integer which gives the row which will be checked whether it is removed
+     * @return an boolean whether a row is still valid (existing) or not valid (removed)
+     */
     public boolean getValidRow(int i) {
         return validRows[i];
     }
 
+    /**
+     * Method that returns the value of a penalty.
+     * @return the value of one penalty
+     */
     public int getPenalty() {
         return -PENALTY_VALUE;
     }
