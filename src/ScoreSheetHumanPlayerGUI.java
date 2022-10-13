@@ -38,8 +38,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
-        numberCrossesLastRound = 0; // Does not include a cross placed on a lock
-        numberCrossesInRound = 0; // Does not include a cross placed on a lock
+        numberCrossesLastRound = 0;
+        numberCrossesInRound = 0;
 
         createTitlePanel();
         createButtons();
@@ -153,13 +153,12 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
                         if (canUncross) {
                             uncrossButton(i, j);
-                            
                             // If player wants to uncross 12 or 2 and this is allowed then lock also gets uncrossed
                             if (j == 10 && buttons[i][j].getText().equals("X")) {
                                 uncrossButton(i, 11);
                                 player.sheet.removeCross(i, 11);
                             }
-                            
+
                             player.sheet.removeCross(i, j);
                             numberCrossesInRound--;
                             allCrossedNumbersInOrder.remove(indexStored);

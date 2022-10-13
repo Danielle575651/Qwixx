@@ -26,6 +26,7 @@ public class Qwixx extends Component implements ActionListener {
     private JButton finish = new JButton();
     private JButton skip = new JButton();
     private JButton turn = new JButton();
+    private JButton toss;
     private int clicksOnRestartGame = 0;
     private boolean humanTossYet = false;
 
@@ -41,6 +42,8 @@ public class Qwixx extends Component implements ActionListener {
         finish.addActionListener(this);
         skip = scoreSheetHumanPlayer.skipRound;
         skip.addActionListener(this);
+        toss = diceGUI.nextRoundButton();
+        toss.addActionListener(this);
         this.human.changeState();
     }
 
@@ -170,6 +173,8 @@ public class Qwixx extends Component implements ActionListener {
         finish.addActionListener(this);
         skip = scoreSheetHumanPlayer.skipRound;
         skip.addActionListener(this);
+        toss = diceGUI.nextRoundButton();
+        toss.addActionListener(this);
     }
 
     public void createStartScreen() {
@@ -393,13 +398,16 @@ public class Qwixx extends Component implements ActionListener {
             } else { // In case a number is crossed and also the skipRound button has been clicked:
                 JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
-                return;
             }
         }
 
         else if (e.getSource() == this.gameRules) {
             JOptionPane.showMessageDialog(this, "Game rules",
                     "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+
+        else if (e.getSource() == this.toss) {
+            diceGUI.disableToss(); // Ensure that the human only tosses once per round
         }
     }
 
