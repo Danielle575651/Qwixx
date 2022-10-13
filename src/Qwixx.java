@@ -289,6 +289,15 @@ public class Qwixx extends Component implements ActionListener {
             restartTheGame(this.human);
             this.turn.setText("This turn belongs to " + this.activePlayer);
             this.createGUI();
+
+            if (this.activePlayer.equals(this.ai.name)) {
+                this.ai.isActivePlayer();
+                this.human.isNotActivePlayer();
+                diceGUI.enableToss();
+                diceGUI.nextRoundButton().doClick();
+                diceGUI.disableToss();
+            }
+
             return;
         }
 
