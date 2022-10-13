@@ -153,6 +153,12 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
                         if (canUncross) {
                             uncrossButton(i, j);
+                            
+                            // If player wants to uncross 12 or 2 and this is allowed then lock also gets uncrossed
+                            if (j == 10) {
+                                uncrossButton(i, 11);
+                            }
+                            
                             player.sheet.removeCross(i, j);
                             numberCrossesInRound--;
                             allCrossedNumbersInOrder.remove(indexStored);
