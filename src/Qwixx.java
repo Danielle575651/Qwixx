@@ -404,21 +404,23 @@ public class Qwixx extends Component implements ActionListener {
         }
 
         else if (e.getSource() == this.gameRules) {
-            JOptionPane.showMessageDialog(this, "1. When you roll the dice in a round, you have two chances to cross the numbers:"+ "\n"+
-                     "  First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows"+ "\n"+
-                    "  Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number"+ "\n"+
-                    "  in the row with the same color. Note that, the order cannot be changed. However, you can choose to cross either one or two times,"+ "\n"+
-                            "  but if you do not cross any, you will get a penalty." + "\n"+ "\n"+
+            JOptionPane.showMessageDialog(this,
+                    "1. When you roll the dice in a round:"+ "\n"+
+                     "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows"+ "\n"+
+                    "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color."+ "\n"+
+                    "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times,"+ "\n"+
+                            "   but if you do not cross any, you will get a penalty." + "\n"+ "\n"+
                             "2. When it is not your round to roll the dice:"+ "\n"+
-                            "  You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty."+ "\n"
+                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty."+ "\n"
                             + "\n"+"3. The numbers must be crossed out from left to right in each of the four colored rows."
                             + "\n" + "\n"+"4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row."+ "\n"+
-                            "  If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)"+ "\n" + "\n"+
+                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)"+ "\n" + "\n"+
                     "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n"+ "\n"+
                              "6. The game ends when two rows are locked, or one player has get 4 penalties."+ "\n"+ "\n" +
                             "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points."+"\n"+
-                            "  The player with the most points wins the game! ",
+                            "   The player with the most points wins the game! ",
                     "Warning", JOptionPane.WARNING_MESSAGE);
+
         }
 
         else if (e.getSource() == this.toss) {
