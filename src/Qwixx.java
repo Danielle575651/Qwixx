@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Random;
 
 
 public class Qwixx extends Component implements ActionListener {
@@ -20,6 +21,7 @@ public class Qwixx extends Component implements ActionListener {
     private JButton restartGame = new JButton();
     private JButton gameRules = new JButton();
     private JButton quitGame = new JButton();
+    private JButton quitApp = new JButton();
     private JPanel infoPanel = new JPanel();
     private JButton finish = new JButton();
     private JButton skip = new JButton();
@@ -183,12 +185,15 @@ public class Qwixx extends Component implements ActionListener {
         gameRules.setText("Click here to view the rules of Qwixx");
         restartGame.addActionListener(this);
         gameRules.addActionListener(this);
+        quitApp.setText("Quit application");
+        quitApp.addActionListener(this);
 
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(3, 1));
         infoPanel.add(restartGame);
         infoPanel.add(gameRules);
-        infoPanel.add(turn);
+        infoPanel.add(quitApp);
+        //infoPanel.add(turn);
         infoPanel.setSize(new Dimension(100, 100));
 
         JPanel middlePanel = new JPanel();
@@ -256,8 +261,27 @@ public class Qwixx extends Component implements ActionListener {
                 return;
             }
 
+            String[] option = new String[] {"Yes!", "Nope, let AI play first", "Choose randomly"};
+            int n = JOptionPane.showOptionDialog(this, "Do you want to play first?",
+                    "Choosing Active Player", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
+
+            if (n == 0) {
+                this.activePlayer = this.human.name;
+            } else if (n == 1) {
+                this.activePlayer = this.ai.name;
+            } else if (n == 2) {
+                int player = (int)Math.round(Math.random());
+                if (player == 0) {
+                    JOptionPane.showMessageDialog(this, "You will play first!",
+                            "Choosing Active Player", JOptionPane.INFORMATION_MESSAGE);
+                    this.activePlayer = this.human.name;
+                } else {
+                    JOptionPane.showMessageDialog(this, "Our AI will play first!",
+                            "Choosing Active Player", JOptionPane.INFORMATION_MESSAGE);
+                    this.activePlayer = this.ai.name;
+                }
+            }
             restartTheGame(this.human);
-            this.activePlayer = this.human.name;
             this.turn.setText("This turn belongs to " + this.activePlayer);
             this.createGUI();
             return;
@@ -279,6 +303,10 @@ public class Qwixx extends Component implements ActionListener {
             JOptionPane.showMessageDialog(this, "Fill in the rules.",
                     "Warning", JOptionPane.WARNING_MESSAGE);
             return;
+        }
+
+        if (e.getSource() == quitApp) {
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }
 
         if (e.getSource() == this.finish) {
