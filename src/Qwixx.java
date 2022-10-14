@@ -169,6 +169,11 @@ public class Qwixx extends Component implements ActionListener {
         this.human.changeState();
         humanTossYet = false;
 
+        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(0));
+        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(1));
+        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(2));
+        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(3));
+
         finish = scoreSheetHumanPlayer.finished;
         finish.addActionListener(this);
         skip = scoreSheetHumanPlayer.skipRound;
@@ -317,7 +322,8 @@ public class Qwixx extends Component implements ActionListener {
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }
 
-        if (e.getSource() == this.finish) {
+        // The player can only finish the round if toss is pressed
+        if (e.getSource() == this.finish && !toss.getModel().isEnabled()) {
             // At least one number has been crossed and thus a round can be closed
             if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
                 scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
@@ -356,8 +362,8 @@ public class Qwixx extends Component implements ActionListener {
                 }
             }
         }
-
-        else if (e.getSource() == this.skip) {
+        // The player can only skip the round if toss is pressed
+        else if (e.getSource() == this.skip && !toss.getModel().isEnabled()) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
             if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
                 human.skipRound(human.isActive);

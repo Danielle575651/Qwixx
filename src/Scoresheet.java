@@ -28,6 +28,12 @@ public class Scoresheet {
         for (int i = 0; i < rows; i++) {
             validRows[i] = true;
         }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                scored[i][j] = false;
+            }
+        }
     }
 
     /**

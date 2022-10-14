@@ -40,6 +40,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         roundIsEnded = false;
         numberCrossesLastRound = 0;
         numberCrossesInRound = 0;
+        this.player.sheet = new Scoresheet();
 
         createTitlePanel();
         createButtons();
@@ -180,12 +181,13 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
                             if (j == 10) { // If last number is crossed then (and this allowed) then lock can also be crossed. canCross already checks if a 12 or 2 are allowed to be crossed
                                 // A lock does not count into the number of crosses done in a round
+                                // If column 10 is crossed in Scoresheet and this is allowed then column 11 is automatically crossed
                                 crossButton(i, 11);
-                                player.sheet.cross(i, 11);
                             }
-                        } else if (!(player.sheet.canCross(i, j) &&
-                                ((player.isActive && (numberCrossesInRound < maxCrossPerRoundActive)) ||
-                                        (!player.isActive && numberCrossesInRound < maxCrossPerRoundInactive)))) { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
+                        } else if (!player.sheet.getValidRow(i)) {
+                            JOptionPane.showMessageDialog(this, "This color has disappeared!",
+                                    "ERROR", JOptionPane.ERROR_MESSAGE);
+                        } else { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
                             uncrossButton(i, j);
 
                             if (!player.sheet.canCross(i, j)) {
