@@ -271,7 +271,7 @@ public class Qwixx extends Component implements ActionListener {
                 return;
             }
 
-            String[] option = new String[] {"Yes!", "Nope, let AI play first", "Choose randomly"};
+            String[] option = new String[]{"Yes!", "Nope, let AI play first", "Choose randomly"};
             int n = JOptionPane.showOptionDialog(this, "Do you want to play first?",
                     "Choosing Active Player", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
 
@@ -280,7 +280,7 @@ public class Qwixx extends Component implements ActionListener {
             } else if (n == 1) {
                 this.activePlayer = this.ai.name;
             } else if (n == 2) {
-                int player = (int)Math.round(Math.random());
+                int player = (int) Math.round(Math.random());
                 if (player == 0) {
                     JOptionPane.showMessageDialog(this, "You will play first!",
                             "Choosing Active Player", JOptionPane.INFORMATION_MESSAGE);
@@ -307,13 +307,12 @@ public class Qwixx extends Component implements ActionListener {
         }
 
         if (e.getSource() == quitGame) {
-            String[] option = new String[] {"Actually, no!", "Yes :("};
+            String[] option = new String[]{"Actually, no!", "Yes :("};
             int n = JOptionPane.showOptionDialog(this, "Are you 100% sure?",
                     "Quit Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
             if (n == JOptionPane.YES_NO_OPTION) {
                 return;
-            }
-            else {
+            } else {
                 frame.dispose();
             }
         }
@@ -324,61 +323,63 @@ public class Qwixx extends Component implements ActionListener {
 
         // The player can only finish the round if toss is pressed
         if (e.getSource() == this.finish && !toss.getModel().isEnabled()) {
-            // At least one number has been crossed and thus a round can be closed
-            if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
-                scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
-                scoreSheetHumanPlayer.setCrossesInRound(0); // A new round is started and thus the counting of crosses is restarted
-                scoreSheetHumanPlayer.setRoundIsEnded();
-            } else {
-                JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
-                        "ERROR", JOptionPane.ERROR_MESSAGE);
-                // Display error message: No number has been crossed. Cross a number or click skip round
-                return;
-            }
-
-            if (!end && humanCheck(diceGUI.getCurrentPoints())) {
-                if (this.human.isActive) {
-                    // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
-                    this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
-                    diceGUI.enableToss();
-                    diceGUI.nextRoundButton().doClick();
-                    diceGUI.disableToss();
+            if (!end) {
+                // At least one number has been crossed and thus a round can be closed
+                if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
+                    scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
+                    scoreSheetHumanPlayer.setCrossesInRound(0); // A new round is started and thus the counting of crosses is restarted
+                    scoreSheetHumanPlayer.setRoundIsEnded();
                 } else {
-                    diceGUI.enableToss();
-                    this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
-                    //humanCheck(diceGUI.getCurrentPoints());
+                    JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    // Display error message: No number has been crossed. Cross a number or click skip round
+                    return;
                 }
-                // If the choice of the dice for the human player is correct, then we change the active player
-                this.human.changeState();
-                this.ai.changeState();
-                updateActivePlayer();
-                this.turn.setText("This turn belongs to " + this.activePlayer);
-                playGame();
-                checkEnd();
 
-                if (end) {
-                    this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-                    this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                if (humanCheck(diceGUI.getCurrentPoints())) {
+                    if (this.human.isActive) {
+                        // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
+                        this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                        diceGUI.enableToss();
+                        diceGUI.nextRoundButton().doClick();
+                        diceGUI.disableToss();
+                    } else {
+                        diceGUI.enableToss();
+                        this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
+                        //humanCheck(diceGUI.getCurrentPoints());
+                    }
+                    // If the choice of the dice for the human player is correct, then we change the active player
+                    this.human.changeState();
+                    this.ai.changeState();
+                    updateActivePlayer();
+                    this.turn.setText("This turn belongs to " + this.activePlayer);
+                    playGame();
+                    checkEnd();
+
+                    if (end) {
+                        this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+                        this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                    }
                 }
             }
-        }
-        // The player can only skip the round if toss is pressed
-        else if (e.getSource() == this.skip && !toss.getModel().isEnabled()) {
-            // Indeed no numbers has been crossed and thus a round can legally be skipped
-            if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
-                human.skipRound(human.isActive);
-                scoreSheetHumanPlayer.setRoundIsEnded();
-
-                if (human.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
-                    int k = 0;
-                    // As long as the penalty buttons are crossed, a new penalty cannot be crossed
-                    while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
-                        k++;
-                    }
-                    scoreSheetHumanPlayer.crossPenalty(k);
-                }
-
+            // The player can only skip the round if toss is pressed
+            else if (e.getSource() == this.skip && !toss.getModel().isEnabled()) {
                 if (!end) {
+                    // Indeed no numbers has been crossed and thus a round can legally be skipped
+                    if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
+                        human.skipRound(human.isActive);
+                        scoreSheetHumanPlayer.setRoundIsEnded();
+
+                        if (human.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
+                            int k = 0;
+                            // As long as the penalty buttons are crossed, a new penalty cannot be crossed
+                            while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
+                                k++;
+                            }
+                            scoreSheetHumanPlayer.crossPenalty(k);
+                        }
+                    }
+
                     if (this.human.isActive) {
                         // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                         this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
@@ -410,31 +411,28 @@ public class Qwixx extends Component implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
             }
-        }
-
-        else if (e.getSource() == this.gameRules) {
+        } else if (e.getSource() == this.gameRules) {
             JOptionPane.showMessageDialog(this,
-                    "1. When you roll the dice in a round:"+ "\n"+
-                     "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows"+ "\n"+
-                    "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color."+ "\n"+
-                    "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times,"+ "\n"+
-                            "   but if you do not cross any, you will get a penalty." + "\n"+ "\n"+
-                            "2. When it is not your round to roll the dice:"+ "\n"+
-                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty."+ "\n"
-                            + "\n"+"3. The numbers must be crossed out from left to right in each of the four colored rows."
-                            + "\n" + "\n"+"4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row."+ "\n"+
-                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)"+ "\n" + "\n"+
-                    "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n"+ "\n"+
-                             "6. The game ends when two rows are locked, or one player has get 4 penalties."+ "\n"+ "\n" +
-                            "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points."+"\n"+
+                    "1. When you roll the dice in a round:" + "\n" +
+                            "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows" + "\n" +
+                            "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color." + "\n" +
+                            "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times," + "\n" +
+                            "   but if you do not cross any, you will get a penalty." + "\n" + "\n" +
+                            "2. When it is not your round to roll the dice:" + "\n" +
+                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty." + "\n"
+                            + "\n" + "3. The numbers must be crossed out from left to right in each of the four colored rows."
+                            + "\n" + "\n" + "4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row." + "\n" +
+                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)" + "\n" + "\n" +
+                            "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n" + "\n" +
+                            "6. The game ends when two rows are locked, or one player has get 4 penalties." + "\n" + "\n" +
+                            "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points." + "\n" +
                             "   The player with the most points wins the game! ",
                     "Warning", JOptionPane.WARNING_MESSAGE);
 
-        }
-
-        else if (e.getSource() == this.toss) {
+        } else if (e.getSource() == this.toss) {
             diceGUI.disableToss(); // Ensure that the human only tosses once per round
         }
+
     }
 
     public static void main(String[] args) {
