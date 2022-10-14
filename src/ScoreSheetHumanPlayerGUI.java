@@ -4,6 +4,11 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
+/**
+ * Class that contains method for the graphical user interface (GUI) of the score sheet for the human player
+ *
+ * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
+ */
 public class ScoreSheetHumanPlayerGUI extends Component implements ActionListener {
     public static int maxCrossPerRoundActive = 2;
     public static int maxCrossPerRoundInactive = 1;
@@ -35,6 +40,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     List<String> allCrossedNumbersInOrder = new ArrayList<>();
     boolean roundIsEnded;
 
+    /**
+     * Constructor for the ScoreSheetHumanPlayerGUI, which initializes the values and panels.
+     * @param player the HumanPlayer from the HumanPlayer class
+     */
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
         this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
         roundIsEnded = false;
@@ -123,6 +132,12 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         mainPanel.add(button_panel);
     }
 
+    /**
+     * {@inheritDoc}
+     * Method which crosses or uncrosses buttons when it is clicked and checks whether it is allowed to click that
+     * button
+     * @param e allows you to access the properties of ActionEvent
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         roundIsEnded = false;
@@ -205,10 +220,12 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 }
             }
         }
-
-
     }
 
+    /**
+     * Method that puts a cross for a penalty.
+     * @param k indicates at which index a penalty needs to be crossed
+     */
     public void crossPenalty(int k) {
         player.sheet.addPenalty();
         penalties[k].setText("X");
@@ -217,6 +234,11 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         penalties[k].setForeground(Color.black);
     }
 
+    /**
+     * Method puts a cross a button for a given row and column.
+     * @param i index which indicates at which row the cross needs to be put
+     * @param j index which indicates at which column the cross needs to be
+     */
     private void crossButton(int i, int j) {
         buttons[i][j].setText("X");
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
@@ -229,6 +251,11 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         }
     }
 
+    /**
+     * Method which uncrosses a button for a given row and column.
+     * @param i index which indicates at which row the cross needs to be removed
+     * @param j index which indicates at which column the cross needs to be removed
+     */
     private void uncrossButton(int i, int j) {
         int value;
 
@@ -257,11 +284,15 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         }
     }
 
+    /**
+     * Method which create the buttons for every element, which means we get four rows and twelve columns with buttons.
+     */
     private void createButtons() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 12; j++) {
                 if (j == 11) {
                     if (i == 0) {
+                        //for the last column, the locks are added
                         buttons[i][j] = new JButton(new ImageIcon(((new ImageIcon(
                                 "src/Red_Lock.png").getImage()
                                 .getScaledInstance(30, 30,
@@ -321,6 +352,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         }
     }
 
+    /**
+     * Method which creates four buttons for the penalties.
+     */
     private void createPenalties() {
         for (int i = 0; i < 4; i++) {
             penalties[i] = new JButton();
@@ -332,6 +366,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         }
     }
 
+    /**
+     * Method which creates the Panel where the title is added with a name which the human player can give.
+     */
     private void createTitlePanel() {
         title.setBackground(new Color(0, 0, 153));
         title.setForeground(new Color(204, 204, 204));
@@ -350,6 +387,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title_panel.setBounds(0, 0, 600, 20);
     }
 
+    /**
+     * Method which creates a panel where is shown how many points for how many crosses per row can be earned
+     */
     private void createPointsPanel() {
         int value = 0;
 
@@ -380,6 +420,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         }
     }
 
+    /**
+     * Method which creates the panel where the total score of the player will be displayed (at the end of the game).
+     */
     private void createScorePanel() {
         signs[0] = new JLabel("Score");
         signs[0].setBackground(new Color(204, 204, 204));
@@ -474,6 +517,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         scorePanel.add(pointsScored[5]);
     }
 
+    /**
+     * Method that updates the panel for every row when the player is finished.
+     */
     public void updatePanelWhenFinished() {
         for(int i = 0; i < 4; i++) {
             pointsScored[i].setText(String.valueOf(player.sheet.getScore(i)));
@@ -483,13 +529,21 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         pointsScored[5].setText(String.valueOf(player.sheet.getTotalScore()));
     }
 
+    /**
+     * Method that returns the score sheet of the HumanPlayer.
+     * @return a panel containing the score sheet of the human player
+     */
     public JPanel getScoreSheetHumanPlayer() {
         return mainPanel;
     }
 
-    // When the round is finished (Skip round or Finish is clicked) but we want to check on the crosses in last round
-    // to see if they correspond to the dice values.
+    /**
+     * Method that returns a list with the latest numbers that are crossed.
+     * @return a list with the numbers that are crossed most recently (the last one)
+     */
     public List<String> getLastCrossedNumbers() {
+        // When the round is finished (Skip round or Finish is clicked) but we want to check on the crosses in last round
+        // to see if they correspond to the dice values.
         if (allCrossedNumbersInOrder.size() > 2) {
             return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
         } else if (allCrossedNumbersInOrder.size() == 2) {
@@ -502,10 +556,14 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         return allCrossedNumbersInOrder;
     }
 
-    // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
-    // such that a modification can be made by the human player
-    // i is the number of crosses that has been made in the last round which were incorrect
+    /**
+     * Method which gives an error when one of the numbers that is crossed in the last round is not valid when comparing
+     * it to the values on the dices.
+     * @param i an integer which indicates the number of crosses that has been made in the last round which were incorrect
+     */
     public void displayErrorMessageRemote(int i) {
+        // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
+        // such that a modification can be made by the human player
         numberCrossesInRound = i;
         JOptionPane.showMessageDialog(this, "The number(s) you have just crossed are not valid " +
                         "(e.g. they do not correspond to the dice values). Uncross the button you have just clicked and " +
@@ -515,6 +573,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     }
 
+    /**
+     * Method that displays an error when the order in which the crosses are placed in the same round are not correct.
+     * @param i the number of crosses in the last round
+     */
     public void displayErrorMessageOrder(int i) {
         numberCrossesInRound = i;
         JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not"  + "\n"+ 
@@ -523,6 +585,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Method that displays an error when the cross is not valid.
+     * @param i the number of crosses in the last round
+     */
     public void displayErrorMessageOnlyColored(int i) {
         numberCrossesInRound = i;
         JOptionPane.showMessageDialog(this, "The numbers you have just crossed are not valid. "  + "\n"+
@@ -531,22 +597,33 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
-    public boolean getRoundIsEnded() {
-        return roundIsEnded;
-    }
-
+    /**
+     * Method that returns the amount of crosses a player has done in one single round.
+     * @return the amount of crosses that a player placed in one round
+     */
     public int getCrossesInRound() {
         return this.numberCrossesInRound;
     }
 
+    /**
+     * Method that sets the amount of crosses that are done in one round.
+     * @param i integer which indicates how many crosses in one round are placed
+     */
     public void setCrossesInRound(int i) {
         this.numberCrossesInRound = i;
     }
 
+    /**
+     * Method which sets the amount of crosses that are done in the last round.
+     * @param i integer which indicates how many crosses are placed in the last round
+     */
     public void setCrossesLastRound(int i) {
         this.numberCrossesLastRound = i;
     }
 
+    /**
+     * Method which sets the round to being ended.
+     */
     public void setRoundIsEnded() {
         this.roundIsEnded = true;
     }
