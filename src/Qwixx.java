@@ -2,7 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Random;
 
 
 public class Qwixx extends Component implements ActionListener {
@@ -88,10 +90,34 @@ public class Qwixx extends Component implements ActionListener {
         // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
         // and the second is the number crossed. 04 is for example a red 4
         for (String indices : lastCrossed) {
+            int row = Integer.parseInt(indices.substring(0,1));
+            int column = Integer.parseInt(indices.substring(1));
+            boolean crossedRowRY = false;
+            boolean crossedRowGB = false;
+
+            // In case we crossed a 12 or 2, the color is locked but we still want to check the crosses with
+            // the dice values and therefore it is added back
+            // Color is red or yellow
+            if ( row == 0 || row == 1) {
+                // If we have crossed an eleven and the color is locked
+                if (column == 11 && !human.sheet.getValidRow(row)) {
+                    human.sheet.addColor(row);
+                    crossedRowRY = true;
+                }
+            } else if (row == 2 | row == 3) {
+                if (column == 2 && !human.sheet.getValidRow(row)) {
+                    human.sheet.addColor(row);
+                    crossedRowGB = true;
+                }
+            }
             // If the crossed number is not valid according to the dice value, display an error message
-            if (human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive()) == false) {
+            if (!human.numIsValid(row, column, points, human.isActive())) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 return false;
+            }
+
+            if (crossedRowRY || crossedRowGB) {
+                human.sheet.addColor(row);
             }
         }
 
@@ -211,7 +237,6 @@ public class Qwixx extends Component implements ActionListener {
 
     public void createGUI() {
         frame = new JFrame();
-        frame.setTitle("Qwixx");
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(new Dimension(600, 800));
@@ -228,8 +253,12 @@ public class Qwixx extends Component implements ActionListener {
         dicePanel.setSize(new Dimension(500, 100));
 
         quitGame.setText("You want to quit this game? Click me!");
+        quitGame.setBackground(Color.white);
         gameRules.setText("Click here to view the rules of Qwixx");
+        gameRules.setBackground(Color.white);
         this.turn = new JButton(this.activePlayer + " will play first");
+        this.turn.setBackground(Color.white);
+        this.turn.setBorder(BorderFactory.createLineBorder(Color.red));
         endGame.setText("Game has not ended yet");
         quitGame.addActionListener(this);
         gameRules.addActionListener(this);
@@ -289,6 +318,7 @@ public class Qwixx extends Component implements ActionListener {
                     this.activePlayer = this.ai.getName();
                 }
             }
+
             restartTheGame(this.human);
             this.createGUI();
 
@@ -344,7 +374,6 @@ public class Qwixx extends Component implements ActionListener {
                 } else {
                     diceGUI.enableToss();
                     this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
-
                 }
 
                 // If the choice of the dice for the human player is correct, then we change the active player
@@ -364,7 +393,6 @@ public class Qwixx extends Component implements ActionListener {
         } else if (e.getSource() == this.skip) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
             if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
-                System.out.println(human.isActive());
                 human.skipRound(human.isActive());
                 scoreSheetHumanPlayer.setRoundIsEnded();
 
@@ -373,7 +401,6 @@ public class Qwixx extends Component implements ActionListener {
                     // As long as the penalty buttons are crossed, a new penalty cannot be crossed
                     while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
                         k++;
-                        System.out.println("4, " + this.human.sheet.getPenaltyValue());
                     }
                     scoreSheetHumanPlayer.crossPenalty(k);
                 }
