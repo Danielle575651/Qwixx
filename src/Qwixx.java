@@ -222,7 +222,7 @@ public class Qwixx extends Component implements ActionListener {
 
         JPanel humanPanel = this.scoreSheetHumanPlayer.getScoreSheetHumanPlayer();
         humanPanel.setMinimumSize(humanPanel.getPreferredSize());
-        JPanel aiPanel = this.ai.gui.getScorePanel();
+        JPanel aiPanel = this.ai.getGUI().getScorePanel();
         aiPanel.setMinimumSize(humanPanel.getPreferredSize());
 
         JPanel dicePanel = this.diceGUI.getDicePanel();
@@ -359,7 +359,7 @@ public class Qwixx extends Component implements ActionListener {
 
                 if (end) {
                     this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-                    this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                    this.ai.getGUI().updatePanelWhenFinished(this.ai.getSheet());
                     endGame.doClick();
                 }
             }
@@ -404,12 +404,12 @@ public class Qwixx extends Component implements ActionListener {
 
                     if (end) {
                         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-                        this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                        this.ai.getGUI().updatePanelWhenFinished(this.ai.getSheet());
                         endGame.doClick();
                     }
                 } else {
                     this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-                    this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                    this.ai.getGUI().updatePanelWhenFinished(this.ai.getSheet());
                     endGame.doClick();
                 }
             } else { // In case a number is crossed and also the skipRound button has been clicked:
