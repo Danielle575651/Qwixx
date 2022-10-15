@@ -1,7 +1,7 @@
 import java.util.Random;
 
 /**
- * A class that generates a dice with specified color and random number
+ * A class that generates a dice with specified color, random number and removal status
  *
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
@@ -43,18 +43,25 @@ public class Dice {
 
 
     /**
-     * Get the number of the top side of the dice
+     * Get the number on the top side of the dice
      *
-     * @return number of the top side of the dice
+     * @return the number on the top side of the dice
      */
     public int getValue() {
         return this.value;
     }
-
+    
+    /**
+     * Get the state of the dice - whether it is removed or not
+     * @return the state of the dice
+     */
     public boolean isRemoved() {
         return this.isRemoved;
     }
-
+    
+    /**
+     * Remove a die by change its state of removal to true
+     */
     public void changeState() {
         this.isRemoved = true;
     }
