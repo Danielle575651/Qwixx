@@ -11,7 +11,8 @@ public class Scoresheet {
             {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0}, {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0}, {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0}};
 
     private boolean[][] scored;
-    private boolean[] validRows; // This ensures that a color and thus a row can disappear
+    // if possible, change to private for validRows
+    public boolean[] validRows; // This ensures that a color and thus a row can disappear
     private int rows;
     private int columns;
     private int penalties;
@@ -101,7 +102,8 @@ public class Scoresheet {
     public void removeCross(int row, int column) {
         scored[row][column] = false;
 
-        if (column == getColumns() - 1) {
+        // If 2 or 12 is uncrosses and the color is not added back yet, we add the color back to the game
+        if (column == getColumns() - 2) {
             addColor(row);
         }
     }
@@ -228,7 +230,7 @@ public class Scoresheet {
                 nLock++;
             }
         }
-        return  nLock;
+        return nLock;
     }
 
     /**
