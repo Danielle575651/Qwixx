@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.List;
-import java.util.Random;
 
 
 public class Qwixx extends Component implements ActionListener {
