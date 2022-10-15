@@ -28,12 +28,6 @@ public class Scoresheet {
         for (int i = 0; i < rows; i++) {
             validRows[i] = true;
         }
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                scored[i][j] = false;
-            }
-        }
     }
 
     /**
@@ -107,8 +101,7 @@ public class Scoresheet {
     public void removeCross(int row, int column) {
         scored[row][column] = false;
 
-        // If 2 or 12 is uncrosses and the color is not added back yet, we add the color back to the game
-        if (column == getColumns() - 2) {
+        if (column == getColumns() - 1) {
             addColor(row);
         }
     }
@@ -215,7 +208,7 @@ public class Scoresheet {
         if (row == 2 || row == 3) {
             lastValue = 13;
         }
-        
+
         for (int i = 0; i < getColumns(); i++) {
             if (scored[row][i]) {
                 lastValue = getValue(row, i);
