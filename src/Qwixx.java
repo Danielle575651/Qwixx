@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.List;
-import java.util.Random;
-
 
 public class Qwixx extends Component implements ActionListener {
     private JFrame frame = new JFrame();
@@ -22,8 +19,8 @@ public class Qwixx extends Component implements ActionListener {
     private JButton quitGame = new JButton();
     private JButton quitApp = new JButton();
     private JPanel infoPanel = new JPanel();
-    private JButton finish = new JButton();
-    private JButton skip = new JButton();
+    private JButton finish;
+    private JButton skip;
     private JButton turn = new JButton();
     private JButton toss;
     private int clicksOnRestartGame = 0;
@@ -88,12 +85,14 @@ public class Qwixx extends Component implements ActionListener {
         List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
         // In case we crossed a 12 or 2, the color is locked but we still want to check the crosses with
         // the dice values and therefore it is added back
-        boolean crossedRowRY = false;
-        boolean crossedRowGB = false;
-        int rowRemoved = 0;
+        boolean crossedRowR = false;
+        boolean crossedRowY = false;
+        boolean crossedRowG = false;
+        boolean crossedRowB = false;
 
         // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
-        // and the second is the number crossed. 04 is for example a red 4
+        // and the second is the number crossed. 04 is for example a red 4.
+        // First we add back a color, when it is locked in this round
         for (String indices : lastCrossed) {
             int row = Integer.parseInt(indices.substring(0,1));
             int column = Integer.parseInt(indices.substring(1));
@@ -103,23 +102,37 @@ public class Qwixx extends Component implements ActionListener {
                 // If we have crossed an eleven and the color is locked
                 if (column == 11 && !human.sheet.getValidRow(row)) {
                     human.sheet.addColor(row);
-                    crossedRowRY = true;
-                    rowRemoved = row;
+                    
+                    if (row == 0) {
+                        crossedRowR = true;
+                    } else {
+                        crossedRowY = true;
+                    }
                 }
             } else if (row == 2 | row == 3) {
                 if (column == 2 && !human.sheet.getValidRow(row)) {
                     human.sheet.addColor(row);
-                    crossedRowGB = true;
-                    rowRemoved = row;
+                    
+                    if (row == 2) {
+                        crossedRowG = true;
+                    } else {
+                        crossedRowB = true;
+                    }
                 }
             }
-            // If the crossed number is not valid according to the dice value, display an error message
+        }
+
+        // If the crossed number is not valid according to the dice value, display an error message
+        for (String indices : lastCrossed) {
+            int row = Integer.parseInt(indices.substring(0,1));
+            int column = Integer.parseInt(indices.substring(1));
+            
             if (!human.numIsValid(row, column, points, human.isActive())) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 return false;
             }
         }
-
+        
         // lastCrossed contains at maximum 2 elements, if more an error message would already be displayed in the GUI
         // If human is not the active player but wants to cross 2 numbers, then also an error message would already be displayed in the GUI
         if (lastCrossed.size() == 2) {
@@ -176,10 +189,17 @@ public class Qwixx extends Component implements ActionListener {
         }
 
         // Remove the row again that was locked in
-        if (crossedRowRY || crossedRowGB) {
-            human.sheet.removeColor(rowRemoved);
+        if (crossedRowR || crossedRowY || crossedRowG || crossedRowB) {
+            if (crossedRowR) {
+                human.sheet.removeColor(0);
+            } else if (crossedRowY) {
+                human.sheet.removeColor(1);
+            } else if (crossedRowG) {
+                human.sheet.removeColor(2);
+            } else {
+                human.sheet.removeColor(3);
+            }
         }
-
         return true;
     }
 
