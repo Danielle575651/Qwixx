@@ -86,38 +86,37 @@ public class Qwixx extends Component implements ActionListener {
 
     public boolean humanCheck(int[] points) {
         List<String> lastCrossed = scoreSheetHumanPlayer.getLastCrossedNumbers();
+        // In case we crossed a 12 or 2, the color is locked but we still want to check the crosses with
+        // the dice values and therefore it is added back
+        boolean crossedRowRY = false;
+        boolean crossedRowGB = false;
+        int rowRemoved = 0;
 
         // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
         // and the second is the number crossed. 04 is for example a red 4
         for (String indices : lastCrossed) {
             int row = Integer.parseInt(indices.substring(0,1));
             int column = Integer.parseInt(indices.substring(1));
-            boolean crossedRowRY = false;
-            boolean crossedRowGB = false;
 
-            // In case we crossed a 12 or 2, the color is locked but we still want to check the crosses with
-            // the dice values and therefore it is added back
             // Color is red or yellow
-            if ( row == 0 || row == 1) {
+            if (row == 0 || row == 1) {
                 // If we have crossed an eleven and the color is locked
                 if (column == 11 && !human.sheet.getValidRow(row)) {
                     human.sheet.addColor(row);
                     crossedRowRY = true;
+                    rowRemoved = row;
                 }
             } else if (row == 2 | row == 3) {
                 if (column == 2 && !human.sheet.getValidRow(row)) {
                     human.sheet.addColor(row);
                     crossedRowGB = true;
+                    rowRemoved = row;
                 }
             }
             // If the crossed number is not valid according to the dice value, display an error message
             if (!human.numIsValid(row, column, points, human.isActive())) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 return false;
-            }
-
-            if (crossedRowRY || crossedRowGB) {
-                human.sheet.addColor(row);
             }
         }
 
@@ -175,6 +174,12 @@ public class Qwixx extends Component implements ActionListener {
                 }
             }
         }
+
+        // Remove the row again that was locked in
+        if (crossedRowRY || crossedRowGB) {
+            human.sheet.removeColor(rowRemoved);
+        }
+
         return true;
     }
 
