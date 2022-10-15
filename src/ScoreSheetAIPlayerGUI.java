@@ -1,6 +1,11 @@
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * Class that contains method for the graphical user interface (GUI) of the score sheet for the AI player
+ *
+ * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
+ */
 public class ScoreSheetAIPlayerGUI {
     JPanel title_panel = new JPanel();
     JPanel button_panel = new JPanel();
@@ -17,6 +22,9 @@ public class ScoreSheetAIPlayerGUI {
     JLabel[] signs = new JLabel[6];
     JButton[] pointsScored = new JButton[6];
 
+    /**
+     * Constructor for the ScoreSheetHumanPlayerGUI, which initializes the values and panels.
+     */
     ScoreSheetAIPlayerGUI() {
         createTitlePanel();
         createButtons();
@@ -76,6 +84,11 @@ public class ScoreSheetAIPlayerGUI {
         //mainPanel.setPreferredSize(new Dimension(600, 140));
     }
 
+    /**
+     * Method that puts a cross for a penalty.
+     *
+     * @param k indicates at which index a penalty needs to be crossed
+     */
     public void crossPenalty(int k) {
         penalties[k].setText("X");
         penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
@@ -83,6 +96,12 @@ public class ScoreSheetAIPlayerGUI {
         penalties[k].setForeground(Color.black);
     }
 
+    /**
+     * Method puts a cross a button for a given row and column.
+     *
+     * @param i index which indicates at which row the cross needs to be put
+     * @param j index which indicates at which column the cross needs to be
+     */
     public void crossButton(int i, int j) {
         buttons[i][j].setText("X");
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
@@ -95,25 +114,9 @@ public class ScoreSheetAIPlayerGUI {
         }
     }
 
-    public void uncrossButton(int i, int j) {
-        int value;
-
-        if (j == 11) {
-            buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
-            buttons[i][j].setVerticalTextPosition(JButton.CENTER);
-            buttons[i][j].setText(" ");
-        } else {
-            if (i == 0 || i == 1) {
-                value = 2 + j;
-            } else {
-                value = 12 - j;
-            }
-
-            buttons[i][j].setText(String.valueOf(value));
-            buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
-        }
-    }
-
+    /**
+     * Method which create the buttons for every element, which means we get four rows and twelve columns with buttons.
+     */
     private void createButtons() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 12; j++) {
@@ -176,6 +179,9 @@ public class ScoreSheetAIPlayerGUI {
         }
     }
 
+    /**
+     * Method which creates four buttons for the penalties.
+     */
     private void createPenalties() {
         for (int i = 0; i < 4; i++) {
             penalties[i] = new JButton();
@@ -186,6 +192,9 @@ public class ScoreSheetAIPlayerGUI {
         }
     }
 
+    /**
+     * Method which creates the Panel where the title is added with a name which the human player can give.
+     */
     private void createTitlePanel() {
         title.setBackground(new Color(0, 0, 153));
         title.setForeground(new Color(204, 204, 204));
@@ -198,6 +207,9 @@ public class ScoreSheetAIPlayerGUI {
         title_panel.setBounds(0, 0, 600, 20);
     }
 
+    /**
+     * Method which creates a panel where is shown how many points for how many crosses per row can be earned
+     */
     private void createPointsPanel() {
         int value = 0;
 
@@ -228,6 +240,9 @@ public class ScoreSheetAIPlayerGUI {
         }
     }
 
+    /**
+     * Method which creates the panel where the total score of the player will be displayed (at the end of the game).
+     */
     private void createScorePanel() {
         signs[0] = new JLabel("Score");
         signs[0].setBackground(new Color(204, 204, 204));
@@ -322,8 +337,13 @@ public class ScoreSheetAIPlayerGUI {
         scorePanel.add(pointsScored[5]);
     }
 
+    /**
+     * Method that updates the panel for every row when the player is finished.
+     *
+     * @param sheet the scoresheet of the AI
+     */
     public void updatePanelWhenFinished(Scoresheet sheet) {
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             pointsScored[i].setText(String.valueOf(sheet.getScore(i)));
         }
 
@@ -331,6 +351,9 @@ public class ScoreSheetAIPlayerGUI {
         pointsScored[5].setText(String.valueOf(sheet.getTotalScore()));
     }
 
+    /**
+     * @return score sheet GUI of the AI
+     */
     public JPanel getScorePanel() {
         return mainPanel;
     }
