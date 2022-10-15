@@ -167,7 +167,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                             }
                         }
 
-                        if (canUncross) {
+                        if (canUncross && player.sheet.getValidRow(i)) {
                             uncrossButton(i, j);
                             // If player wants to uncross 12 or 2 and this is allowed then lock also gets uncrossed
                             if (j == 10 && buttons[i][11].getText().equals("X")) {
@@ -579,7 +579,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
      */
     public void displayErrorMessageOrder(int i) {
         numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not"  + "\n"+ 
+        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not"  + "\n"+
                         " correct. If you want to cross numbers in the same row, you first have to cross the combination" + "\n" +
                         " of the white dice and then a colored combination.",
                 "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -627,6 +627,4 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
     public void setRoundIsEnded() {
         this.roundIsEnded = true;
     }
-
-
 }
