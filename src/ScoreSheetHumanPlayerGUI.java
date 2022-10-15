@@ -45,7 +45,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
      * @param player the HumanPlayer from the HumanPlayer class
      */
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
-        this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
+        this.player = player;
         roundIsEnded = false;
         numberCrossesLastRound = 0;
         numberCrossesInRound = 0;
@@ -198,7 +198,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                                 // A lock does not count into the number of crosses done in a round
                                 crossButton(i, 11);
                                 player.sheet.cross(i, 11);
-                                System.out.println(player.sheet.getValidRow(i));
                             }
                         } else if (!(player.sheet.canCross(i, j) &&
                                 ((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
@@ -208,12 +207,10 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                             if (!player.sheet.canCross(i, j)) {
                                 JOptionPane.showMessageDialog(this, "Crossing this number is not allowed, please cross another number",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
-                                // Display an error message that crossing this number is not allowed
                             } else if (!((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
                                     (!player.isActive() && numberCrossesInRound < maxCrossPerRoundInactive))){
                                 JOptionPane.showMessageDialog(this, "The maximum number of allowed crosses for this round is reached",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
-                                // Display an error message that the maximum number of allowed crosses per round is reached
                             }
                         }
                     }
@@ -372,7 +369,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title.setForeground(new Color(204, 204, 204));
         title.setFont(new Font("Ink Free", Font.BOLD, 15));
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setText("Qwixx Score Sheet from (type your name):");
+        title.setText("Qwixx Score Sheet from: ");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
