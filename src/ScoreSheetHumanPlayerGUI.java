@@ -24,7 +24,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
 
     JLabel title = new JLabel();
     JLabel crossPenalty = new JLabel();
-    JTextField inputName = new JTextField();
+    JLabel inputName = new JLabel();
     JButton[][] buttons = new JButton[4][12];
     JButton[] penalties = new JButton[4];
     JLabel[][] points = new JLabel[2][13];
@@ -45,7 +45,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
      * @param player the HumanPlayer from the HumanPlayer class
      */
     ScoreSheetHumanPlayerGUI(HumanPlayer player) {
-        this.player = player; // A Human Player does not have a name until it types its name and the name is set by the setName method.
+        this.player = player;
         roundIsEnded = false;
         numberCrossesLastRound = 0;
         numberCrossesInRound = 0;
@@ -97,6 +97,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         button_panel.setLayout(new GridLayout(4, 12));
         button_panel.setBackground(new Color(204, 204, 204));
 
+        inputName.setText(player.getName());
         title_panel.add(title, BorderLayout.WEST);
         title_panel.add(inputName);
 
@@ -197,7 +198,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                                 // A lock does not count into the number of crosses done in a round
                                 crossButton(i, 11);
                                 player.sheet.cross(i, 11);
-                                System.out.println(player.sheet.getValidRow(i));
                             }
                         } else if (!(player.sheet.canCross(i, j) &&
                                 ((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
@@ -207,20 +207,16 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                             if (!player.sheet.canCross(i, j)) {
                                 JOptionPane.showMessageDialog(this, "Crossing this number is not allowed, please cross another number",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
-                                // Display an error message that crossing this number is not allowed
                             } else if (!((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
                                     (!player.isActive() && numberCrossesInRound < maxCrossPerRoundInactive))){
                                 JOptionPane.showMessageDialog(this, "The maximum number of allowed crosses for this round is reached",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
-                                // Display an error message that the maximum number of allowed crosses per round is reached
                             }
                         }
                     }
                 }
             }
         }
-
-
     }
 
     /**
@@ -373,14 +369,13 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         title.setForeground(new Color(204, 204, 204));
         title.setFont(new Font("Ink Free", Font.BOLD, 15));
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setText("Qwixx Score Sheet from (type your name):");
+        title.setText("Qwixx Score Sheet from: ");
         title.setOpaque(true);
 
         inputName.setBackground(new Color(0, 0, 153));
         inputName.setForeground(new Color(204, 204, 204));
         inputName.setFont(new Font("Ink Free", Font.BOLD, 15));
         inputName.setOpaque(true);
-        //player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
         title_panel.setBounds(0, 0, 600, 20);
@@ -562,9 +557,9 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         // The human player already clicked on finished, but made a mistake, then all the last crossed numbers are added
         // such that a modification can be made by the human player
         numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The number(s) you have just crossed are not valid " +
-                        "(e.g. they do not correspond to the dice values). Uncross the button you have just clicked and " +
-                        "make sure to cross the number that corresponds to the dice values and hit the finish button or " +
+        JOptionPane.showMessageDialog(this, "The number(s) you have just crossed are not valid " + "\n" +
+                        "(e.g. they do not correspond to the dice values). Uncross the button you have just clicked and " + "\n" +
+                        "make sure to cross the number that corresponds to the dice values and hit the finish button or " + "\n" +
                         "skip this round.",
                 "ERROR", JOptionPane.ERROR_MESSAGE);
 

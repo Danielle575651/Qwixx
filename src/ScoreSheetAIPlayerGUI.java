@@ -68,12 +68,10 @@ public class ScoreSheetAIPlayerGUI {
         title_panel.add(title, BorderLayout.WEST);
         title_panel.setBackground(new Color(0, 0, 153));
 
-        //BoxLayout testLayout = new BoxLayout(mainPanel, BoxLayout.Y_AXIS);
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(title_panel, BorderLayout.PAGE_START);
         mainPanel.add(lowerPanel, BorderLayout.PAGE_END);
         mainPanel.add(button_panel);
-        //mainPanel.setPreferredSize(new Dimension(600, 140));
     }
 
     public void crossPenalty(int k) {
@@ -323,7 +321,7 @@ public class ScoreSheetAIPlayerGUI {
     }
 
     public void updatePanelWhenFinished(Scoresheet sheet) {
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             pointsScored[i].setText(String.valueOf(sheet.getScore(i)));
         }
 

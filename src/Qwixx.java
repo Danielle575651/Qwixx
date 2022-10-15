@@ -90,10 +90,34 @@ public class Qwixx extends Component implements ActionListener {
         // Each element (indices) consists of 2 numbers (here in String format) where the first is the number of the color
         // and the second is the number crossed. 04 is for example a red 4
         for (String indices : lastCrossed) {
+            int row = Integer.parseInt(indices.substring(0,1));
+            int column = Integer.parseInt(indices.substring(1));
+            boolean crossedRowRY = false;
+            boolean crossedRowGB = false;
+
+            // In case we crossed a 12 or 2, the color is locked but we still want to check the crosses with
+            // the dice values and therefore it is added back
+            // Color is red or yellow
+            if ( row == 0 || row == 1) {
+                // If we have crossed an eleven and the color is locked
+                if (column == 11 && !human.sheet.getValidRow(row)) {
+                    human.sheet.addColor(row);
+                    crossedRowRY = true;
+                }
+            } else if (row == 2 | row == 3) {
+                if (column == 2 && !human.sheet.getValidRow(row)) {
+                    human.sheet.addColor(row);
+                    crossedRowGB = true;
+                }
+            }
             // If the crossed number is not valid according to the dice value, display an error message
-            if (human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive()) == false) {
+            if (!human.numIsValid(row, column, points, human.isActive())) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 return false;
+            }
+
+            if (crossedRowRY || crossedRowGB) {
+                human.sheet.addColor(row);
             }
         }
 
@@ -229,8 +253,12 @@ public class Qwixx extends Component implements ActionListener {
         dicePanel.setSize(new Dimension(500, 100));
 
         quitGame.setText("You want to quit this game? Click me!");
+        quitGame.setBackground(Color.white);
         gameRules.setText("Click here to view the rules of Qwixx");
+        gameRules.setBackground(Color.white);
         this.turn = new JButton(this.activePlayer + " will play first");
+        this.turn.setBackground(Color.white);
+        this.turn.setBorder(BorderFactory.createLineBorder(Color.red));
         endGame.setText("Game has not ended yet");
         quitGame.addActionListener(this);
         gameRules.addActionListener(this);
@@ -267,7 +295,7 @@ public class Qwixx extends Component implements ActionListener {
             }
             this.human.changeName(humanName);
 
-            String[] option = new String[] {"Yes!", "Nope, let AI play first", "Choose randomly"};
+            String[] option = new String[]{"Yes!", "Nope, let AI play first", "Choose randomly"};
             int n = JOptionPane.showOptionDialog(this, "Do you want to play first?",
                     "Choosing Active Player", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
 
@@ -278,7 +306,7 @@ public class Qwixx extends Component implements ActionListener {
             } else if (n == 1) {
                 this.activePlayer = this.ai.getName();
             } else if (n == 2) {
-                int player = (int)Math.round(Math.random());
+                int player = (int) Math.round(Math.random());
                 if (player == 0) {
                     JOptionPane.showMessageDialog(this, "You will play first!",
                             "Choosing Active Player", JOptionPane.INFORMATION_MESSAGE);
@@ -290,6 +318,7 @@ public class Qwixx extends Component implements ActionListener {
                     this.activePlayer = this.ai.getName();
                 }
             }
+
             restartTheGame(this.human);
             this.createGUI();
 
@@ -306,39 +335,38 @@ public class Qwixx extends Component implements ActionListener {
         }
 
         if (e.getSource() == quitGame) {
-            String[] option = new String[] {"Actually, no!", "Yes :("};
+            String[] option = new String[]{"Actually, no!", "Yes :("};
             int n = JOptionPane.showOptionDialog(this, "Are you 100% sure?",
                     "Quit Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
             if (n == JOptionPane.YES_NO_OPTION) {
                 return;
-            }
-            else {
-                //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                //frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            } else {
                 frame.dispose();
+                createStartScreen();
             }
         }
 
         if (e.getSource() == quitApp) {
-            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            System.exit(0);
         }
 
-        if (e.getSource() == this.finish) {
+        if ((e.getSource() == finish || e.getSource() == skip) && this.toss.getModel().isEnabled()) {
+            JOptionPane.showMessageDialog(this, "Toss the dice. It is your turn!",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else if (e.getSource() == this.finish) {
             // At least one number has been crossed and thus a round can be closed
             if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
-                scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
-                scoreSheetHumanPlayer.setCrossesInRound(0); // A new round is started and thus the counting of crosses is restarted
+                scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound());
+                scoreSheetHumanPlayer.setCrossesInRound(0);
                 scoreSheetHumanPlayer.setRoundIsEnded();
             } else {
                 JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
-                // Display error message: No number has been crossed. Cross a number or click skip round
                 return;
             }
 
             if (!end && humanCheck(diceGUI.getCurrentPoints())) {
                 if (this.human.isActive()) {
-                    // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                     this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
                     diceGUI.enableToss();
                     diceGUI.nextRoundButton().doClick();
@@ -346,7 +374,6 @@ public class Qwixx extends Component implements ActionListener {
                 } else {
                     diceGUI.enableToss();
                     this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
-                    //humanCheck(diceGUI.getCurrentPoints());
                 }
 
                 // If the choice of the dice for the human player is correct, then we change the active player
@@ -363,12 +390,9 @@ public class Qwixx extends Component implements ActionListener {
                     endGame.doClick();
                 }
             }
-        }
-
-        else if (e.getSource() == this.skip) {
+        } else if (e.getSource() == this.skip) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
             if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
-                System.out.println(human.isActive());
                 human.skipRound(human.isActive());
                 scoreSheetHumanPlayer.setRoundIsEnded();
 
@@ -377,14 +401,12 @@ public class Qwixx extends Component implements ActionListener {
                     // As long as the penalty buttons are crossed, a new penalty cannot be crossed
                     while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
                         k++;
-                        System.out.println("4, " + this.human.sheet.getPenaltyValue());
                     }
                     scoreSheetHumanPlayer.crossPenalty(k);
                 }
 
                 if (!end) {
                     if (this.human.isActive()) {
-                        // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                         this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
                         diceGUI.enableToss();
                         diceGUI.nextRoundButton().doClick();
@@ -394,7 +416,7 @@ public class Qwixx extends Component implements ActionListener {
                         this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
                         //humanCheck(diceGUI.getCurrentPoints());
                     }
-                    // If the choice of the dice for the human player is correct, then we change the active player
+
                     this.human.changeState();
                     this.ai.changeState();
                     updateActivePlayer();
@@ -416,33 +438,27 @@ public class Qwixx extends Component implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
             }
-        }
-
-        else if (e.getSource() == this.gameRules) {
+        } else if (e.getSource() == this.gameRules) {
             JOptionPane.showMessageDialog(this,
-                    "1. When you roll the dice in a round:"+ "\n"+
-                            "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows"+ "\n"+
-                            "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color."+ "\n"+
-                            "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times,"+ "\n"+
-                            "   but if you do not cross any, you will get a penalty." + "\n"+ "\n"+
-                            "2. When it is not your round to roll the dice:"+ "\n"+
-                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty."+ "\n"
-                            + "\n"+"3. The numbers must be crossed out from left to right in each of the four colored rows."
-                            + "\n" + "\n"+"4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row."+ "\n"+
-                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)"+ "\n" + "\n"+
-                            "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n"+ "\n"+
-                            "6. The game ends when two rows are locked, or one player has get 4 penalties."+ "\n"+ "\n" +
-                            "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points."+"\n"+
+                    "1. When you roll the dice in a round:" + "\n" +
+                            "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows" + "\n" +
+                            "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color." + "\n" +
+                            "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times," + "\n" +
+                            "   but if you do not cross any, you will get a penalty." + "\n" + "\n" +
+                            "2. When it is not your round to roll the dice:" + "\n" +
+                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty." + "\n"
+                            + "\n" + "3. The numbers must be crossed out from left to right in each of the four colored rows."
+                            + "\n" + "\n" + "4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row." + "\n" +
+                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)" + "\n" + "\n" +
+                            "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n" + "\n" +
+                            "6. The game ends when two rows are locked, or one player has get 4 penalties." + "\n" + "\n" +
+                            "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points." + "\n" +
                             "   The player with the most points wins the game! ",
                     "Warning", JOptionPane.WARNING_MESSAGE);
 
-        }
-
-        else if (e.getSource() == this.toss) {
+        } else if (e.getSource() == this.toss) {
             diceGUI.disableToss(); // Ensure that the human only tosses once per round
-        }
-
-        else if (e.getSource() == endGame) {
+        } else if (e.getSource() == endGame) {
             if (this.ai.sheet.getTotalScore() == this.human.sheet.getTotalScore()) {
                 JOptionPane.showMessageDialog(this, "It's a tie!",
                         "Game Ends!", JOptionPane.INFORMATION_MESSAGE);
@@ -451,7 +467,7 @@ public class Qwixx extends Component implements ActionListener {
 
             String message;
 
-            if(this.ai.sheet.getTotalScore() < this.human.sheet.getTotalScore()) {
+            if (this.ai.sheet.getTotalScore() < this.human.sheet.getTotalScore()) {
                 message = "Congratulation, you beat the AI! Want to play another game?";
                 endGame.setText("You win!");
             } else {
@@ -459,7 +475,7 @@ public class Qwixx extends Component implements ActionListener {
                 endGame.setText("AI win...");
             }
 
-            String[] option = new String[] {"Sure!", "No, thanks!"};
+            String[] option = new String[]{"Sure!", "No, thanks!"};
             int m = JOptionPane.showOptionDialog(this, message,
                     "Game Ends", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
             if (m == 0) {
