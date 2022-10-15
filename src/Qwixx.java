@@ -163,16 +163,11 @@ public class Qwixx extends Component implements ActionListener {
     public void restartTheGame(HumanPlayer human) {
         this.human = new HumanPlayer(human.getName());
         this.ai = new AIPlayer();
-        this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
+        this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(this.human);
         this.diceGUI = new DiceGUI();
         end = false;
         this.human.changeState();
         humanTossYet = false;
-
-        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(0));
-        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(1));
-        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(2));
-        System.out.println(scoreSheetHumanPlayer.player.sheet.getValidRow(3));
 
         finish = scoreSheetHumanPlayer.finished;
         finish.addActionListener(this);
@@ -323,63 +318,61 @@ public class Qwixx extends Component implements ActionListener {
 
         // The player can only finish the round if toss is pressed
         if (e.getSource() == this.finish && !toss.getModel().isEnabled()) {
-            if (!end) {
-                // At least one number has been crossed and thus a round can be closed
-                if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
-                    scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
-                    scoreSheetHumanPlayer.setCrossesInRound(0); // A new round is started and thus the counting of crosses is restarted
-                    scoreSheetHumanPlayer.setRoundIsEnded();
+            // At least one number has been crossed and thus a round can be closed
+            if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
+                scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
+                scoreSheetHumanPlayer.setCrossesInRound(0); // A new round is started and thus the counting of crosses is restarted
+                scoreSheetHumanPlayer.setRoundIsEnded();
+            } else {
+                JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+                // Display error message: No number has been crossed. Cross a number or click skip round
+                return;
+            }
+
+            if (!end && humanCheck(diceGUI.getCurrentPoints())) {
+                if (this.human.isActive) {
+                    // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
+                    this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
+                    diceGUI.enableToss();
+                    diceGUI.nextRoundButton().doClick();
+                    diceGUI.disableToss();
                 } else {
-                    JOptionPane.showMessageDialog(this, "No number has been crossed. Cross a number or click skip round",
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
-                    // Display error message: No number has been crossed. Cross a number or click skip round
-                    return;
+                    diceGUI.enableToss();
+                    this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
+                    //humanCheck(diceGUI.getCurrentPoints());
                 }
+                // If the choice of the dice for the human player is correct, then we change the active player
+                this.human.changeState();
+                this.ai.changeState();
+                updateActivePlayer();
+                this.turn.setText("This turn belongs to " + this.activePlayer);
+                playGame();
+                checkEnd();
 
-                if (humanCheck(diceGUI.getCurrentPoints())) {
-                    if (this.human.isActive) {
-                        // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
-                        this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
-                        diceGUI.enableToss();
-                        diceGUI.nextRoundButton().doClick();
-                        diceGUI.disableToss();
-                    } else {
-                        diceGUI.enableToss();
-                        this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
-                        //humanCheck(diceGUI.getCurrentPoints());
-                    }
-                    // If the choice of the dice for the human player is correct, then we change the active player
-                    this.human.changeState();
-                    this.ai.changeState();
-                    updateActivePlayer();
-                    this.turn.setText("This turn belongs to " + this.activePlayer);
-                    playGame();
-                    checkEnd();
-
-                    if (end) {
-                        this.scoreSheetHumanPlayer.updatePanelWhenFinished();
-                        this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
-                    }
+                if (end) {
+                    this.scoreSheetHumanPlayer.updatePanelWhenFinished();
+                    this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
                 }
             }
-            // The player can only skip the round if toss is pressed
-            else if (e.getSource() == this.skip && !toss.getModel().isEnabled()) {
-                if (!end) {
-                    // Indeed no numbers has been crossed and thus a round can legally be skipped
-                    if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
-                        human.skipRound(human.isActive);
-                        scoreSheetHumanPlayer.setRoundIsEnded();
+        }
+        // The player can only skip the round if toss is pressed
+        else if (e.getSource() == this.skip && !toss.getModel().isEnabled()) {
+            // Indeed no numbers has been crossed and thus a round can legally be skipped
+            if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
+                human.skipRound(human.isActive);
+                scoreSheetHumanPlayer.setRoundIsEnded();
 
-                        if (human.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
-                            int k = 0;
-                            // As long as the penalty buttons are crossed, a new penalty cannot be crossed
-                            while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
-                                k++;
-                            }
-                            scoreSheetHumanPlayer.crossPenalty(k);
-                        }
+                if (human.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
+                    int k = 0;
+                    // As long as the penalty buttons are crossed, a new penalty cannot be crossed
+                    while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
+                        k++;
                     }
+                    scoreSheetHumanPlayer.crossPenalty(k);
+                }
 
+                if (!end) {
                     if (this.human.isActive) {
                         // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                         this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
@@ -432,7 +425,6 @@ public class Qwixx extends Component implements ActionListener {
         } else if (e.getSource() == this.toss) {
             diceGUI.disableToss(); // Ensure that the human only tosses once per round
         }
-
     }
 
     public static void main(String[] args) {
