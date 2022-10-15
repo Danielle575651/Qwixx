@@ -24,7 +24,8 @@ public class HumanPlayer extends Player {
         return true;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
-    }
+    //public void setName(String newName) {
+        //this.name = newName;
+    //}
 }
+
