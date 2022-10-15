@@ -51,17 +51,10 @@ public class Dice {
         return this.value;
     }
 
-    /**
-     * Get the state of the dice - whether it is removed or not
-     * @return the state of the dice
-     */
     public boolean isRemoved() {
         return this.isRemoved;
     }
 
-    /**
-     * Remove a die by change its state to true
-     */
     public void changeState() {
         this.isRemoved = true;
     }
