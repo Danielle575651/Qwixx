@@ -2,8 +2,8 @@ import java.util.Arrays;
 
 public abstract class Player {
     public Scoresheet sheet;
-    public String name;
-    public boolean isActive;
+    private String name;
+    private boolean isActive;
 
     // For a new player, generate a new score sheet
     public Player(String name) {
@@ -18,6 +18,10 @@ public abstract class Player {
 
     public String getName() {
         return this.name;
+    }
+
+    public void changeName(String newName) {
+        this.name = newName;
     }
 
     public final void tossDice(Dice[] dice) {
@@ -35,7 +39,7 @@ public abstract class Player {
     }
 
     // Gets the state of the player to determine if the choices made by this player are allowed.
-    public boolean getState() {
+    public boolean isActive() {
         return isActive;
     }
 
