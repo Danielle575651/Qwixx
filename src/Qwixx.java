@@ -312,7 +312,8 @@ public class Qwixx extends Component implements ActionListener {
             if (n == JOptionPane.YES_NO_OPTION) {
                 return;
             } else {
-                System.exit(0);
+                frame.dispose();
+                createStartScreen();
             }
         }
 
@@ -389,7 +390,7 @@ public class Qwixx extends Component implements ActionListener {
                         this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
                         //humanCheck(diceGUI.getCurrentPoints());
                     }
-                    
+
                     this.human.changeState();
                     this.ai.changeState();
                     updateActivePlayer();
