@@ -211,6 +211,7 @@ public class Qwixx extends Component implements ActionListener {
 
     public void createGUI() {
         frame = new JFrame();
+        frame.setTitle("Qwixx");
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(new Dimension(600, 800));
