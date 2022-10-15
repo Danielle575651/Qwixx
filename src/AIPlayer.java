@@ -1,8 +1,7 @@
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
- * Class that contains method for the graphical user interface (GUI) of the score sheet for the AI player
+ * Class defines the behavior (the choice) of AI player
  *
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
@@ -158,14 +157,12 @@ public class AIPlayer extends Player {
      * @param points an array that stores the values of six dice in a round. (If a die is removed, the related point becomes 0)
      */
     public void bestChoiceActive(int[] points) {
-
-        //The First STRATEGY: Immediately lock the row if possible
-        //(white, white) is considered, and then (white, color)
+        //Priority Case: Locking a row whenever possible
         int whiteComb = getWhiteComb(points);
         int[] colorComb = getColorComb(points);
         for (int i = 0; i < 4; i++) {
             if (sheet.canCross(i, 10, whiteComb)) {
-                sheet.cross(i, 10); //(The cross method embeds a behavior to cross the Lock column)
+                sheet.cross(i, 10); //(Note: The cross method embeds a behavior to cross the Lock column)
                 this.gui.crossButton(i, 10);
                 this.gui.crossButton(i, 11);
                 return;
@@ -173,16 +170,16 @@ public class AIPlayer extends Player {
         }
         for (int combValue : colorComb) {
             for (int i = 0; i < 4; i++) {
-                if (sheet.canCross(i, 10, combValue)) { // checking if 12 (or 2) can be crossed
-                    sheet.cross(i, 10); //cross 12 (or 2)
+                if (sheet.canCross(i, 10, combValue)) {
+                    sheet.cross(i, 10); //(Note: The cross method embeds a behavior to cross the Lock column)
                     this.gui.crossButton(i, 10);
                     this.gui.crossButton(i, 11);
                     return;
                 }
             }
         }
-
-        //Secondly,
+        //Second Priority Case: If 7 is the third crossed number in that row,
+        //then 9 is crossed if possible for red and yellow row, and 5 for green or blue row
         if (whiteComb == 9 || whiteComb == 5 || IntStream.of(colorComb).anyMatch(x -> x == 9) || IntStream.of(colorComb).anyMatch(x -> x == 5)) {
             for (int i = 0; i < 2; i++) {
                 if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
@@ -193,7 +190,6 @@ public class AIPlayer extends Player {
                     }
                 }
             }
-
             for (int i = 2; i < 4; i++) {
                 if (sheet.getLastCrossed(i) == 7 && sheet.getNumberCrossed(i) == 3) {
                     if (sheet.canCross(i, 7, 5)) {
@@ -205,12 +201,14 @@ public class AIPlayer extends Player {
             }
         }
 
-        //
+        //Consider crossing the number based on the two minimum gap counts from the
+        //best (white, white) and (white, color) combinations
         int[] wwBestGap = minGapWhite(points);
-        int wwRow = wwBestGap[0];
-        int wwGap = wwBestGap[1];
-        int wwNum = wwBestGap[2];
+        int wwRow = wwBestGap[0];  //the index of colored row
+        int wwGap = wwBestGap[1];  //the gap of the best (white, white)
+        int wwNum = wwBestGap[2];  //the number of (white, white)
         int[] wcBestGap = minGapColor(points);
+        //Similar to the code 207-210, but for (white, color) combination
         int wcRow = wcBestGap[0];
         int wcGap = wcBestGap[1];
         int wcNum = wcBestGap[2];
@@ -222,10 +220,16 @@ public class AIPlayer extends Player {
             return;
         }
 
-        // Case: same color
+        /**
+         * Case 1: The 2 combinations share the same color
+         * Choose the row with smaller gap to continue with
+         * checking {@Link #exception1(int, int, int)} for final decision
+         */
         if (wwRow == wcRow) {
             if (wwGap < wcGap) {
-                if (wcGap - wwGap <= 2 && wwGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+                // Exception: Cross both combinations when gap of (white, white) is at most 3
+                // and also the difference between 2 min gaps is at most 2
+                if (wcGap - wwGap <= 2 && wwGap <= 3) {
                     crossNumber(wwRow, wwNum);
                     crossNumber(wcRow, wcNum);
                     return;
@@ -238,9 +242,14 @@ public class AIPlayer extends Player {
             }
         }
 
-        // if 2 min rows give same gap, then pick the one with more crossed numbers
+        /**
+         * Case 2: The 2 combinations share the same gap
+         * Choose the row with more crossed numbers to continue with
+         * checking {@Link #exception1(int, int, int)} for final decision
+         */
         if (wwGap == wcGap) {
-            if (wwGap == 1) { // if min gap = 1 for both then we cross both - consider also min gap = 2
+            // Exception: Cross both if min gap = 1
+            if (wwGap == 1) {
                 crossNumber(wwRow, wwNum);
                 crossNumber(wcRow, wcNum);
                 return;
@@ -254,9 +263,15 @@ public class AIPlayer extends Player {
             }
         }
 
-        // Different color + gap
+        /**
+         * Case 3: The 2 combinations are different in gap and color
+         * Choose the row with smaller gap to continue with
+         * checking {@Link #exception1(int, int, int)} for final decision
+         */
         if (wwGap < wcGap) {
-            if (wwGap < 3 && wcGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+            // Exception: Cross both when the smaller gap is < 3,
+            // and the larger one is <= 3
+            if (wwGap < 3 && wcGap <= 3) {
                 crossNumber(wwRow, wwNum);
                 crossNumber(wcRow, wcNum);
                 return;
@@ -264,7 +279,7 @@ public class AIPlayer extends Player {
             exception1(wwRow, wwNum, wwGap);
             return;
         } else {
-            if (wcGap < 3 && wwGap <= 3) { //when gap between ww and last is at most 3, and the difference between 2 min gap is 1, then we cross both
+            if (wcGap < 3 && wwGap <= 3) {
                 crossNumber(wwRow, wwNum);
                 crossNumber(wcRow, wcNum);
                 return;
@@ -276,27 +291,29 @@ public class AIPlayer extends Player {
 
     /**
      * The method makes the AI Player perform (in case of the NonActive round)
+     * Only use the white combination
      *
-     * @param points an array that stores the values of six dice in a round. (If a die is removed, the related point becomes 0)
+     * @param points an array that stores the values of six dice in a round.
+     *               (If a die is removed, the related point becomes 0)
      */
     public void bestChoiceNonActive(int[] points) {
-        // check if we can lock with the white combination
+        //Priority Case: Locking a row whenever possible
         int whiteComb = getWhiteComb(points);
         for (int i = 0; i < 4; i++) {
-            if (sheet.canCross(i, 10, whiteComb)) { // checking if 12 (or 2) can be crossed
-                sheet.cross(i, 10); //cross 12 (or 2)
+            if (sheet.canCross(i, 10, whiteComb)) {
+                sheet.cross(i, 10);
                 this.gui.crossButton(i, 10);
                 return;
             }
         }
 
-        int[] input = minGapWhite(points); // index corresponds to color + minGap + number to cross
+        int[] input = minGapWhite(points); // list of color (ie. row), corresponding min. gap, and the number to cross
 
-        if (input[0] == -1) { // When there is no valid gap
-            return; //Skip the round
+        if (input[0] == -1) { // Do nothing when there is no valid gap
+            return;
         }
 
-        // Check if we can cross 12 or 2 to lock
+        //Check if we can cross 12 or 2 to lock///////////////////////////////////////////////////// note
         if (input[0] < 2 && input[2] == 12 && this.sheet.canCross(input[0], 10, 12)) {
             crossNumber(input[0], 12);
             return;
@@ -306,13 +323,13 @@ public class AIPlayer extends Player {
             return;
         }
 
-        // if the min gap is 1, then we cross the chosen number
+        // If the min gap is < 3, then we cross the chosen number
         if (input[1] < 3) {
             crossNumber(input[0], input[2]);
             return;
         }
 
-        // when the min. gap is > 1, and if there is an empty row --> only cross if gap <= 3
+        // If there is an empty row, only cross if gap <= 3
         if (sheet.getLastCrossed(input[0]) == 1 || sheet.getLastCrossed(input[0]) == 13) {
             if (input[1] <= 3) {
                 crossNumber(input[0], input[2]);
@@ -323,11 +340,14 @@ public class AIPlayer extends Player {
     }
 
     /**
-     * The method is for checking the Exception 1 (one of AI's strategies)
-     * If
-     * @param color the index referring to the colored row
-     * @param number the number
-     * @param minGap
+     * The method is for checking the Exception 1: When the list of crossed numbers or red or yellow
+     * only has 2 and 3 (12 and 11 for green and blue), then we only cross the best number when min. gap < 4
+     * Otherwise, we check {@Link #exception2(int, int, int)}
+     * Support method for {@Link #bestChoiceActive(int[])}
+     * 
+     * @param color  the index referring to the colored row
+     * @param number the possible number to be crossed
+     * @param minGap the minimum gap associated with the number
      */
     public void exception1(int color, int number, int minGap) {
         if (color == 0 || color == 1) {
@@ -348,11 +368,13 @@ public class AIPlayer extends Player {
     }
 
     /**
-     * The method is for checking the Exception 1 (one of AI's strategies)
-     * If
-     * @param color the index referring to the colored row
-     * @param number the number that want to be cro
-     * @param minGap
+     * The method is for checking the Exception 2: Only actively cross penalty when there is < 3 penalties, 
+     * min.gap > 3, and the crossed number's order is after number 7
+     * Support method for {@Link #exception2(int, int, int)} and {@Link #bestChoiceActive(int[])}
+     *
+     * @param color  the index referring to the colored row
+     * @param number the possible number to be crossed
+     * @param minGap the minimum gap associated with the number
      */
     public void exception2(int color, int number, int minGap) {
         if (color == 0 || color == 1) {
@@ -363,6 +385,7 @@ public class AIPlayer extends Player {
                 crossNumber(color, number);
             }
         }
+        
         if (color == 2 || color == 3) {
             if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number < 7) {
                 this.sheet.addPenalty();

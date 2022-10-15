@@ -1,9 +1,15 @@
 public class HumanPlayer extends Player {
-
+    /**
+     * Constructor for the HumanPlayer, which stores the player name.
+     */
     public HumanPlayer(String name) {
         super(name);
     }
 
+    /**
+     * If the player is active and decides to skip round, they get a penalty
+     * @param active is true when the player is active
+     */
     public void skipRound(boolean active) {
         if(active) {
             sheet.addPenalty();
@@ -11,21 +17,4 @@ public class HumanPlayer extends Player {
             return;
         }
     }
-
-    public boolean cross(int color, int number, int[] points, boolean isActive) {
-        boolean valid = numIsValid(color, number, points, isActive);
-
-        if(!valid) {
-            // output that is not valid to cross
-            return false;
-        }
-
-        crossNumber(color, number);
-        return true;
-    }
-
-    //public void setName(String newName) {
-        //this.name = newName;
-    //}
 }
-
