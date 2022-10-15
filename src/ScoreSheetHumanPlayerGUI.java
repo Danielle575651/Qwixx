@@ -49,7 +49,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         roundIsEnded = false;
         numberCrossesLastRound = 0;
         numberCrossesInRound = 0;
-        this.player.sheet = new Scoresheet();
 
         createTitlePanel();
         createButtons();
@@ -167,7 +166,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                             }
                         }
 
-                        if (canUncross && player.sheet.getValidRow(i)) {
+                        if (canUncross) {
                             uncrossButton(i, j);
                             // If player wants to uncross 12 or 2 and this is allowed then lock also gets uncrossed
                             if (j == 10 && buttons[i][11].getText().equals("X")) {
@@ -188,29 +187,29 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                         // If an active player has 2 or more crosses he/she cannot cross anymore. If an inactive player
                         // has 1 or more crosses he/she cannot cross anymore.
                         if (player.sheet.canCross(i, j) &&
-                                ((player.isActive && (numberCrossesInRound < maxCrossPerRoundActive)) ||
-                                        (!player.isActive && numberCrossesInRound < maxCrossPerRoundInactive))) {
+                                ((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
+                                        (!player.isActive() && numberCrossesInRound < maxCrossPerRoundInactive))) {
                             player.sheet.cross(i, j);
                             numberCrossesInRound++;
                             allCrossedNumbersInOrder.add(indexStored);
 
                             if (j == 10) { // If last number is crossed then (and this allowed) then lock can also be crossed. canCross already checks if a 12 or 2 are allowed to be crossed
                                 // A lock does not count into the number of crosses done in a round
-                                // If column 10 is crossed in Scoresheet and this is allowed then column 11 is automatically crossed
                                 crossButton(i, 11);
+                                player.sheet.cross(i, 11);
+                                System.out.println(player.sheet.getValidRow(i));
                             }
-                        } else if (!player.sheet.getValidRow(i)) {
-                            JOptionPane.showMessageDialog(this, "This color has disappeared!",
-                                    "ERROR", JOptionPane.ERROR_MESSAGE);
-                        } else { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
+                        } else if (!(player.sheet.canCross(i, j) &&
+                                ((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
+                                        (!player.isActive() && numberCrossesInRound < maxCrossPerRoundInactive)))) { // If a player may not cross the button, then it is also not stored in lastCrossedNumbers
                             uncrossButton(i, j);
 
                             if (!player.sheet.canCross(i, j)) {
                                 JOptionPane.showMessageDialog(this, "Crossing this number is not allowed, please cross another number",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
                                 // Display an error message that crossing this number is not allowed
-                            } else if (!((player.isActive && (numberCrossesInRound < maxCrossPerRoundActive)) ||
-                                    (!player.isActive && numberCrossesInRound < maxCrossPerRoundInactive))){
+                            } else if (!((player.isActive() && (numberCrossesInRound < maxCrossPerRoundActive)) ||
+                                    (!player.isActive() && numberCrossesInRound < maxCrossPerRoundInactive))){
                                 JOptionPane.showMessageDialog(this, "The maximum number of allowed crosses for this round is reached",
                                         "ERROR", JOptionPane.ERROR_MESSAGE);
                                 // Display an error message that the maximum number of allowed crosses per round is reached
@@ -220,6 +219,8 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
                 }
             }
         }
+
+
     }
 
     /**
@@ -227,7 +228,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
      * @param k indicates at which index a penalty needs to be crossed
      */
     public void crossPenalty(int k) {
-        player.sheet.addPenalty();
         penalties[k].setText("X");
         penalties[k].setFont(new Font("MV Boli", Font.PLAIN, 10));
         penalties[k].setBackground(new Color(204, 204, 204));
@@ -292,7 +292,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
             for (int j = 0; j < 12; j++) {
                 if (j == 11) {
                     if (i == 0) {
-                        //for the last column, the locks are added
                         buttons[i][j] = new JButton(new ImageIcon(((new ImageIcon(
                                 "src/Red_Lock.png").getImage()
                                 .getScaledInstance(30, 30,
@@ -381,7 +380,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
         inputName.setForeground(new Color(204, 204, 204));
         inputName.setFont(new Font("Ink Free", Font.BOLD, 15));
         inputName.setOpaque(true);
-        player.setName(inputName.getText()); // Sets the name of the human player
+        //player.setName(inputName.getText()); // Sets the name of the human player
 
         title_panel.setLayout(new BorderLayout());
         title_panel.setBounds(0, 0, 600, 20);
@@ -542,8 +541,6 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
      * @return a list with the numbers that are crossed most recently (the last one)
      */
     public List<String> getLastCrossedNumbers() {
-        // When the round is finished (Skip round or Finish is clicked) but we want to check on the crosses in last round
-        // to see if they correspond to the dice values.
         if (allCrossedNumbersInOrder.size() > 2) {
             return allCrossedNumbersInOrder.subList(allCrossedNumbersInOrder.size() - numberCrossesLastRound, allCrossedNumbersInOrder.size());
         } else if (allCrossedNumbersInOrder.size() == 2) {
@@ -579,7 +576,7 @@ public class ScoreSheetHumanPlayerGUI extends Component implements ActionListene
      */
     public void displayErrorMessageOrder(int i) {
         numberCrossesInRound = i;
-        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not"  + "\n"+
+        JOptionPane.showMessageDialog(this, "The order in which you crossed the number is not"  + "\n"+ 
                         " correct. If you want to cross numbers in the same row, you first have to cross the combination" + "\n" +
                         " of the white dice and then a colored combination.",
                 "ERROR", JOptionPane.ERROR_MESSAGE);
