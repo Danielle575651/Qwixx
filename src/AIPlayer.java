@@ -11,7 +11,7 @@ public class AIPlayer extends Player {
      * Constructor for the AIPlayer, which initializes the values and panels.
      */
     public AIPlayer() {
-        super("AI Player"); //
+        super("AI Player");
         this.gui = new ScoreSheetAIPlayerGUI();
     }
 
@@ -27,7 +27,6 @@ public class AIPlayer extends Player {
             sheet.cross(color, 12 - number);
             this.gui.crossButton(color, 12 - number);
         }
-        System.out.println(color + " " + number);
     }
 
     // Finding minimum gap of the white combination

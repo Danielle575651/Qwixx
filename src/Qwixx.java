@@ -46,7 +46,7 @@ public class Qwixx extends Component implements ActionListener {
         toss.addActionListener(this);
         this.human.changeState();
     }
-///
+
     public void playGame() {
         for (int i = 0; i < NUMBER_OF_COLOR; i++) {
             if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
@@ -160,7 +160,6 @@ public class Qwixx extends Component implements ActionListener {
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(this.human);
         this.diceGUI = new DiceGUI();
         end = false;
-        this.human.changeState();
 
         humanTossYet = false;
         quitGame = new JButton();
@@ -291,27 +290,8 @@ public class Qwixx extends Component implements ActionListener {
                     this.activePlayer = this.ai.getName();
                 }
             }
-            //System.out.println("1,"+ this.activePlayer);
             restartTheGame(this.human);
-            //System.out.println("2,"+ this.activePlayer);
             this.createGUI();
-            //System.out.println("3,"+ this.activePlayer);
-            //this.turn.setText("This turn belongs to " + this.activePlayer);
-
-            if(humanFirst) {
-                this.human.changeState();
-            } else {
-                this.ai.changeState();
-            }
-
-            /**
-            if (this.activePlayer.equals(this.ai.name)) {
-                this.ai.isActivePlayer();
-                this.human.isNotActivePlayer();
-                diceGUI.enableToss();
-                diceGUI.nextRoundButton().doClick();
-                diceGUI.disableToss();
-            }*/
 
             if (!humanFirst) {
                 this.ai.changeState();
@@ -388,6 +368,7 @@ public class Qwixx extends Component implements ActionListener {
         else if (e.getSource() == this.skip) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
             if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
+                System.out.println(human.isActive());
                 human.skipRound(human.isActive());
                 scoreSheetHumanPlayer.setRoundIsEnded();
 
