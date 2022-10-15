@@ -9,7 +9,6 @@ import java.util.Random;
 
 public class Qwixx extends Component implements ActionListener {
     private JFrame frame = new JFrame();
-
     private HumanPlayer human;
     private AIPlayer ai;
     private boolean end;
@@ -30,24 +29,30 @@ public class Qwixx extends Component implements ActionListener {
     private int clicksOnRestartGame = 0;
     private boolean humanTossYet = false;
 
-    public Qwixx(HumanPlayer human, AIPlayer ai) {
+    private JButton endGame = new JButton();
+
+    public Qwixx(HumanPlayer human) {
         this.human = human;
-        this.ai = ai;
+        this.ai = new AIPlayer();
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         this.diceGUI = new DiceGUI();
-        this.activePlayer = "Game is not started yet.";
+        this.activePlayer = ""; //"Game is not started yet.";
         end = false;
         //humanFirst();
         finish = scoreSheetHumanPlayer.finished;
         finish.addActionListener(this);
-        skip = scoreSheetHumanPlayer.skipRound;
-        skip.addActionListener(this);
+        this.skip = scoreSheetHumanPlayer.skipRound;
+        this.skip.addActionListener(this);
         toss = diceGUI.nextRoundButton();
         toss.addActionListener(this);
         this.human.changeState();
     }
 
     public void playGame() {
+        System.out.println();
+        System.out.println();
+        System.out.println("----------------------------------------------------------");
+        System.out.println("New turn");
         for (int i = 0; i < NUMBER_OF_COLOR; i++) {
             if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
                 // If one player closes a row, then the color should also disappear for the other player after
@@ -67,9 +72,40 @@ public class Qwixx extends Component implements ActionListener {
         }
     }
 
+    public void checkLock() {
+        for (int i = 0; i < NUMBER_OF_COLOR; i++) {
+            if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
+                System.out.println("yo bestie 1");
+                if(!this.human.sheet.getValidRow(i)) {
+                    System.out.println("Human sheet row " + i);
+                } else if (!this.ai.sheet.getValidRow(i)) {
+                    System.out.println("AI sheet row " + i);
+                }
+                // If one player closes a row, then the color should also disappear for the other player after
+                // having chosen their dice combination (including the color that may now disappear)
+                this.human.sheet.removeColor(i);
+                this.ai.sheet.removeColor(i);
+
+                System.out.println("Human sheet row after lock" + i);
+                System.out.println("AI sheet row after lock" + i);
+
+                // Also remove the corresponding die from the game
+                for (Dice d : this.diceGUI.getDiceSet()) {
+                    if (!d.isRemoved()) {
+                        System.out.println("yo bestie 2");
+                        if (d.getColor() == i + 2) {
+                            diceGUI.removeDice(d);
+                            System.out.println("yo bestie 3");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void checkEnd() {
         if (this.human.sheet.getPenaltyValue() == 4 || this.ai.sheet.getPenaltyValue() == 4 ||
-                this.human.sheet.getLocks() == 2 || this.ai.sheet.getLocks() == 2) {
+                this.human.sheet.getLocks() >= 2 || this.ai.sheet.getLocks() >= 2) {
             // getLocks returns the number of colors that are removed from the game, when 2 colors are removed or
             // one player gets 4 penalties then the game is ended.
             this.end = true;
@@ -77,16 +113,10 @@ public class Qwixx extends Component implements ActionListener {
     }
 
     public void updateActivePlayer() {
-        if (this.human.isActive) {
-            if (this.human.getName().equals(" ")) {
-                this.activePlayer = "Human player";
-            } else {
-                this.activePlayer = this.human.getName();
-            }
-        } else if (this.ai.isActive) {
+        if (this.human.isActive()) {
+            this.activePlayer = this.human.getName();
+        } else if (this.ai.isActive()) {
             this.activePlayer = this.ai.getName();
-        } else {
-            this.activePlayer = "Game is not started yet.";
         }
     }
 
@@ -97,7 +127,7 @@ public class Qwixx extends Component implements ActionListener {
         // and the second is the number crossed. 04 is for example a red 4
         for (String indices : lastCrossed) {
             // If the crossed number is not valid according to the dice value, display an error message
-            if (human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive) == false) {
+            if (human.numIsValid(Integer.parseInt(indices.substring(0, 1)), Integer.parseInt(indices.substring(1)), points, human.isActive()) == false) {
                 scoreSheetHumanPlayer.displayErrorMessageRemote(lastCrossed.size());
                 return false;
             }
@@ -167,14 +197,20 @@ public class Qwixx extends Component implements ActionListener {
         this.diceGUI = new DiceGUI();
         end = false;
         this.human.changeState();
-        humanTossYet = false;
 
-        finish = scoreSheetHumanPlayer.finished;
-        finish.addActionListener(this);
-        skip = scoreSheetHumanPlayer.skipRound;
-        skip.addActionListener(this);
-        toss = diceGUI.nextRoundButton();
+        humanTossYet = false;
+        quitGame = new JButton();
+        quitApp = new JButton();
+        endGame = new JButton();
+        this.scoreSheetHumanPlayer.setCrossesInRound(0);
+
+        this.finish = this.scoreSheetHumanPlayer.finished;
+        this.finish.addActionListener(this);
+        this.skip = this.scoreSheetHumanPlayer.skipRound;
+        this.skip.addActionListener(this);
+        toss = this.diceGUI.nextRoundButton();
         toss.addActionListener(this);
+        this.playGame();
     }
 
     public void createStartScreen() {
@@ -231,15 +267,18 @@ public class Qwixx extends Component implements ActionListener {
 
         quitGame.setText("You want to quit this game? Click me!");
         gameRules.setText("Click here to view the rules of Qwixx");
-        this.turn = new JButton(this.activePlayer);
+        this.turn = new JButton(this.activePlayer + " will play first");
+        endGame.setText("Game has not ended yet");
         quitGame.addActionListener(this);
         gameRules.addActionListener(this);
+        endGame.addActionListener(this);
 
         JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new GridLayout(3, 1));
+        infoPanel.setLayout(new GridLayout(4, 1));
         infoPanel.add(quitGame);
         infoPanel.add(gameRules);
         infoPanel.add(turn);
+        //infoPanel.add(endGame);
         infoPanel.setSize(new Dimension(100, 100));
 
         JPanel middlePanel = new JPanel();
@@ -259,55 +298,79 @@ public class Qwixx extends Component implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == restartGame) {
-            //JOptionPane.showMessageDialog(this, "What's your name? Our AI would love to make new friend!",
-            //"Warning", JOptionPane.WARNING_MESSAGE);
-            this.human.name = JOptionPane.showInputDialog("What's your name? Our AI would love to make new friend!");
-            if (this.human.name == null) {
+            String humanName = JOptionPane.showInputDialog("What's your name? Our AI would love to make new friend!");
+            if (humanName == null) {
                 return;
             }
+            this.human.changeName(humanName);
 
-            String[] option = new String[]{"Yes!", "Nope, let AI play first", "Choose randomly"};
+            String[] option = new String[] {"Yes!", "Nope, let AI play first", "Choose randomly"};
             int n = JOptionPane.showOptionDialog(this, "Do you want to play first?",
                     "Choosing Active Player", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
 
+            boolean humanFirst = false;
             if (n == 0) {
-                this.activePlayer = this.human.name;
+                this.activePlayer = this.human.getName();
+                humanFirst = true;
             } else if (n == 1) {
-                this.activePlayer = this.ai.name;
+                this.activePlayer = this.ai.getName();
             } else if (n == 2) {
-                int player = (int) Math.round(Math.random());
+                int player = (int)Math.round(Math.random());
                 if (player == 0) {
                     JOptionPane.showMessageDialog(this, "You will play first!",
                             "Choosing Active Player", JOptionPane.INFORMATION_MESSAGE);
-                    this.activePlayer = this.human.name;
+                    this.activePlayer = this.human.getName();
+                    humanFirst = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "Our AI will play first!",
                             "Choosing Active Player", JOptionPane.INFORMATION_MESSAGE);
-                    this.activePlayer = this.ai.name;
+                    this.activePlayer = this.ai.getName();
                 }
             }
+            //System.out.println("1,"+ this.activePlayer);
             restartTheGame(this.human);
-            this.turn.setText("This turn belongs to " + this.activePlayer);
+            //System.out.println("2,"+ this.activePlayer);
             this.createGUI();
+            //System.out.println("3,"+ this.activePlayer);
+            //this.turn.setText("This turn belongs to " + this.activePlayer);
 
+            if(humanFirst) {
+                this.human.changeState();
+            } else {
+                this.ai.changeState();
+            }
+
+            /**
             if (this.activePlayer.equals(this.ai.name)) {
                 this.ai.isActivePlayer();
                 this.human.isNotActivePlayer();
                 diceGUI.enableToss();
                 diceGUI.nextRoundButton().doClick();
                 diceGUI.disableToss();
+            }*/
+
+            if (!humanFirst) {
+                this.ai.changeState();
+                diceGUI.enableToss();
+                diceGUI.nextRoundButton().doClick();
+                diceGUI.disableToss();
+            } else {
+                this.human.changeState();
             }
 
             return;
         }
 
         if (e.getSource() == quitGame) {
-            String[] option = new String[]{"Actually, no!", "Yes :("};
+            String[] option = new String[] {"Actually, no!", "Yes :("};
             int n = JOptionPane.showOptionDialog(this, "Are you 100% sure?",
                     "Quit Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
             if (n == JOptionPane.YES_NO_OPTION) {
                 return;
-            } else {
+            }
+            else {
+                //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                //frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 frame.dispose();
             }
         }
@@ -316,8 +379,7 @@ public class Qwixx extends Component implements ActionListener {
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
         }
 
-        // The player can only finish the round if toss is pressed
-        if (e.getSource() == this.finish && !toss.getModel().isEnabled()) {
+        if (e.getSource() == this.finish) {
             // At least one number has been crossed and thus a round can be closed
             if (scoreSheetHumanPlayer.getCrossesInRound() > 0) {
                 scoreSheetHumanPlayer.setCrossesLastRound(scoreSheetHumanPlayer.getCrossesInRound()); // Store the number of crosses in last round in case something went wrong when checking in Qwixx class
@@ -331,7 +393,7 @@ public class Qwixx extends Component implements ActionListener {
             }
 
             if (!end && humanCheck(diceGUI.getCurrentPoints())) {
-                if (this.human.isActive) {
+                if (this.human.isActive()) {
                     // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                     this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
                     diceGUI.enableToss();
@@ -342,6 +404,7 @@ public class Qwixx extends Component implements ActionListener {
                     this.ai.bestChoiceActive(diceGUI.getCurrentPoints());
                     //humanCheck(diceGUI.getCurrentPoints());
                 }
+
                 // If the choice of the dice for the human player is correct, then we change the active player
                 this.human.changeState();
                 this.ai.changeState();
@@ -353,27 +416,29 @@ public class Qwixx extends Component implements ActionListener {
                 if (end) {
                     this.scoreSheetHumanPlayer.updatePanelWhenFinished();
                     this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                    endGame.doClick();
                 }
             }
         }
-        // The player can only skip the round if toss is pressed
-        else if (e.getSource() == this.skip && !toss.getModel().isEnabled()) {
+
+        else if (e.getSource() == this.skip) {
             // Indeed no numbers has been crossed and thus a round can legally be skipped
             if (scoreSheetHumanPlayer.getCrossesInRound() == 0) {
-                human.skipRound(human.isActive);
+                human.skipRound(human.isActive());
                 scoreSheetHumanPlayer.setRoundIsEnded();
 
-                if (human.isActive) { // A player cannot cross a penalty itself, only hit skip round button.
+                if (human.isActive()) { // A player cannot cross a penalty itself, only hit skip round button.
                     int k = 0;
                     // As long as the penalty buttons are crossed, a new penalty cannot be crossed
                     while (scoreSheetHumanPlayer.penalties[k].getText().equals("X")) {
                         k++;
+                        System.out.println("4, " + this.human.sheet.getPenaltyValue());
                     }
                     scoreSheetHumanPlayer.crossPenalty(k);
                 }
 
                 if (!end) {
-                    if (this.human.isActive) {
+                    if (this.human.isActive()) {
                         // Should add a condition that AI only generates new dice values when human has finished round with valid dice values
                         this.ai.bestChoiceNonActive(diceGUI.getCurrentPoints());
                         diceGUI.enableToss();
@@ -395,43 +460,79 @@ public class Qwixx extends Component implements ActionListener {
                     if (end) {
                         this.scoreSheetHumanPlayer.updatePanelWhenFinished();
                         this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                        endGame.doClick();
                     }
                 } else {
                     this.scoreSheetHumanPlayer.updatePanelWhenFinished();
                     this.ai.gui.updatePanelWhenFinished(this.ai.getSheet());
+                    endGame.doClick();
                 }
             } else { // In case a number is crossed and also the skipRound button has been clicked:
                 JOptionPane.showMessageDialog(this, "Remove the crosses if you want to skip this round or click the Finish button",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
             }
-        } else if (e.getSource() == this.gameRules) {
+        }
+
+        else if (e.getSource() == this.gameRules) {
             JOptionPane.showMessageDialog(this,
-                    "1. When you roll the dice in a round:" + "\n" +
-                            "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows" + "\n" +
-                            "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color." + "\n" +
-                            "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times," + "\n" +
-                            "   but if you do not cross any, you will get a penalty." + "\n" + "\n" +
-                            "2. When it is not your round to roll the dice:" + "\n" +
-                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty." + "\n"
-                            + "\n" + "3. The numbers must be crossed out from left to right in each of the four colored rows."
-                            + "\n" + "\n" + "4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row." + "\n" +
-                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)" + "\n" + "\n" +
-                            "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n" + "\n" +
-                            "6. The game ends when two rows are locked, or one player has get 4 penalties." + "\n" + "\n" +
-                            "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points." + "\n" +
+                    "1. When you roll the dice in a round:"+ "\n"+
+                            "  -First, sum up the points of two white dice, and you can cross the corresponding number in one of the four rows"+ "\n"+
+                            "  -Second, sum up one of the white die and one of the colored die, and you can cross the corresponding number in the row with the same color."+ "\n"+
+                            "  -Note that, the order cannot be changed. However, you can choose to cross either one or two times,"+ "\n"+
+                            "   but if you do not cross any, you will get a penalty." + "\n"+ "\n"+
+                            "2. When it is not your round to roll the dice:"+ "\n"+
+                            "   You can only choose the sum of the two white dice, and cross that number in one of the four rows. If you do not cross any, you will not get a penalty."+ "\n"
+                            + "\n"+"3. The numbers must be crossed out from left to right in each of the four colored rows."
+                            + "\n" + "\n"+"4. The rightest number in each row can only be crossed when it is at least the 6th cross in that row."+ "\n"+
+                            "   If you cross the rightest number, you can then lock the row! (Crossing a lock also gives you an additional cross in that row)"+ "\n" + "\n"+
+                            "5. When a row is locked, the corresponding colored die is removed from the game, and the players cannot cross that colored row anymore." + "\n"+ "\n"+
+                            "6. The game ends when two rows are locked, or one player has get 4 penalties."+ "\n"+ "\n" +
+                            "7. You can find the scoring table below the color rows on the score sheet. Each penalty costs you 5 points."+"\n"+
                             "   The player with the most points wins the game! ",
                     "Warning", JOptionPane.WARNING_MESSAGE);
 
-        } else if (e.getSource() == this.toss) {
+        }
+
+        else if (e.getSource() == this.toss) {
             diceGUI.disableToss(); // Ensure that the human only tosses once per round
+        }
+
+        else if (e.getSource() == endGame) {
+            if (this.ai.sheet.getTotalScore() == this.human.sheet.getTotalScore()) {
+                JOptionPane.showMessageDialog(this, "It's a tie!",
+                        "Game Ends!", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            String message;
+
+            if(this.ai.sheet.getTotalScore() < this.human.sheet.getTotalScore()) {
+                message = "Congratulation, you beat the AI! Want to play another game?";
+                endGame.setText("You win!");
+            } else {
+                message = "Oh no, our AI won this game. Want to try again?";
+                endGame.setText("AI win...");
+            }
+
+            String[] option = new String[] {"Sure!", "No, thanks!"};
+            int m = JOptionPane.showOptionDialog(this, message,
+                    "Game Ends", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[0]);
+            if (m == 0) {
+                frame.dispose();
+                restartGame.doClick();
+            } else {
+                //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                //frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                frame.dispose();
+            }
         }
     }
 
     public static void main(String[] args) {
         HumanPlayer human = new HumanPlayer("");
-        AIPlayer ai = new AIPlayer();
-        Qwixx qwixxGame = new Qwixx(human, ai);
+        //AIPlayer ai = new AIPlayer();
+        Qwixx qwixxGame = new Qwixx(human);
         qwixxGame.createStartScreen();
-        qwixxGame.playGame();
+        //qwixxGame.playGame();
     }
 }
