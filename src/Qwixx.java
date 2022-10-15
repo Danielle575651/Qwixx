@@ -36,9 +36,8 @@ public class Qwixx extends Component implements ActionListener {
         this.ai = new AIPlayer();
         this.scoreSheetHumanPlayer = new ScoreSheetHumanPlayerGUI(human);
         this.diceGUI = new DiceGUI();
-        this.activePlayer = ""; //"Game is not started yet.";
+        this.activePlayer = "";
         end = false;
-        //humanFirst();
         finish = scoreSheetHumanPlayer.finished;
         finish.addActionListener(this);
         this.skip = scoreSheetHumanPlayer.skipRound;
@@ -49,10 +48,6 @@ public class Qwixx extends Component implements ActionListener {
     }
 
     public void playGame() {
-        System.out.println();
-        System.out.println();
-        System.out.println("----------------------------------------------------------");
-        System.out.println("New turn");
         for (int i = 0; i < NUMBER_OF_COLOR; i++) {
             if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
                 // If one player closes a row, then the color should also disappear for the other player after
@@ -65,37 +60,6 @@ public class Qwixx extends Component implements ActionListener {
                     if (!d.isRemoved()) {
                         if (d.getColor() == i + 2) {
                             diceGUI.removeDice(d);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void checkLock() {
-        for (int i = 0; i < NUMBER_OF_COLOR; i++) {
-            if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
-                System.out.println("yo bestie 1");
-                if(!this.human.sheet.getValidRow(i)) {
-                    System.out.println("Human sheet row " + i);
-                } else if (!this.ai.sheet.getValidRow(i)) {
-                    System.out.println("AI sheet row " + i);
-                }
-                // If one player closes a row, then the color should also disappear for the other player after
-                // having chosen their dice combination (including the color that may now disappear)
-                this.human.sheet.removeColor(i);
-                this.ai.sheet.removeColor(i);
-
-                System.out.println("Human sheet row after lock" + i);
-                System.out.println("AI sheet row after lock" + i);
-
-                // Also remove the corresponding die from the game
-                for (Dice d : this.diceGUI.getDiceSet()) {
-                    if (!d.isRemoved()) {
-                        System.out.println("yo bestie 2");
-                        if (d.getColor() == i + 2) {
-                            diceGUI.removeDice(d);
-                            System.out.println("yo bestie 3");
                         }
                     }
                 }
