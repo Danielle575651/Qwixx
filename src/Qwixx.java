@@ -46,7 +46,7 @@ public class Qwixx extends Component implements ActionListener {
         toss.addActionListener(this);
         this.human.changeState();
     }
-
+///
     public void playGame() {
         for (int i = 0; i < NUMBER_OF_COLOR; i++) {
             if (!this.human.sheet.getValidRow(i) || !this.ai.sheet.getValidRow(i)) {
