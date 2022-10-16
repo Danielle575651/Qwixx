@@ -105,10 +105,11 @@ public class ScoreSheetAIPlayerGUI {
         buttons[i][j].setFont(new Font("MV Boli", Font.PLAIN, 12));
         buttons[i][j].setForeground(Color.BLACK);
 
-        if (j == 11) {
-            buttons[i][j].setHorizontalTextPosition(JButton.CENTER);
-            buttons[i][j].setVerticalTextPosition(JButton.CENTER);
-            buttons[i][j].setForeground(Color.black);
+        if (j == 10 || j == 11) {
+            buttons[i][11].setText("X");
+            buttons[i][11].setHorizontalTextPosition(JButton.CENTER);
+            buttons[i][11].setVerticalTextPosition(JButton.CENTER);
+            buttons[i][11].setForeground(Color.black);
         }
     }
 
