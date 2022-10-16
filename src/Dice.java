@@ -54,7 +54,7 @@ public class Dice {
     public int getValue() {
         return this.value;
     }
-    
+
     /**
      * Get the state of the die - whether it is removed or not
      *
@@ -63,7 +63,7 @@ public class Dice {
     public boolean isRemoved() {
         return this.isRemoved;
     }
-    
+
     /**
      * Remove a die by change its state of removal to true
      */

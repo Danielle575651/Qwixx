@@ -344,7 +344,7 @@ public class AIPlayer extends Player {
      * only has 2 and 3 (12 and 11 for green and blue), then we only cross the best number when min. gap < 4
      * Otherwise, we check {@Link #exception2(int, int, int)}
      * Support method for {@Link #bestChoiceActive(int[])}
-     * 
+     *
      * @param color  the index referring to the colored row
      * @param number the possible number to be crossed
      * @param minGap the minimum gap associated with the number
@@ -368,7 +368,7 @@ public class AIPlayer extends Player {
     }
 
     /**
-     * The method is for checking the Exception 2: Only actively cross penalty when there is < 3 penalties, 
+     * The method is for checking the Exception 2: Only actively cross penalty when there is < 3 penalties,
      * min.gap > 3, and the crossed number's order is after number 7
      * Support method for {@Link #exception2(int, int, int)} and {@Link #bestChoiceActive(int[])}
      *
@@ -385,7 +385,7 @@ public class AIPlayer extends Player {
                 crossNumber(color, number);
             }
         }
-        
+
         if (color == 2 || color == 3) {
             if (this.sheet.getPenaltyValue() < 3 && minGap > 3 && number < 7) {
                 this.sheet.addPenalty();

@@ -8,10 +8,11 @@ public class HumanPlayer extends Player {
 
     /**
      * If the player is active and decides to skip round, they get a penalty
+     *
      * @param active is true when the player is active
      */
     public void skipRound(boolean active) {
-        if(active) {
+        if (active) {
             sheet.addPenalty();
         } else {
             return;
