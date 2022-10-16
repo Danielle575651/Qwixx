@@ -1,7 +1,7 @@
 import java.util.Random;
 
 /**
- * A class that generates a dice with specified color, random number and removal status
+ * A class that generates a die with specified color, random number and removal status
  *
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
@@ -18,7 +18,7 @@ public class Dice {
     private boolean isRemoved;
 
     /**
-     * Construct a die with specified color, 0 - white, 1 - white (for the second white die), 2 - red, 3 - yellow, 4 - green, 5 - blue
+     * Construct a die with specified color, 0 - white (for the first white die), 1 - white (for the second white die), 2 - red, 3 - yellow, 4 - green, 5 - blue
      * Here we use the above numbers to represent the color each die has
      *
      * @param color specified color of the dice
