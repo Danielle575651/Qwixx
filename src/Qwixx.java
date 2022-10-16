@@ -46,7 +46,7 @@ public class Qwixx extends Component implements ActionListener {
         this.finish.addActionListener(this);
         this.skip = this.scoreSheetHumanPlayer.skipRound;
         this.skip.addActionListener(this);
-        this.toss = this.diceGUI.nextRoundButton();
+        this.toss = this.diceGUI.getTossButton();
         this.toss.addActionListener(this);
         this.human.changeState();
     }
@@ -251,7 +251,7 @@ public class Qwixx extends Component implements ActionListener {
         this.finish.addActionListener(this);
         this.skip = this.scoreSheetHumanPlayer.skipRound;
         this.skip.addActionListener(this);
-        this.toss = this.diceGUI.nextRoundButton();
+        this.toss = this.diceGUI.getTossButton();
         this.toss.addActionListener(this);
         this.checkRemoveDice();
     }
@@ -395,7 +395,7 @@ public class Qwixx extends Component implements ActionListener {
             if (!humanFirst) {
                 this.ai.changeState();
                 this.diceGUI.enableToss();
-                this.diceGUI.nextRoundButton().doClick();
+                this.diceGUI.getTossButton().doClick();
                 this.diceGUI.disableToss();
             } else {
                 this.human.changeState();
@@ -447,7 +447,7 @@ public class Qwixx extends Component implements ActionListener {
                     // and inactive AI player. In case the end has not been reached the AI can toss the dice.
                     if (!this.end) {
                         this.diceGUI.enableToss();
-                        this.diceGUI.nextRoundButton().doClick();
+                        this.diceGUI.getTossButton().doClick();
                         this.diceGUI.disableToss();
 
                         this.human.changeState();
@@ -501,7 +501,7 @@ public class Qwixx extends Component implements ActionListener {
                         // If not the AI can toss the dice, since it is its turn.
                         if (!this.end) {
                             this.diceGUI.enableToss();
-                            this.diceGUI.nextRoundButton().doClick();
+                            this.diceGUI.getTossButton().doClick();
                             this.diceGUI.disableToss();
 
                             this.human.changeState();

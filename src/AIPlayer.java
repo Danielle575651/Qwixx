@@ -220,7 +220,7 @@ public class AIPlayer extends Player {
             return;
         }
 
-        /**
+        /*
          * Case 1: The 2 combinations share the same color
          * Choose the row with smaller gap to continue with
          * checking {@Link #exception1(int, int, int)} for final decision
@@ -242,7 +242,7 @@ public class AIPlayer extends Player {
             }
         }
 
-        /**
+        /*
          * Case 2: The 2 combinations share the same gap
          * Choose the row with more crossed numbers to continue with
          * checking {@Link #exception1(int, int, int)} for final decision
@@ -263,7 +263,7 @@ public class AIPlayer extends Player {
             }
         }
 
-        /**
+        /*
          * Case 3: The 2 combinations are different in gap and color
          * Choose the row with smaller gap to continue with
          * checking {@Link #exception1(int, int, int)} for final decision
@@ -289,7 +289,7 @@ public class AIPlayer extends Player {
         }
     }
 
-    /**
+    /*
      * The method makes the AI Player perform (in case of the NonActive round)
      * Only use the white combination
      *

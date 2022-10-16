@@ -4,9 +4,13 @@
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
 public class Scoresheet {
+    // Minimum number of crosses that a row needs before it can be locked.
     public static final int MIN_CROSS = 5;
+    // Is used to check if a lock has been used.
     public static final int LOCK_VALUE = 0;
+    // Value of crossing a penalty
     public static final int PENALTY_VALUE = -5;
+    // The numbers of the score sheet
     public static final int[][] DEFAULT_NUMBERS = {{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0},
             {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0}, {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0}, {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 0}};
 
@@ -133,12 +137,8 @@ public class Scoresheet {
         // If we want to cross for example twelve, but we do not have already four crosses, we cannot lock 12 and
         // cannot lock the color. The lock can only be crossed after crossing a two or twelve. Or the number
         // that wants to be crossed is outside the score sheet.
-        if ((column == getColumns() - 2 && getNumberCrossed(row) < MIN_CROSS) || getValue(row, column) == LOCK_VALUE
-                || !validRows[row] || row < 0 || row > getRows() || column < 0 || column > getColumns()) {
-            return false;
-        }
-
-        return true;
+        return (column != getColumns() - 2 || getNumberCrossed(row) >= MIN_CROSS) && getValue(row, column) != LOCK_VALUE
+                && validRows[row] && row <= getRows() && column >= 0 && column <= getColumns();
     }
 
     /**

@@ -17,14 +17,11 @@ public class DiceGUI extends JPanel {
     //An array of the points of the corresponding dice.
     private final int[] points;
     //A button for the players to press to toss the dice.
-    private JButton nextRound;
+    private JButton toss;
     //A panel containing the pictures of the 6 dice.
     private JPanel dicePanel = new JPanel();
-    //A panel containing the toss dice button.
 
-    private JPanel BPanel = new JPanel();
-    //The main panel combining the above two panels
-
+    //The main panel combining two panels, dice and toss button
     private JPanel mainPanel = new JPanel();
 
     /**
@@ -39,7 +36,7 @@ public class DiceGUI extends JPanel {
         dicePanel.setLayout(new GridLayout(1, 6));
         initDicePanel(dicePanel);
 
-        nextRound = new JButton(new AbstractAction("Toss dice") {
+        toss = new JButton(new AbstractAction("Toss dice") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dicePanel.removeAll();
@@ -48,7 +45,8 @@ public class DiceGUI extends JPanel {
                 fillDicePanel(dicePanel);
             }
         });
-        BPanel.add(nextRound);
+        JPanel BPanel = new JPanel();
+        BPanel.add(toss);
 
         mainPanel.setLayout(new GridLayout(1, 2));
         mainPanel.add(BPanel);
@@ -291,14 +289,14 @@ public class DiceGUI extends JPanel {
      *
      * @return the toss dice button
      */
-    public JButton nextRoundButton() {
-        return this.nextRound;
+    public JButton getTossButton() {
+        return this.toss;
     }
 
     /**
      * A method that returns the dice panel
      *
-     * @return
+     * @return The panel containing the dice is returned
      */
     public JPanel getDicePanel() {
         return this.mainPanel;
@@ -308,13 +306,13 @@ public class DiceGUI extends JPanel {
      * A method that disables the nextRound button
      */
     public void disableToss() {
-        this.nextRound.setEnabled(false);
+        this.toss.setEnabled(false);
     }
 
     /**
      * A method that (re-)enables the nextRound button
      */
     public void enableToss() {
-        this.nextRound.setEnabled(true);
+        this.toss.setEnabled(true);
     }
 }

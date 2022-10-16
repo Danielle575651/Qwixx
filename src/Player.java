@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public abstract class Player {
     public Scoresheet sheet;
     private String name;
@@ -24,12 +22,6 @@ public abstract class Player {
         this.name = newName;
     }
 
-    public final void tossDice(Dice[] dice) {
-        for (Dice die : dice) {
-            die.rollDice();
-        }
-    }
-
     public void crossNumber(int color, int number) {
         if (color == 0 || color == 1) {
             sheet.cross(color, number - 2);
@@ -44,19 +36,7 @@ public abstract class Player {
     }
 
     public final void changeState() {
-        if (isActive) {
-            isActive = false;
-        } else {
-            isActive = true;
-        }
-    }
-
-    public void isActivePlayer() {
-        this.isActive = true;
-    }
-
-    public void isNotActivePlayer() {
-        this.isActive = false;
+        isActive = !isActive;
     }
 
     // Get combination of white dice
@@ -89,10 +69,12 @@ public abstract class Player {
     public boolean numIsValid(int color, int value, int[] points, boolean active) {
         // for non-active, only check white comb
         int whiteComb = getWhiteComb(points);
+
         if (!active && value == whiteComb) {
             return true;
         }
-        if (!active && value != whiteComb) {
+
+        if (!active) {
             return false;
         }
 
@@ -107,10 +89,6 @@ public abstract class Player {
             return false;
         }
         // Check if the value is valid
-        if (value == comb[color] || value == comb[color + 4]) {
-            return true;
-        } else {
-            return false;
-        }
+        return value == comb[color] || value == comb[color + 4];
     }
 }
