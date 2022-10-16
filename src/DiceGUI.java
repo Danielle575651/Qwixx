@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  * This is a GUI for the 6 dice. The play can toss the dice and use the corresponding points to make a move on the
- * score sheet.  The colored dice can also be removed from the game. In that case, both players cannot use the dice anymore.
+ * score sheet. The colored dice can also be removed from the game. In that case, both players cannot use the dice anymore.
  *
  * @author Amber Cuijpers, Danielle Lam, Khue Nguyen, Yu-Shan Cho, Yuntong Wu
  */
@@ -17,21 +17,21 @@ public class DiceGUI extends JPanel {
     //An array of the points of the corresponding dice.
     private final int[] points;
     //A button for the players to press to toss the dice.
-    private JButton toss;
+    private final JButton toss;
     //A panel containing the pictures of the 6 dice.
-    private JPanel dicePanel = new JPanel();
+    private final JPanel dicePanel = new JPanel();
 
     //The main panel combining two panels, dice and toss button
-    private JPanel mainPanel = new JPanel();
+    private final JPanel mainPanel = new JPanel();
 
     /**
      * A constructor that initialize the Dice GUI by creating the main panel and adding the components to the panel
      */
     public DiceGUI() {
         picLabels = new JLabel[6];
+        points = new int[6];
         diceSet = new Dice[6];
         addDice();
-        points = new int[6];
 
         dicePanel.setLayout(new GridLayout(1, 6));
         initDicePanel(dicePanel);
@@ -213,7 +213,7 @@ public class DiceGUI extends JPanel {
     }
 
     /**
-     * Method that roll the dice and get the corresponding point of the dice
+     * Method that roll the dice and update the corresponding point of the dice
      */
     public void rollDice() {
         // We roll each of the dice and update its point unless it is not removed from the game
@@ -242,6 +242,7 @@ public class DiceGUI extends JPanel {
                 diceSet[i] = dice;
             }
         }
+        
         // If the die is removed from the game, we set its point to 0 and it will no longer be updated
         points[d.getColor()] = 0;
 
@@ -257,7 +258,7 @@ public class DiceGUI extends JPanel {
                     .getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH)));
         }
 
-        // Update the panel
+        // Update the panel to show which die is removed
         dicePanel.removeAll();
         dicePanel.revalidate();
         dicePanel.repaint();
